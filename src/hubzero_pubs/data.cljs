@@ -378,10 +378,7 @@
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/tags")  {:edn-params tag-str}))]
         (prn "<<< TAG" (:body res))
-        ;(as-> (:body res) $
-        ;  (:generated_key $)
-        ;  )
-        (swap! s update-in [:data :tags] conj tag-str)
+        (get-tags s)
         (swap! s assoc-in [:ui :tag] false)
         ))
   )
