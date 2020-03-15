@@ -45,12 +45,15 @@
    ] 
   )
 
-(defn textfield [s key name]
-  [:input {:type :text
-           :value (get-in @s [:data key (keyword name)])
-           :on-change #(swap! s assoc-in [:data key (keyword name)]
-                              (-> % .-target .-value)          
-                              )}]
+(defn textfield [s k name]
+  [:div.field.anchor.err {:class (if (get-in @s [:ui :errors (keyword name)]) :with-error)}
+   [:input {:type :text
+            :value (get-in @s [:data k (keyword name)])
+            :on-change #(swap! s assoc-in [:data k (keyword name)]
+                               (-> % .-target .-value)
+                               )}] 
+   (ui/val-error s (keyword name))
+   ]
   )
 
 (defn field [s key f]
@@ -61,5 +64,4 @@
                })
    ]
   )
-
 

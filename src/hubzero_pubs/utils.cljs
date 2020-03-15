@@ -39,6 +39,20 @@
     ) 
   )
 
+(defn authors-new-valid? [s]
+  (swap! s assoc-in [:ui :errors]
+         (reduce (fn [errors [k v]]
+                   (if (= 0 (count (get-in @s [:data :authors-new k])))
+                     (assoc errors k v)
+                     errors
+                     )
+                   ) {} {:firstname ["Firstname" "can not be empty"]
+                         :lastname ["Lastname" "can not be empty"]
+                         })
+         )
+  (= (count (get-in @s [:ui :errors])) 0)
+  )
+
 (defn valid? [s]
   (swap! s assoc-in [:ui :errors]
          (reduce (fn [errors [k v]]

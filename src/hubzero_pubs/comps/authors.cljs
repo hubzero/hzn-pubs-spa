@@ -50,25 +50,29 @@
    ]
   )
 
-(defn add-click [s k e]
-  (.preventDefault e)
-  (.stopPropagation e)
+(defn- _handle-author [s k e]
   (let [u (get-in @s [:data k])]
-    (prn "ADDDDD USER" u)
     (if (get-in @s [:ui :author-options :is-new]) 
       (data/new-author s (assoc u
                                 :fullname (str (:firstname u) " " (:lastname u))
                                 :id (:id u 0)
                                 ))
       (data/update-author s u)
-      )   
-    )
+      ) 
+    (panels/close s e)
+    ;; Clear form - JBG
+    (swap! s update :data dissoc k)
+    ;; Scroll form, am I a dirty hack? ... yes. - JBG
+    (-> js/document (.querySelector (str "." (name k) " .inner")) (.scrollTo 0 0))    
+    ) 
+  )
 
-  (panels/close s e)
-  ;; Clear form - JBG
-  (swap! s update :data dissoc k)
-  ;; Scroll form, am I a dirty hack? ... yes. - JBG
-  (-> js/document (.querySelector (str "." (name k) " .inner")) (.scrollTo 0 0))
+(defn add-click [s k e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (if (utils/authors-new-valid? s)
+    (_handle-author s k e)
+    ) 
   )
 
 (defn authors-buttons [s k]

@@ -35,12 +35,6 @@
    ]
   )
 
-(defn- _val-error [s k]
-  (if-let [err (get-in @s [:ui :errors k])]
-    [:div.validation-error
-     (str "Please check! " (first err) " " (second err) ". ")]
-    ) 
-  )
 
 (defn textfield [s id title name]
   [:div.field.anchor.err {:id id :class (if (get-in @s [:ui :errors (keyword name)]) :with-error)}
@@ -52,7 +46,7 @@
             :value (get-in @s [:data (keyword name)])
             :on-change #(_handle-value % s name)
             }]
-   (_val-error s (keyword name))
+   (ui/val-error s (keyword name))
    ]
   )
 
@@ -63,7 +57,7 @@
                :value (get-in @s [:data (keyword name)])
                :on-change #(_handle-value % s name)
                }]
-   (_val-error s (keyword name))
+   (ui/val-error s (keyword name))
    ]
   )
 
@@ -239,7 +233,7 @@
     (items s k)
     (selector-button s k options-comp f)
     ]
-   (_val-error s k)
+   (ui/val-error s k)
    ]
   )
 
@@ -377,7 +371,7 @@
       [:input {:type :text
                :name "publication-date" 
                }]
-      (_val-error s :publication-date)
+      (ui/val-error s :publication-date)
       ]
      )
    ]
