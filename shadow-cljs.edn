@@ -1,0 +1,13 @@
+{:source-paths ["src"]
+ :dependencies [[cljs-http "0.1.46"]
+                [reagent "0.8.1"]
+                [clj-commons/secretary "1.2.4"]
+                ]
+ :builds {:app {:target :browser
+                :output-to "/home/jbg/Development/hub/app/components/com_pubs/site/assets/js/compiled/hubzero_pubs.js"
+                :output-dir "/home/jbg/Development/hub/app/components/com_pubs/site/assets/js/compiled"
+                :asset-path "/app/components/com_pubs/site/assets/js/compiled"
+                :modules {:main {:init-fn hubzero-pubs.core/main!}}
+                :compiler-options {:infer-externs :auto}
+                }}}
+
