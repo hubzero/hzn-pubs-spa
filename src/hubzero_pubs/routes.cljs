@@ -31,7 +31,6 @@
   (secretary/set-config! :prefix "#")
 
   (defroute "/prjs/:id" {:as params}
-    (prn "PRJ" (:id params) "NEW")
     (swap! s assoc-in [:ui :summary] false)
     (swap! s assoc-in [:data :prj-id] (:id params))
     (data/get-prj s)
@@ -40,7 +39,6 @@
     )
 
   (defroute (str pubsroot) {:as params}
-    (prn "PUB" (:id params) (:ver-id params))
     (swap! s assoc-in [:ui :summary] true)
     (swap! s assoc-in [:data :pub-id] (:id params))
     (swap! s assoc-in [:data :ver-id] (:ver-id params))
@@ -48,6 +46,8 @@
     )
 
   (defroute (str pubsroot "/edit") {:as params}
+    ;; This is is a weird hack, dissoc data ... otherwise authors sort breaks - JBG
+    (swap! s dissoc :data)
     (swap! s assoc-in [:ui :summary] false)
     (swap! s assoc-in [:data :pub-id] (:id params))
     (swap! s assoc-in [:data :ver-id] (:ver-id params))

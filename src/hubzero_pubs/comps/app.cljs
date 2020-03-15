@@ -209,7 +209,7 @@
 (defn items [s k]
   (prn "SET LIST | " (get-in @s [:data k]))
   (if-let [l (into [] (get-in @s [:data k]))]
-    (_sortitems s k l)    
+    (_sortitems s k l)
     )
   )
 
@@ -392,15 +392,10 @@
   )
 
 (defn- _submit-draft [s e]
-  (.preventDefault e) 
-  (.stopPropagation e) 
-  (if (utils/valid? s)
-    (secretary/dispatch! (str "/pubs/"
-                              (get-in @s [:data :pub-id])
-                              "/v/"
-                              (get-in @s [:data :version-id])
-                              ))
-    (panels/show s e true :errors)
+  (when (not (utils/valid? s)) 
+    (.preventDefault e) 
+    (.stopPropagation e)  
+    (panels/show s e true :errors)     
     )
   )
 
@@ -409,7 +404,13 @@
    [:div.inner
     [:fieldset.buttons-aside
      ;;[:a.btn {:href "/pubs/#/summary"} "Proceed with the draft"]
-     [:a.btn {:href "#" :on-click #(_submit-draft s %)} "Proceed with the draft"]
+     ;;[:a.btn {:href "#" :on-click #(_submit-draft s %)} "Proceed with the draft"]
+     [:a.btn {:href (str "/pubs/#/pubs/"
+                         (get-in @s [:data :pub-id])
+                         "/v/"
+                         (get-in @s [:data :ver-id])
+                         )
+              :on-click #(_submit-draft s %)} "Proceed with the draft"]
      ]
     ]
    ]
@@ -418,8 +419,12 @@
 (defn section-buttons [s]
   [:fieldset.fieldset-section.buttons
    [:div.field.buttons
-    ;;[:a.btn {:href "/pubs/#/summary"} "Proceed with the draft"]
-    [:a.btn {:href "#" :on-click #(_submit-draft s %)} "Proceed with the draft"]
+    [:a.btn {:href (str "/pubs/#/pubs/"
+                        (get-in @s [:data :pub-id])
+                        "/v/"
+                        (get-in @s [:data :ver-id])
+                        )
+             :on-click #(_submit-draft s %)} "Proceed with the draft"]
     ]
    ]
   )
