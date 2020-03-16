@@ -153,7 +153,7 @@
 (defn- _submit [s e]
   ;; This will trigger the backend to grab a DOI - JBG
   (swap! s assoc-in [:data :state] 1)
-  (data/save-pub s) 
+  (data/submit-pub s) 
   )
 
 (defn aside [s]

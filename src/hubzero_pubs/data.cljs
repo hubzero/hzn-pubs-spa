@@ -352,6 +352,17 @@
     )
   )
 
+(defn submit-pub [s]
+  (as-> (:data @s) $
+    (mutate/prepare $)
+    (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
+          (prn "SENT PUB >>>" $)
+          (prn "<<< RECEIVED"(:body res))
+          (get-pub s) 
+          ))
+    )
+  )
+
 (defn save-state [s]
   (go (let [res (<! (http/post (str url "/ui-state") {:edn-params (mutate/coerce-ui-state s)}))]
         (_handle-res s res (fn [s res]
