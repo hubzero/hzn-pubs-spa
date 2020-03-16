@@ -62,7 +62,6 @@
   )
 
 (defn file [s k v id]
-  (prn "FILE" v id)
   [:li.item {:key id}
    (ui/icon s "#icon-file-text2")
    [:div.main [:a {:href "#"} (:name v)]]
@@ -110,13 +109,11 @@
 (defn edit-author [s v e]
   (.preventDefault e)
   (.stopPropagation e)
-  (prn "EDIT AUTHOR" v)
   (swap! s assoc-in [:data :authors-new] (_fillname v))
   (options/handle-author false s e)
   )
 
 (defn author [s k v id]
-  (prn "AUTHOR" k v id)
   [:li.item {:key id}
    (ui/icon s "#icon-user")
    [:div.main
@@ -192,7 +189,6 @@
   )
 
 (defn- _sortitems [s k l]
-  (prn "SET LIST >> " l)
   [:> ReactSortable {:tag "ul" :list l :setList #(_set-list s k %)}
    (doall
      (map #(item s k %) l)
@@ -201,7 +197,6 @@
   )
 
 (defn items [s k]
-  (prn "SET LIST | " (get-in @s [:data k]))
   (if-let [l (into [] (get-in @s [:data k]))]
     (_sortitems s k l)
     )
@@ -520,7 +515,6 @@
    ])
 
 (defn- _save [s]
-  (prn "STATE" @s)
   (if (utils/savable? s) (data/save-pub s))
   (data/save-state s)
   )

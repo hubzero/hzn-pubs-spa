@@ -161,7 +161,7 @@
                                    :label "Month"
                                    :type :dropdown
                                    :options (:months @s)}
-                                  {:name :authors :label "Authors" :type :text}
+                                  {:name :author :label "Authors" :type :text}
                                   {:name :journal :label "Journal" :type :text}
                                   {:name :book :label "Book title" :type :text}
                                   {:name :volume :label "Volume" :type :text}
