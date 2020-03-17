@@ -64,7 +64,7 @@
 (defn file [s k v id]
   [:li.item {:key id}
    (ui/icon s "#icon-file-text2")
-   [:div.main [:a {:href "#"} (:name v)]]
+   [:div.main [:span (:name v)]]
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
@@ -79,7 +79,7 @@
 (defn image [s k v id]
   [:li.item {:key id}
    (ui/icon s "#icon-file-picture")
-   [:div.main [:a {:href "#"} (:name v)]]
+   [:div.main [:span (:name v)]]
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
@@ -260,7 +260,9 @@
                         } ]
      [:label {:for :poc}
       "I have read the "
-      [:a {:href "#"} "license terms"]
+      [:a {:href (get-in @s [:data :licenses :url])
+           :target :_blank
+           } "license terms"]
       " and agree to license my work under the attribution 3.0 unported license."
       ]
      ]
@@ -297,7 +299,7 @@
          ]
         ] 
        ]
-      (acknowledge s)
+      (if (get-in @s [:data :licenses]) (acknowledge s))
       (selector-button s :licenses nil handle-licenses-options)
       ]   
      )
@@ -531,7 +533,7 @@
    ])
 
 (defn- _save [s]
-  (prn "STATE" @s)
+  ;(prn "STATE" @s)
   (if (utils/savable? s) (data/save-pub s))
   (data/save-state s)
   )

@@ -83,7 +83,11 @@
   )
 
 (defn tag [s t]
-  [:div {:class :tag :key t} [:div {:class :inner} (:raw_tag t)]]
+  [:div {:class :tag :key t} [:div {:class :inner}
+                              [:a {:href (str "/tags/" (:raw_tag t) )
+                                   :target :_blank
+                                   } (:raw_tag t)] 
+                              ]]
   )
 
 (defn tags [s key type]

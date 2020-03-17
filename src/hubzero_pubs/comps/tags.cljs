@@ -29,7 +29,6 @@
   )
 
 (defn- _result-click [s tag e]
-  (prn "ADD TAG RESULT CLICK" (:raw_tag @s))
   (.preventDefault e)
   (.stopPropagation e)
   (swap! s dissoc :tag-query)
@@ -101,12 +100,10 @@
 (defn tag
   "s state, t is the tag map - JBG" 
   [s t]
-  [:a.ptag {:href "#"
+  [:a.ptag {:href (str "/tags/" (:raw_tag t))
             :key (:id t)
-            :on-click (fn [e]
-                        (.preventDefault e)
-                        (.stopPropagation e)
-                        )}
+            :target :_blank
+            }
    [:div.inner (:raw_tag t) 
     [:div.remove.icon {:on-click #(remove-tag s t %)}
      (ui/icon s "#icon-cross")
