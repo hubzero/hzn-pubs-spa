@@ -139,13 +139,29 @@
    ]
   )
 
+(defn- _water-citation [s c]
+  (swap! s assoc-in [:data :citations-manual]
+         (-> c
+             (assoc :book (:booktitle c))
+             )
+         )
+  )
+
+(defn edit-citation [s c e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (_water-citation s c)
+  (options/handle-manual s e)
+  )
 
 (defn citation [s k c]
   [:li.item {:key (:id c)}
    [:div.icon (ui/icon s "#icon-file-text2")]
    [:div.main
     [:div.subject
-     [:a {:href "#"} (utils/format-citation c)]
+     [:a {:href "#"
+          :on-click #(edit-citation s c %)
+          } (utils/format-citation c)]
      ]
     ]
    [:div.options {:on-click (fn [e]
@@ -515,6 +531,7 @@
    ])
 
 (defn- _save [s]
+  (prn "STATE" @s)
   (if (utils/savable? s) (data/save-pub s))
   (data/save-state s)
   )
