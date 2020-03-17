@@ -28,9 +28,41 @@
                       .-value))
   )
 
+(defn- _result-click [s tag e]
+  (prn "ADD TAG RESULT CLICK" (:raw_tag @s))
+  (.preventDefault e)
+  (.stopPropagation e)
+  (swap! s dissoc :tag-query)
+  (data/add-tag s (:raw_tag tag))
+  )
+
+(defn- _result [s tag]
+  [:li.result {:key (:id tag)}
+   [:a {:href "#"
+        :on-click #(_result-click s tag %)
+        } (:raw_tag tag)]
+   ]
+  )
+
+(defn- _results [s]
+  (merge [:ul.results]
+         (doall (map #(_result s %) (:tag-results @s)))
+         )
+  )
+
+(defn- _search [s v e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (swap! s assoc-in [:ui :tag-str] v)
+  (swap! s assoc :tag-query v)
+  (if (not (empty? v))
+    (data/search-tags s)
+    )
+  )
+
 (defn tag-input [s]
-  [^{;:component-did-mount
-     ;#(-> js/document (.querySelector ".new-tag") (.focus))
+  [^{:component-did-mount
+     #(-> js/document (.querySelector ".new-tag") (.focus))
      ;:component-did-update
      ;#(.log js/console "example-component-did-update")
      }
@@ -40,6 +72,8 @@
                       :placeholder "Enter tag"
                       :onKeyUp #(if (= 13 (.-keyCode %)) (add-tag s %))
                       ;:on-change #(swap! s assoc-in [:ui :tag-str] (-> % .-target .-value)) 
+                      :onChange #(_search s (-> % .-target .-value) %)
+                      :value (get-in @s [:ui :tag-str]) 
                       }]
      )])
 
@@ -52,6 +86,9 @@
      [:span.name "Add"]
      ] 
     ]
+[:div.ui.autocomplete
+      (_results s)
+      ] 
    ]
   )
 

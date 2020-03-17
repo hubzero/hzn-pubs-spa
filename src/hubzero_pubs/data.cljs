@@ -387,7 +387,7 @@
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
-                                    "/tags")  {:edn-params tag-str}))]
+                                    "/tags")  {:edn-params {:tag tag-str}}))]
         (prn "<<< TAG" (:body res))
         (get-tags s)
         (swap! s assoc-in [:ui :tag] false)
@@ -405,6 +405,15 @@
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :tags] dissoc tag-id)
                              ))
+        ))
+  )
+
+(defn search-tags [s]
+  (go (let [res (<! (http/post (str url "/tags/search")
+                               {:edn-params {:q (:tag-query @s)}}
+                               ))]
+        (prn "SEARCH TAG RESPONSE" (:body res))
+        (swap! s assoc :tag-results (:body res))
         ))
   )
 
