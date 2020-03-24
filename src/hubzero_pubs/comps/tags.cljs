@@ -9,7 +9,11 @@
 (defn tag-creator [s]
   [:div.ptag.creator {:href "#"
                       :class (if (get-in @s [:ui :tag]) :hide)
-                      :on-click #(swap! s assoc-in [:ui :tag] true)
+                      :on-click (fn [e]
+                                  (.preventDefault e)
+                                  (.stopPropagation e)
+                                  (swap! s assoc-in [:ui :tag] true)
+                                  )
                       }
    [:div.inner
     [:div.add.icon
@@ -44,9 +48,10 @@
   )
 
 (defn- _results [s]
+  (prn "l;djssaldkfjasldkfjsda")
   (merge [:ul.results]
          (doall (map #(_result s %) (:tag-results @s)))
-         )
+         ) 
   )
 
 (defn- _search [s v e]
@@ -85,9 +90,12 @@
      [:span.name "Add"]
      ] 
     ]
-[:div.ui.autocomplete
-      (_results s)
-      ] 
+   (if (and
+         (not (empty? (:tag-query @s)))
+         (not (empty? (:tag-results @s)))
+         ) 
+     [:div.ui.autocomplete (_results s) ]
+     ) 
    ]
   )
 

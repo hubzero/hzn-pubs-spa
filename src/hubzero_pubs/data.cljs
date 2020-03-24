@@ -11,9 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-  (prn "ERROR" code)
-  ;(secretary/dispatch! "/error")
-  ;(set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
+  (secretary/dispatch! "/error")
+  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
   )
 
 (defn- _handle-res [s res f]

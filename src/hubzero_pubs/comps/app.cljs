@@ -542,7 +542,7 @@
   ;; Is this a hack, probably, save state and draft pub - JBG
   (_save s)
   (merge
-    [:div]
+    [:div {:on-click #(swap! s assoc-in [:ui :tag] false)}]
     (wrap s)
     (panels/overlay s)
     (errors/errors s :errors)
