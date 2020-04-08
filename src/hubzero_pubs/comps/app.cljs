@@ -538,7 +538,7 @@
   (data/save-state s)
   )
 
-(defn app [s]
+(defn- _app [s]
   ;; Is this a hack, probably, save state and draft pub - JBG
   (_save s)
   (merge
@@ -556,5 +556,9 @@
     (citations/manual s :citations-manual)
     (help/help s :help-center)
     )
+  )
+
+(defn app [s]
+  (if (get-in @s [:data :pub-id]) (_app s))
   )
 

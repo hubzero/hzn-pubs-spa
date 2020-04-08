@@ -13,9 +13,9 @@
 
 ;; TODO: Remove, I'm a placeholder! - JBG
 (defn set-html! [content]
-  (-> (js/document.getElementById "app") 
-      (aset "innerHTML" content) 
-    )
+;  (-> (js/document.getElementById "app") 
+;      (aset "innerHTML" content) 
+;    )
   )
 ;; END TODO
 
@@ -33,9 +33,8 @@
   (defroute "/prjs/:id" {:as params}
     (swap! s assoc-in [:ui :summary] false)
     (swap! s assoc-in [:data :prj-id] (:id params))
-    (data/get-prj s)
     ;; Create a new pub - JBG
-    (data/save-pub s)
+    (data/save-pub s true)
     )
 
   (defroute (str pubsroot) {:as params}

@@ -21,6 +21,8 @@
   )
 
 (defn folder-pop [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
   (-> (get-in @s [:ui :current-panel])
       (first)
       .-classList
@@ -31,6 +33,7 @@
   )
 
 (defn folder-push [s name path e]
+  (.preventDefault e)
   (.stopPropagation e)
   (let [node (-> e 
                  .-target
@@ -44,8 +47,6 @@
   (swap! s update-in [:ui :current-folder] conj [name path])
   )
 
-;(def s hubzero-pubs.core/s)
-
 (defn toggle-folder-files [s key index selected]
   (as-> (:files @s) $
     (nth $ index) 
@@ -53,20 +54,20 @@
     (reduce (fn [c f]
               (if (clojure.string/includes? (first f) $)
                 (reduce (fn [c2 f2]
-                          (prn "FOLDER" key (first f) f2)
                           (let [k (get-id s key (first f) f2)]
                             (if selected 
                               (data/add-file s {:type key
-                    :index 0 
-                    :path (spf (first f) f2)
-                    :name f2 
-                    })
+                                                :index 0 
+                                                :path (spf (first f) f2)
+                                                :name f2 
+                                                })
                               (data/rm-file s key k)
                               )
                             )
                           ) c (last f)) c)
               )
-            (get-in @s [:data key]) (:files @s))
+            (get-in @s [:data key]) (:files @s))  
+
     ;(swap! s assoc-in [:data key] $)
     )
   )
@@ -82,7 +83,6 @@
       (toggle-folder-files s key index (not (boolean (some #{"selected"} (js/Array.from classes)))))
       (.toggle classes "selected")
     )
-;  (data/usage s)
   )
 
 (defn _folder-selected? [s key index]

@@ -15,7 +15,7 @@
                   (get-in @s [:usage :units])
                   " ("
                   (get-in @s [:usage :percent])
-                  ")"
+                  "%)"
                   )]
     " of your "
     [:strong (str (get-in @s [:usage :max])

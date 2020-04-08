@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-  (secretary/dispatch! "/error")
-  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
+;  (secretary/dispatch! "/error")
+;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
   )
 
 (defn- _handle-res [s res f]
@@ -44,6 +44,7 @@
 (defn add-file
   "s is the state, file is a map - :type, :index, :path, :name - JBG"
   [s file]
+  (prn "ADD-FILE" file)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
@@ -59,6 +60,7 @@
 (defn rm-file
   "s is the state, k is the type - :content, :images, :support-docs, and file-id - JBG"
   [s k file-id]
+  (prn "RM-FILE" k file-id)
   (go (let [res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -258,8 +260,10 @@
   )
 
 (defn usage [s]
-  (go (let [res (<! (http/post (str url "/prjs/" (get-in @s [:data :prj-id]) "/usage" ) {:edn-params (map #(:path %) (get-in @s [:data :content] {})) }))]
-        ;(prn (:body res))
+  (go (let [data (map #(:path %) (vals (get-in @s [:data :content] {})))
+            res (<! (http/post (str url "/prjs/" (get-in @s [:data :prj-id]) "/usage" ) {:edn-params data}))]
+        (prn "USAGE >>>" data)
+        (prn "<<< USAGE" (:body res))
         (swap! s assoc :usage (:body res))
         ))
   )
@@ -338,7 +342,19 @@
         ))
   )
 
-(defn save-pub [s]
+(defn- _nudirect [s]
+  (as-> (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
+             "/v/" (get-in @s [:data :ver-id])
+             "/edit") $
+    (->
+      js/window
+      .-location
+      (set! $)
+      )    
+  )
+)
+
+(defn save-pub [s & [new?]]
   (as-> (:data @s) $
     (mutate/prepare $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
@@ -346,6 +362,7 @@
           (prn "<<< RECEIVED"(:body res))
           (_handle-res s res (fn [s res]
                                (swap! s update :data merge (:body res))
+                               (if new? (_nudirect s))
                                ))
           ))
     )
