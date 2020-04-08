@@ -37,6 +37,7 @@
   (.stopPropagation e)
   (swap! s dissoc :tag-query)
   (data/add-tag s (:raw_tag tag))
+  (swap! s assoc-in [:ui :tag-str] "")
   )
 
 (defn- _result [s tag]
