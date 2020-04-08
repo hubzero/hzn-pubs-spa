@@ -7,18 +7,25 @@
     ) 
   )
 
-(defn user-click [s u key e]
-  (swap! s update-in [:ui key (utils/author-key u)] not)
-  (if (get-in @s [:data key (utils/author-key u)])
-    (swap! s update-in [:data key] dissoc (utils/author-key u))
-    (data/add-author s u)
+(defn user-click [s k u e]
+    (if-let [a (_author? s k (:id u))] 
+      (data/rm-author s (:id a))
+      (data/add-author s u)
+      )
+  )
+
+(defn- _author? [s k po-id]
+  (->
+    (group-by :project_owner_id (vals (get-in @s [:data k])))
+    (get po-id)
+    (first)
     )
   )
 
-(defn user [s key u]
-  [:li {:key (utils/author-key u) :on-click #(user-click s u key %)}
+(defn user [s k u]
+  [:li {:key (utils/author-key u) :on-click #(user-click s k u %)}
    [:div.inner
-    [:div.selected-indicator {:class (if (get-in @s [:ui key (utils/author-key u)]) :selected)}
+    [:div.selected-indicator {:class (if (_author? s k (:id u)) :selected)}
      [:div.icon
       (ui/icon s "#icon-checkmark")
       [:span.name "Selected"]

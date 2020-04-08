@@ -138,11 +138,7 @@
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/authors")  {:edn-params author}))]
         (prn "<<< AUTHOR" (:body res))
-        (as-> (:body res) $
-          (:generated_key $)
-          (assoc author :id $)
-          (swap! s assoc-in [:data :authors-list (:id $)] $)
-          )
+        (get-authors s)
         ))
   )
 
