@@ -120,13 +120,23 @@
    ]
   )
 
+(defn- _sort [tags]
+  (->> tags
+       (vals)
+       (group-by :raw_tag)
+       (into (sorted-map))
+       (vals)
+       (map first)
+       )
+  )
+
 (defn tags [s]
   [:div#a-tags.field
    [:label {:for :tags} "Tags:"]
    [:div.field-wrapper
     (merge
       [:div.item.ui.ptags]
-      (map #(tag s %) (vals (get-in @s [:data :tags])))
+      (map #(tag s %) (_sort (get-in @s [:data :tags])))
       (tag-creator s)
       (tag-creating s)
       )
