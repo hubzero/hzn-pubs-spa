@@ -83,7 +83,7 @@
   )
 
 (defn tag [s t]
-  [:div {:class :tag :key t} [:div {:class :inner}
+  [:div {:class :ptag :key t} [:div {:class :inner}
                               [:a {:href (str "/tags/" (:raw_tag t) )
                                    :target :_blank
                                    } (:raw_tag t)] 
@@ -91,7 +91,7 @@
   )
 
 (defn tags [s key type]
-  [:div {:class [:item :ui :tags]}
+  [:div {:class [:item :ui :ptags]}
    (doall (map #(tag s %) (vals (get-in @s [:data :tags]))))] 
   )
 
