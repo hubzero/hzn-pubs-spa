@@ -94,10 +94,9 @@
 (defn handle-poc-click [s e id]
   (.preventDefault e)
   (.stopPropagation e)
-  (if (some #{id} (get-in @s [:data :poc]))
-    (swap! s assoc-in [:data :poc] (remove #{id} (get-in @s [:data :poc])))
-    (swap! s update-in [:data :poc] conj id)
-    )
+  (prn "POC!!!!!!!!!!!!!!" (-> e .-target .-checked))
+  (swap! s assoc-in [:data :authors-list id :poc] (-> e .-target .-checked))
+  (data/update-author s (get-in @s [:data :authors-list id]))
   )
 
 (defn- _fillname [v]
@@ -124,7 +123,9 @@
                     :on-click #(edit-author s v %)
                     } (:organization v)] ]
     [:div.ui.checkbox.inline.meta
-     [:input (merge {:type :checkbox :name :poc :on-change #(handle-poc-click s % id)} {:checked (boolean (some #{id} (get-in @s [:data :poc]))) })]
+     [:input (merge {:type :checkbox
+                     :name :poc
+                     :on-change #(handle-poc-click s % id)} {:checked (get-in @s [:data k id :poc]) })]
      [:label (:for :poc) "Point of contact"]
      ]
     ]
@@ -177,12 +178,12 @@
 
 (defn item [s k v]
   ((k {
-      :content #(file s k (second v) (first v))
-      :support-docs #(file s k (second v) (first v))
-      :authors-list #(author s k (second v) (first v))
-      :images #(image s k (second v) (first v))
-      :citations #(citation s k (second v))
-      })) 
+       :content #(file s k (second v) (first v))
+       :support-docs #(file s k (second v) (first v))
+       :authors-list #(author s k (second v) (first v))
+       :images #(image s k (second v) (first v))
+       :citations #(citation s k (second v))
+       })) 
   )
 
 (defn- _set-list [s k l]

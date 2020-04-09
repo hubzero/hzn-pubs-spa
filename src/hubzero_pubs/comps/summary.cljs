@@ -160,6 +160,15 @@
   (data/submit-pub s) 
   )
 
+(defn submit-button [s]
+  [:a.btn {:href (str
+                   "/pubs/#/pubs/" (get-in @s [:data :pub-id])
+                   "/v/" (get-in @s [:data :ver-id])
+                   )
+           :on-click #(_submit s %)
+           } "Submit publication"]
+  )
+
 (defn aside [s]
   [:aside
    [:div.inner
@@ -167,12 +176,7 @@
      [:header "Your publication is ready for submission!"]
      [:p "Please review your publication and make sure everything looks good."]
      [:fieldset.buttons-aside
-      [:a.btn {:href (str
-                       "/pubs/#/pubs/" (get-in @s [:data :pub-id])
-                       "/v/" (get-in @s [:data :ver-id])
-                       )
-               :on-click #(_submit s %)
-               } "Submit publication"]
+      (if (utils/valid? s) (submit-button s))
       [:a.btn.secondary {:href (str
                                  "/pubs/#/pubs/" (get-in @s [:data :pub-id])
                                  "/v/" (get-in @s [:data :ver-id])

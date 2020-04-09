@@ -21,13 +21,18 @@
   (panels/close s e)
   )
 
+(defn- _search [s v]
+  (swap! s assoc :doi-query v)
+  (if (> (count v) 0) 
+    (data/search-citations s)
+    (swap! s dissoc :doi-results)
+    )
+  )
+
 (defn search-doi [s key]
   [:div.field
    [:label {:for :doi} "DOI:"]
-   [:input {:type :text :onChange (fn [e]
-                                    (swap! s assoc :doi-query (-> e .-target .-value))
-                                    (data/search-citations s)
-                                    )}]
+   [:input {:type :text :onChange #(_search s (-> % .-target .-value))}]
    ]
   )
 

@@ -160,13 +160,15 @@
 
 (defn update-author
   [s author]
-  (prn "UPDATE AUTHOR" author)
+  (prn "UPDATE AUTHOR >>>>" author)
   (go (let [res (<! (http/put (str url
-                                    "/pubs/" (get-in @s [:data :pub-id])
-                                    "/v/" (get-in @s [:data :ver-id])
-                                    "/authors/" (:id author)) {:edn-params author}))]
-        (prn "<<< UPDATED AUTHOR" (:body res))
-        (get-authors s)
+                                   "/pubs/" (get-in @s [:data :pub-id])
+                                   "/v/" (get-in @s [:data :ver-id])
+                                   "/authors/" (:id author)) {:edn-params author}))]
+        (_handle-res s res (fn [s res]
+                             (prn "<<< UPDATED AUTHOR" (:body res))
+                             (get-authors s)
+                             ))
         ))
   )
 
@@ -197,7 +199,7 @@
 (defn search-citations [s]
   (go (let [res (<! (http/post (str url "/citations/search") {:edn-params {:doi (:doi-query @s)}}
                               ))]
-        ;(prn (:body res))
+        (prn "CITATIONS<<<<<<<" (:body res))
         (swap! s assoc :doi-results (:body res)) 
         ))
   )
@@ -220,7 +222,9 @@
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/citations")  {:edn-params c}))]
         (prn "<<< CITATION" (:body res))
-        (swap! s update-in [:data :citations] assoc (:id c) c)
+        (_handle-res s res (fn [s res]
+                             (swap! s update-in [:data :citations] assoc (:id c) c)
+                             ))
         ))
   )
 
