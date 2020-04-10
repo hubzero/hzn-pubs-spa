@@ -181,6 +181,10 @@
                                  "/pubs/#/pubs/" (get-in @s [:data :pub-id])
                                  "/v/" (get-in @s [:data :ver-id])
                                  "/edit")} "Edit draft"]
+      [:a.btn.secondary {:href (str "/projects/"
+                                    (get-in @s [:data :prj-id])
+                                    "/publications"
+                                    )} "Save & Close"]
       ]
      ]
     ]

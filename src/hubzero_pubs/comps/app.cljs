@@ -419,6 +419,11 @@
                          (get-in @s [:data :ver-id])
                          )
               :on-click #(_submit-draft s %)} "Proceed with the draft"]
+     [:a.btn.secondary {:href (str "/projects/"
+                                   (get-in @s [:data :prj-id])
+                                   "/publications"
+                                   )} "Save & Close"]
+
      ]
     ]
    ]
@@ -433,6 +438,10 @@
                         (get-in @s [:data :ver-id])
                         )
              :on-click #(_submit-draft s %)} "Proceed with the draft"]
+    [:a.btn.secondary {:href (str "/projects/"
+                                  (get-in @s [:data :prj-id])
+                                  "/publications"
+                                  )} "Save & Close"]
     ]
    ]
   )
