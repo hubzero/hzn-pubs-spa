@@ -94,7 +94,6 @@
 (defn handle-poc-click [s e id]
   (.preventDefault e)
   (.stopPropagation e)
-  (prn "POC!!!!!!!!!!!!!!" (-> e .-target .-checked))
   (swap! s assoc-in [:data :authors-list id :poc] (-> e .-target .-checked))
   (data/update-author s (get-in @s [:data :authors-list id]))
   )
@@ -286,7 +285,10 @@
   )
 
 (defn licenses [s]
-  [:div.field
+  [:div.field.err {:class (if (or (get-in @s [:ui :errors :licenses])
+                                  (get-in @s [:ui :errors :ack])
+                                  ) 
+                            :with-error)}
    [:label {:for :title} "License:"]
    (merge
      [:div.collection.single-item
@@ -304,11 +306,13 @@
       (selector-button s :licenses nil handle-licenses-options)
       ]   
      )
+   (ui/val-error s :licenses)
+   (ui/val-error s :ack)
    ]
   )
 
 (defn agreements [s]
-  [:div.field
+  [:div.field.err {:class (if (get-in @s [:ui :errors :terms]) :with-error)}
    [:label {:for :agreement} "Agreements"]
    [:div.field-wrapper
     [:div.item.ui.checkbox.inline
@@ -320,6 +324,7 @@
      [:label {:for :terms} (:terms @s)]
      ]
     ]
+    (ui/val-error s :terms)
    ]
   )
 
@@ -400,11 +405,20 @@
   )
 
 (defn- _submit-draft [s e]
-  (when (not (utils/valid? s)) 
+  (when (not (utils/errors? s)) 
     (.preventDefault e) 
     (.stopPropagation e)  
     (panels/show s e true :errors)     
     )
+  )
+
+(defn save-close [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (data/save-pub s #(routes/redirect (str "/projects/"
+                                          (get-in @s [:data :prj-id])
+                                          "/publications"
+                                          )))
   )
 
 (defn aside-buttons [s]
@@ -419,10 +433,7 @@
                          (get-in @s [:data :ver-id])
                          )
               :on-click #(_submit-draft s %)} "Proceed with the draft"]
-     [:a.btn.secondary {:href (str "/projects/"
-                                   (get-in @s [:data :prj-id])
-                                   "/publications"
-                                   )} "Save & Close"]
+     [:a.btn.secondary {:href "#" :on-click #(save-close s %)} "Save & Close"]
 
      ]
     ]
@@ -543,7 +554,7 @@
    ])
 
 (defn- _save [s]
-  ;(prn "STATE" @s)
+  (prn "STATE" @s)
   (if (utils/savable? s) (data/save-pub s))
   (data/save-state s)
   )

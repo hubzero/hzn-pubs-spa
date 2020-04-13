@@ -198,7 +198,7 @@
 
 (defn search-citations [s]
   (go (let [res (<! (http/post (str url "/citations/search") {:edn-params {:doi (:doi-query @s)}}
-                              ))]
+                               ))]
         (prn "CITATIONS<<<<<<<" (:body res))
         (swap! s assoc :doi-results (:body res)) 
         ))
@@ -321,7 +321,7 @@
     )
   )
 
-(defn get-pub [s]
+(defn get-pub [s & [validate?]]
   (go (let [res (<! (http/get (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
@@ -338,23 +338,14 @@
                              (get-license s)
                              (get-citations s)
                              (usage s)
+
+
                              ))
         ))
   )
 
-(defn- _nudirect [s]
-  (as-> (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
-             "/v/" (get-in @s [:data :ver-id])
-             "/edit") $
-    (->
-      js/window
-      .-location
-      (set! $)
-      )    
-  )
-)
 
-(defn save-pub [s & [new?]]
+(defn save-pub [s & [callback]]
   (as-> (:data @s) $
     (mutate/prepare $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
@@ -362,7 +353,7 @@
           (prn "<<< RECEIVED"(:body res))
           (_handle-res s res (fn [s res]
                                (swap! s update :data merge (:body res))
-                               (if new? (_nudirect s))
+                               (if callback (callback))
                                ))
           ))
     )

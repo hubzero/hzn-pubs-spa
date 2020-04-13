@@ -13,9 +13,9 @@
 
 ;; TODO: Remove, I'm a placeholder! - JBG
 (defn set-html! [content]
-;  (-> (js/document.getElementById "app") 
-;      (aset "innerHTML" content) 
-;    )
+  ;  (-> (js/document.getElementById "app") 
+  ;      (aset "innerHTML" content) 
+  ;    )
   )
 ;; END TODO
 
@@ -23,6 +23,14 @@
   (doto (History.)
     (events/listen EventType.NAVIGATE #(secretary/dispatch! (.-token %)))
     (.setEnabled true))
+  )
+
+(defn redirect [url]
+  (->
+    js/window
+    .-location
+    (set! url)
+    )  
   )
 
 (def pubsroot "/pubs/:id/v/:ver-id")
@@ -34,14 +42,19 @@
     (swap! s assoc-in [:ui :summary] false)
     (swap! s assoc-in [:data :prj-id] (:id params))
     ;; Create a new pub - JBG
-    (data/save-pub s true)
+    (data/save-pub s #(redirect (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
+                                     "/v/" (get-in @s [:data :ver-id])
+                                     "/edit")
+                                ))
     )
 
   (defroute (str pubsroot) {:as params}
     (swap! s assoc-in [:ui :summary] true)
     (swap! s assoc-in [:data :pub-id] (:id params))
     (swap! s assoc-in [:data :ver-id] (:ver-id params))
-    (data/get-pub s)
+
+    ;; true is there to validate the pub after it comes back - JBG
+    (data/get-pub s true)
     )
 
   (defroute (str pubsroot "/edit") {:as params}

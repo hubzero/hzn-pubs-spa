@@ -169,12 +169,24 @@
            } "Submit publication"]
   )
 
+(defn- _submit-instructions [s]
+  (if (utils/valid? s)
+    [:div
+     [:header "Your publication is ready for submission!"] 
+     [:p "Please review your publication and make sure everything looks good."]
+     ]
+    [:div
+     [:header "Not quite yet."] 
+     [:p "Please complete Essential fields in order to submit."]
+     ]
+    )
+  )
+
 (defn aside [s]
   [:aside
    [:div.inner
     [:div.notification
-     [:header "Your publication is ready for submission!"]
-     [:p "Please review your publication and make sure everything looks good."]
+     (_submit-instructions s)   
      [:fieldset.buttons-aside
       (if (utils/valid? s) (submit-button s))
       [:a.btn.secondary {:href (str

@@ -32,13 +32,6 @@
     )
   )
 
-(defn- _date-valid? [s]
-  (if (and (not (get-in @s [:ui :errors :publication-date]))
-    (< (js/Date. (get-in @s [:data :publication-date])) (js/Date.)))
-    (swap! s assoc-in [:ui :errors :publication-date] ["Embargo date" "can not be in the past"])
-    ) 
-  )
-
 (defn authors-new-valid? [s]
   (swap! s assoc-in [:ui :errors]
          (reduce (fn [errors [k v]]
@@ -52,23 +45,59 @@
          )
   (= (count (get-in @s [:ui :errors])) 0)
   )
+ 
+(defn- _date-valid? [s errors]
+  (if (and (not (get-in @s [:ui :errors :publication-date]))
+    (< (js/Date. (get-in @s [:data :publication-date])) (js/Date.)))
+    (assoc errors :publication-date ["Embargo date" "can not be in the past"])
+    errors
+    ) 
+  )
+
+(defn- _terms-valid? [s errors]
+  (if (not (get-in @s [:data :terms])) 
+    (assoc errors :terms ["Terms" "must be agreed to"])
+    errors
+    ) 
+  )
+
+(defn- _ack-valid? [s errors]
+  (if (not (get-in @s [:data :ack]))
+    (assoc errors :ack ["Acknowledgement" "is required"])
+    errors
+    )
+  )
+
+(defn- _errors [s]
+  (->>
+    (reduce (fn [errors [k v]]
+              (if (= 0 (count (get-in @s [:data k])))
+                (assoc errors k v)
+                errors
+                )
+              ) {} {:title ["Title" "can not be empty"]
+                    :abstract ["Abstract" "can not be empty"]
+                    :publication-date ["Embargo date" "can not be empty"]
+                    :authors-list ["Authors"  "can not be empty"]
+                    :content ["Content" "can not be empty"]
+                    :tags ["Tags" "can not be empty"]
+                    :licenses ["Licenses" "can not be empty"]
+                    })   
+    (_date-valid? s)
+    (_terms-valid? s)
+    (_ack-valid? s) 
+    )
+  )
+
+(defn errors? [s]
+  (let [errors (_errors s)]
+    (swap! s assoc-in [:ui :errors] (_errors s))
+    (-> errors (count) (= 0)) 
+    ) 
+  )
 
 (defn valid? [s]
-  (swap! s assoc-in [:ui :errors]
-         (reduce (fn [errors [k v]]
-                   (if (= 0 (count (get-in @s [:data k])))
-                     (assoc errors k v)
-                     errors
-                     )
-                   ) {} {:title ["Title" "can not be empty"]
-                         :abstract ["Abstract" "can not be empty"]
-                         :publication-date ["Embargo date" "can not be empty"]
-                         :authors-list ["Authors"  "can not be empty"]
-                         })
-         )
-  (_date-valid? s)
-  (= (count (get-in @s [:ui :errors])) 0)
-  )
+  (-> (_errors s) (count) (= 0)))
 
 (defn file-count [files]
   (reduce (fn [c d]

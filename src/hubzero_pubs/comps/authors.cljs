@@ -7,19 +7,19 @@
     ) 
   )
 
-(defn user-click [s k u e]
-    (if-let [a (_author? s k (:id u))] 
-      (data/rm-author s (:id a))
-      (data/add-author s u)
-      )
-  )
-
 (defn- _author? [s k po-id]
   (->
     (group-by :project_owner_id (vals (get-in @s [:data k])))
     (get po-id)
     (first)
     )
+  )
+
+(defn user-click [s k u e]
+    (if-let [a (_author? s k (:id u))] 
+      (data/rm-author s (:id a))
+      (data/add-author s u)
+      )
   )
 
 (defn user [s k u]

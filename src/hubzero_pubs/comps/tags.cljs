@@ -132,7 +132,7 @@
   )
 
 (defn tags [s]
-  [:div#a-tags.field
+  [:div#a-tags.field.err {:class (if (get-in @s [:ui :errors :tags]) :with-error)}
    [:label {:for :tags} "Tags:"]
    [:div.field-wrapper
     (merge
@@ -142,6 +142,7 @@
       (tag-creating s)
       )
     ]
+    (ui/val-error s :tags)
    ]
   )
 
