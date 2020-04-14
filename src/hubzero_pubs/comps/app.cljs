@@ -117,7 +117,7 @@
    [:div.main
     [:div.subject [:a {:href "#"
                        :on-click #(edit-author s v %)
-                       } (:fullname v)] ]
+                       } (str (:firstname v) " " (:lastname v)) ] ]
     [:div.meta [:a {:href "#"
                     :on-click #(edit-author s v %)
                     } (:organization v)] ]

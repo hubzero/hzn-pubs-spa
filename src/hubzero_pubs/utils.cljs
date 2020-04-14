@@ -84,16 +84,15 @@
                     :licenses ["Licenses" "can not be empty"]
                     })   
     (_date-valid? s)
-    (_terms-valid? s)
     (_ack-valid? s) 
     )
   )
 
 (defn errors? [s]
-  (let [errors (_errors s)]
-    (swap! s assoc-in [:ui :errors] (_errors s))
-    (-> errors (count) (= 0)) 
-    ) 
+  (let [errors (->> (_errors s) (_terms-valid? s))]
+    (swap! s assoc-in [:ui :errors] errors)
+    (-> errors (count) (= 0))
+    )
   )
 
 (defn valid? [s]
