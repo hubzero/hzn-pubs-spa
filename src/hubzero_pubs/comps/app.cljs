@@ -111,20 +111,26 @@
   (options/handle-author false s e)
   )
 
+(defn- _get-name [v]
+  (or (:name v) (:fullname v) (str (:firstname v) " " (:lastname v)))
+  )
+
 (defn author [s k v id]
   [:li.item {:key id}
    (ui/icon s "#icon-user")
    [:div.main
     [:div.subject [:a {:href "#"
                        :on-click #(edit-author s v %)
-                       } (str (:firstname v) " " (:lastname v)) ] ]
+                       } (_get-name v)]]
     [:div.meta [:a {:href "#"
                     :on-click #(edit-author s v %)
                     } (:organization v)] ]
     [:div.ui.checkbox.inline.meta
-     [:input (merge {:type :checkbox
-                     :name :poc
-                     :on-change #(handle-poc-click s % id)} {:checked (get-in @s [:data k id :poc]) })]
+     [:input {:type :checkbox
+              :name :poc
+              :on-change #(handle-poc-click s % id)
+              :checked (get-in @s [:data k id :poc])
+              }]
      [:label (:for :poc) "Point of contact"]
      ]
     ]
@@ -348,7 +354,7 @@
    (textfield s "a-title" "Title:" "title")
    (textarea s "a-abstract" "Abstract:" "abstract")
    (collection s "a-content" "Content:" :content nil handle-files-options)
-   (collection s "a-authors" "Authors:" :authors-list (options/authors s) handle-author-options)
+   (collection s "a-authors" "Authors (drag to reorder):" :authors-list (options/authors s) handle-author-options)
    (tags/tags s)
    (licenses s)
    (agreements s)

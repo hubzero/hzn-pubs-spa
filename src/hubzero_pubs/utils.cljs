@@ -47,7 +47,7 @@
   )
  
 (defn- _date-valid? [s errors]
-  (if (and (not (get-in @s [:ui :errors :publication-date]))
+  (if (and (get-in @s [:data :publication-date])
     (< (js/Date. (get-in @s [:data :publication-date])) (js/Date.)))
     (assoc errors :publication-date ["Embargo date" "can not be in the past"])
     errors
@@ -77,7 +77,6 @@
                 )
               ) {} {:title ["Title" "can not be empty"]
                     :abstract ["Abstract" "can not be empty"]
-                    :publication-date ["Embargo date" "can not be empty"]
                     :authors-list ["Authors"  "can not be empty"]
                     :content ["Content" "can not be empty"]
                     :tags ["Tags" "can not be empty"]
