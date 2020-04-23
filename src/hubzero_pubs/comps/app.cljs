@@ -418,15 +418,6 @@
     )
   )
 
-(defn save-close [s e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (data/save-pub s #(routes/redirect (str "/projects/"
-                                          (get-in @s [:data :prj-id])
-                                          "/publications"
-                                          )))
-  )
-
 (defn aside-buttons [s]
   [:aside
    [:div.inner
@@ -439,7 +430,10 @@
                          (get-in @s [:data :ver-id])
                          )
               :on-click #(_submit-draft s %)} "Proceed with the draft"]
-     [:a.btn.secondary {:href "#" :on-click #(save-close s %)} "Save & Close"]
+     [:a.btn.secondary {:href (str "/projects/"
+                                   (get-in @s [:data :prj-id])
+                                   "/publications"
+                                   )} "Save & Close"]
 
      ]
     ]
@@ -455,10 +449,7 @@
                         (get-in @s [:data :ver-id])
                         )
              :on-click #(_submit-draft s %)} "Proceed with the draft"]
-    [:a.btn.secondary {:href (str "/projects/"
-                                  (get-in @s [:data :prj-id])
-                                  "/publications"
-                                  )} "Save & Close"]
+    
     ]
    ]
   )
