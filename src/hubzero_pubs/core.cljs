@@ -9,9 +9,6 @@
 
 (defonce s (r/atom {:terms "I and all publication authors have read and agree to PURR terms of deposit." 
                     :months ["January" "February" "March" "April" "May" "June" "July" "August" "September" "October" "November" "December"]
-                    :l [{:id 1 :name "foo"}
-                        {:id 2 :name "bar"}
-                        ]
                     }
                    ))
 

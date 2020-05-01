@@ -454,8 +454,25 @@
    ]
   )
 
+(defn- _get-state [s e]
+  (prn "GET STATE" (-> e .-target .-value))
+  (swap! s assoc :t (js/parseInt (-> e .-target .-value)))
+  (swap! s assoc-in [:cap :lock] true)
+  (data/get-state s)
+  )
+
+(defn history-slider [s]
+  [:input {:type :range
+           :min (get-in @s [:cap :min])
+           :max (get-in @s [:cap :max])
+           :value (get @s :t (get-in @s [:cap :max]))
+           :onInput #(_get-state s %)
+           }]
+  )
+
 (defn main-form [s]
   [:main
+   (history-slider s)
    [:form
     (essentials s) 
     (additional-details s)
@@ -551,9 +568,12 @@
    ])
 
 (defn- _save [s]
-  (prn "STATE" @s)
-  (if (utils/savable? s) (data/save-pub s))
-  (data/save-state s)
+  ;; Only save if we are not scrubbing history - JBG
+  (when (not (get-in @s [:cap :lock]))
+    (prn "STATE" @s)
+    (if (utils/savable? s) (data/save-pub s))
+    (data/save-state s)
+    )
   )
 
 (defn- _app [s]
