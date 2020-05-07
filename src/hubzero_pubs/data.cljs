@@ -110,8 +110,8 @@
   (go (let [res (<! (http/get (str api "/prjs/" (get-in @s [:data :prj-id]) "/files")
                               (options s)))]
         ;(prn (:body res))
-        (swap! s assoc :files (cljs.reader/read-string (:body res)))
-        (swap! s assoc-in [:ui :current-folder] [["Project files" (first (first (:files @s)))]])
+        (swap! s assoc-in [:ui :files] (cljs.reader/read-string (:body res)))
+        (swap! s assoc-in [:ui :current-folder] [["Project files" (first (first (get-in @s [:ui :files])))]])
         ))
   )
 

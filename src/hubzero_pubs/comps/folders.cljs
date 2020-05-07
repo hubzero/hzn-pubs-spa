@@ -48,7 +48,7 @@
   )
 
 (defn toggle-folder-files [s key index selected]
-  (as-> (:files @s) $
+  (as-> (get-in @s [:ui :files]) $
     (nth $ index) 
     (first $)
     (reduce (fn [c f]
@@ -66,7 +66,7 @@
                             )
                           ) c (last f)) c)
               )
-            (get-in @s [:data key]) (:files @s))  
+            (get-in @s [:data key]) (get-in @s [:ui :files]))  
 
     ;(swap! s assoc-in [:data key] $)
     )
@@ -75,18 +75,18 @@
 (defn folder-click [s key index e]
   (.stopPropagation e)
   (let [classes (-> e 
-      .-target
-      (utils/find-ancestor "li")
-      (.querySelector ".selected-indicator")
-      .-classList
-      )]
-      (toggle-folder-files s key index (not (boolean (some #{"selected"} (js/Array.from classes)))))
-      (.toggle classes "selected")
+                    .-target
+                    (utils/find-ancestor "li")
+                    (.querySelector ".selected-indicator")
+                    .-classList
+                    )]
+    (toggle-folder-files s key index (not (boolean (some #{"selected"} (js/Array.from classes)))))
+    (.toggle classes "selected")
     )
   )
 
 (defn _folder-selected? [s key index]
-  (as-> (:files @s) $
+  (as-> (get-in @s [:ui :files]) $
     (nth $ index) 
     (first $)
     (reduce (fn [c f]
@@ -99,12 +99,12 @@
 
                 c)
               )
-            true (:files @s)) 
+            true (get-in @s [:ui :files])) 
     )
   )
 
 (defn folder-selected? [s key index]
-  (if (= (count (:files @s)) 0) false (_folder-selected? s key index))
+  (if (= (count (get-in @s [:ui :files])) 0) false (_folder-selected? s key index))
   )
 
 (defn folder [s path name key index subpanel]
@@ -124,8 +124,8 @@
      name
      ]
     ]
-   (if (< index (count (:files @s)))
-     (subpanel s (:files @s) name key index)
+   (if (< index (count (get-in @s [:ui :files])))
+     (subpanel s (get-in @s [:ui :files]) name key index)
      )
    ]
   )

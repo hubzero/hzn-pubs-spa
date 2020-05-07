@@ -573,6 +573,7 @@
     (prn "STATE" @s)
     (if (utils/savable? s) (data/save-pub s))
     (data/save-state s)
+    (data/state-frame s)
     )
   )
 

@@ -148,7 +148,7 @@
     (panels/header s "Add files from project")  
     (progress s)
     (subheader s)
-    (container s (:files @s) key 0)
+    (container s (get-in @s [:ui :files]) key 0)
     ]
    ]
   )
