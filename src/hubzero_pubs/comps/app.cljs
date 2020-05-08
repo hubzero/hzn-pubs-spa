@@ -551,9 +551,7 @@
    ])
 
 (defn- _save [s]
-  (prn "STATE" @s)
   (if (utils/savable? s) (data/save-pub s))
-  (data/save-state s)
   )
 
 (defn- _app [s]

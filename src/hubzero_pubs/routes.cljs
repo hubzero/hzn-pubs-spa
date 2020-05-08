@@ -55,6 +55,7 @@
 
     ;; true is there to validate the pub after it comes back - JBG
     (data/get-pub s true)
+    (-> js/window (.scrollTo 0 0))
     )
 
   (defroute (str pubsroot "/edit") {:as params}
