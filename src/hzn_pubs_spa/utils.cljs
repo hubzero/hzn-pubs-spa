@@ -45,6 +45,21 @@
          )
   (= (count (get-in @s [:ui :errors])) 0)
   )
+
+(defn citations-manual-valid? [s]
+  (prn "ASFDSF citations-manual-valid?")
+  (swap! s assoc-in [:ui :errors]
+         (reduce (fn [errors [k v]]
+                   (if (= 0 (count (get-in @s [:data :citations-manual k])))
+                     (assoc errors k v)
+                     errors
+                     )
+                   ) {} {:citation-type ["Type" "can not be empty"]
+                         :title ["Title" "can not be empty"]
+                         })
+         )
+  (= (count (get-in @s [:ui :errors])) 0)
+  )
  
 (defn- _date-valid? [s errors]
   (if (and (get-in @s [:data :publication-date])

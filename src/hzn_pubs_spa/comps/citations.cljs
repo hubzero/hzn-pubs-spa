@@ -10,8 +10,10 @@
 (defn create-citation [s e]
   (.preventDefault e)
   (.stopPropagation e)
-  (data/create-citation s)
-  (panels/close s e)
+  (when (utils/citations-manual-valid? s)
+    (data/create-citation s)
+    (panels/close s e)   
+    )
   )
 
 (defn add-doi [s e]
@@ -71,7 +73,7 @@
   )
 
 (defn text [s key f]
-  [:div.field {:key (:name f)}
+  [:div.field.anchor.err {:key (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
    [:label {:for :title} (str (:label f) ":")]
    [:input {:type :text
             :value (get-in @s [:data key (:name f)])
@@ -80,7 +82,7 @@
                         (.stopPropagation e)
                         (swap! s assoc-in [:data key (:name f)] (-> e .-target .-value))
                         )}]
-
+   (ui/val-error s (:name f))
    ]
   )
 
@@ -120,7 +122,7 @@
   )
 
 (defn dropdown [s key f]
-  [:div.field {:key (:name f)}
+  [:div.field.anchor.err {:key (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
    [:label {:for (:name f)} (str (:label f) ":")]
    [:div.proto-dropdown {:class (if (get-in @s [:ui key (:name f)]) :open)}
     [:div.input-wrap
@@ -143,6 +145,7 @@
               :on-click #(_handle-dropdown s key f %)
               } (ui/icon s "#icon-left")]
     ]
+   (ui/val-error s (:name f))
    ]
   )
 
