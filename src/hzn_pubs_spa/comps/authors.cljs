@@ -60,10 +60,7 @@
 (defn- _handle-author [s k e]
   (let [u (get-in @s [:data k])]
     (if (get-in @s [:ui :author-options :is-new]) 
-      (data/new-author s (assoc u
-                                :fullname (str (:firstname u) " " (:lastname u))
-                                :id (:id u 0)
-                                ))
+      (data/new-author s (assoc u :fullname (str (:firstname u) " " (:lastname u))))
       (data/update-author s u)
       ) 
     (panels/close s e)

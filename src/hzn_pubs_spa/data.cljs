@@ -144,6 +144,7 @@
 
 (defn new-author
   [s author]
+  (prn "AUTHOR >>>" author)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
