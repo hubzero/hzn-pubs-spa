@@ -98,16 +98,11 @@
   (data/update-author s (get-in @s [:data :authors-list id]))
   )
 
-(defn- _fillname [v]
-  (assoc v
-         :firstname (or (:firstname v) (first (clojure.string/split (:fullname v) #" ")))
-         :lastname (or (:lastname v) (last (clojure.string/split (:fullname v) #" "))))
-  )
 
 (defn edit-author [s v e]
   (.preventDefault e)
   (.stopPropagation e)
-  (swap! s assoc-in [:data :authors-new] (_fillname v))
+  (swap! s assoc-in [:data :authors-new] (utils/fillname v))
   (options/handle-author false s e)
   )
 

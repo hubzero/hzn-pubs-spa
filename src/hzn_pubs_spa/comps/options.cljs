@@ -9,6 +9,15 @@
 (defn close [s]
   (swap! s assoc-in [:ui :options] nil)
   )
+
+(defn handle-author [is-new s e]
+   (.preventDefault e)
+   (.stopPropagation e)
+   (panels/show-overlay s true)
+   (swap! s assoc-in [:ui :panels :authors-new] true)
+   (swap! s assoc-in [:ui :author-options :is-new] is-new)
+   (close s) ;; why?
+  )
  
 (defn item [s i name f]
   [:li
@@ -32,12 +41,21 @@
     )
   )
 
+(defn- _edit-author [e s v]
+  (.preventDefault e) 
+  (.stopPropagation e)
+  (swap! s assoc-in [:data :authors-new] (utils/fillname v))
+  (handle-author false s e)
+  )
+
 (defn items [s k v id]
   [:div.options-list.--as-panel {:class (if (get-in @s [:ui :options k id]) :open) }
    [:div.inner
     (merge
       [:ul]
-      ;(item s "#icon-edit" "Rename" #())
+      (if (= k :authors-list)
+        (item s "#icon-edit" "Rename" (fn [s e] (_edit-author e s v)))
+        )
       ;(item s "#icon-download" "Download" #())
       (item s "#icon-delete" "Remove" (fn [s e]
                                         (_remove s e k id)
@@ -62,14 +80,6 @@
    ]
   )
 
-(defn handle-author [is-new s e]
-   (.preventDefault e)
-   (.stopPropagation e)
-   (panels/show-overlay s true)
-   (swap! s assoc-in [:ui :panels :authors-new] true)
-   (swap! s assoc-in [:ui :author-options :is-new] is-new)
-   (close s) ;; why?
-  )
 
 (defn handle-add-author [s e]
   (.preventDefault e)

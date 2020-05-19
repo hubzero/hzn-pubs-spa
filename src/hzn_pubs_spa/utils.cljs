@@ -122,3 +122,10 @@
   (into {} (for [[k v] m] [(keyword k) v]))
   )
 
+(defn fillname [v]
+  (assoc v
+         :firstname (or (:firstname v) (first (clojure.string/split (:fullname v) #" ")))
+         :lastname (or (:lastname v) (last (clojure.string/split (:fullname v) #" "))))
+  )
+
+
