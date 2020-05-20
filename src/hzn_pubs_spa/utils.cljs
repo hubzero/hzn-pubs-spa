@@ -128,4 +128,11 @@
          :lastname (or (:lastname v) (last (clojure.string/split (:fullname v) #" "))))
   )
 
-
+(defn water-citation [s c]
+  (swap! s assoc-in [:data :citations-manual]
+         (-> c
+             (assoc :book (:booktitle c))
+             )
+         )
+  )
+ 

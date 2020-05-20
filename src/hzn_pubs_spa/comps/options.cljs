@@ -64,12 +64,20 @@
    ]
   )
 
+(defn- _edit-citation [e s c]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (utils/water-citation s c)
+  (handle-manual s e)
+  )
+
 (defn citation [s k c]
   (prn "CITATION" c)
   [:div.options-list.--as-panel {:class (if (get-in @s [:ui :options :citation (:id c)]) :open) }
    [:div.inner
     (merge
       [:ul]
+      (item s "#icon-edit" "Edit" (fn [s e] (_edit-citation e s c)))
       (item s "#icon-delete" "Remove" (fn [s e]
                                         (.preventDefault e)
                                         (.stopPropagation e)

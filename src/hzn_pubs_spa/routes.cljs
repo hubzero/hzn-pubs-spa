@@ -35,17 +35,24 @@
 
 (def pubsroot "/pubs/:id/v/:ver-id")
 
+(defn- _new-pub [s prj-id]
+  (swap! s assoc-in [:ui :summary] false)
+  (swap! s assoc-in [:data :prj-id] prj-id)
+  ;; Create a new pub - JBG
+  (data/save-pub s #(redirect (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
+                                   "/v/" (get-in @s [:data :ver-id])
+                                   "/edit")
+                              )) 
+  )
+
 (defn app-routes [s]
   (secretary/set-config! :prefix "#")
 
   (defroute "/prjs/:id" {:as params}
-    (swap! s assoc-in [:ui :summary] false)
-    (swap! s assoc-in [:data :prj-id] (:id params))
-    ;; Create a new pub - JBG
-    (data/save-pub s #(redirect (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
-                                     "/v/" (get-in @s [:data :ver-id])
-                                     "/edit")
-                                ))
+    (if (not (get-in @s [:data :pub-id]))
+      (_new-pub s (:id params))
+      (redirect (str "/projects/" (:id params) "/publications"))
+      )
     )
 
   (defroute (str pubsroot) {:as params}

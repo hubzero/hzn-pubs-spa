@@ -140,18 +140,11 @@
    ]
   )
 
-(defn- _water-citation [s c]
-  (swap! s assoc-in [:data :citations-manual]
-         (-> c
-             (assoc :book (:booktitle c))
-             )
-         )
-  )
 
 (defn edit-citation [s c e]
   (.preventDefault e)
   (.stopPropagation e)
-  (_water-citation s c)
+  (utils/water-citation s c)
   (options/handle-manual s e)
   )
 

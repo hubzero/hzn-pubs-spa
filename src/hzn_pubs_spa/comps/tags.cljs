@@ -60,7 +60,7 @@
   (.stopPropagation e)
   (swap! s assoc-in [:ui :tag-str] v)
   (swap! s assoc :tag-query v)
-  (if (not (empty? v))
+  (if (and (not (empty? v)) (> (count v) 2))
     (data/search-tags s)
     )
   )
