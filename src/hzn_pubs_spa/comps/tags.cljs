@@ -35,9 +35,9 @@
 (defn- _result-click [s tag e]
   (.preventDefault e)
   (.stopPropagation e)
-  (swap! s dissoc :tag-query)
   (data/add-tag s (:raw_tag tag))
   (swap! s assoc-in [:ui :tag-str] "")
+  (swap! s dissoc :tag-query) 
   )
 
 (defn- _result [s tag]
@@ -49,7 +49,6 @@
   )
 
 (defn- _results [s]
-  (prn "l;djssaldkfjasldkfjsda")
   (merge [:ul.results]
          (doall (map #(_result s %) (:tag-results @s)))
          ) 
@@ -59,8 +58,8 @@
   (.preventDefault e)
   (.stopPropagation e)
   (swap! s assoc-in [:ui :tag-str] v)
-  (swap! s assoc :tag-query v)
-  (if (and (not (empty? v)) (> (count v) 2))
+  (when (and (not (empty? v)) (> (count v) 2))
+    (swap! s assoc :tag-query v)
     (data/search-tags s)
     )
   )
@@ -124,10 +123,7 @@
 (defn- _sort [tags]
   (->> tags
        (vals)
-       (group-by :raw_tag)
-       (into (sorted-map))
-       (vals)
-       (map first)
+       (sort-by #(clojure.string/lower-case (:raw_tag %)))
        )
   )
 

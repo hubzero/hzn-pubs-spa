@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-  ;(secretary/dispatch! "/error")
-  ;(set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
+  (secretary/dispatch! "/error")
+  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -367,7 +367,8 @@
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
           (prn "SENT PUB >>>" $)
           (prn "<<< RECEIVED"(:body res))
-          (get-pub s) 
+          (get-pub s)
+          ;(set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
           ))
     )
   )

@@ -13,9 +13,9 @@
 
 ;; TODO: Remove, I'm a placeholder! - JBG
 (defn set-html! [content]
-;    (-> (js/document.getElementById "app") 
-;        (aset "innerHTML" content) 
-;      )
+    (-> (js/document.getElementById "app") 
+        (aset "innerHTML" content) 
+      )
   )
 ;; END TODO
 
