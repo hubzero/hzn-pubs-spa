@@ -35,9 +35,9 @@
 (defn authors-new-valid? [s]
   (swap! s assoc-in [:ui :errors]
          (reduce (fn [errors [k v]]
-                   (if (= 0 (count (get-in @s [:data :authors-new k])))
-                     (assoc errors k v)
-                     errors
+                   (as-> (get-in @s [:data :authors-new k]) $
+                     (if $ (clojure.string/trim $) $)
+                     (if (= 0 (count $)) (assoc errors k v) errors)
                      )
                    ) {} {:firstname ["Firstname" "can not be empty"]
                          :lastname ["Lastname" "can not be empty"]
@@ -47,7 +47,6 @@
   )
 
 (defn citations-manual-valid? [s]
-  (prn "ASFDSF citations-manual-valid?")
   (swap! s assoc-in [:ui :errors]
          (reduce (fn [errors [k v]]
                    (if (= 0 (count (get-in @s [:data :citations-manual k])))
