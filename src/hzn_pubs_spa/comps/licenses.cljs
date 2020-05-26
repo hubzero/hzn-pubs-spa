@@ -39,12 +39,22 @@
    ]
   )
 
+(defn suggest-link [s]
+  [:li.with-meta
+   [:div.inner
+    [:p "Don't see a license in the list above that you would like to use? You can "
+     [:a {:href (str "/projects/" (get-in @s [:data :prj-id]) "/publications/" (get-in @s [:data :pub-id]) "?action=suggest_license&version=1")} "suggest a license"]]  
+    ]
+   ]
+  )
+
 (defn licenses [s k]
   (merge
     [:ul.ui.item-selector]
     (doall
       (map #(license s k %) (:licenses @s))
       )
+    (suggest-link s)
     )
   )
 
