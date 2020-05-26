@@ -336,12 +336,13 @@
                                   (mutate/coerce)
                                   (swap! s assoc :data)
                                   )
+                             (get-prj s)
                              (get-files s)
                              (get-authors s)
                              (get-tags s)
                              (get-license s)
                              (get-citations s)
-                             (usage s)
+                             ;(usage s)
                              ))
         ))
   )
@@ -383,7 +384,9 @@
 
 (defn get-prj [s]
   (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
+        (prn "PRJ >>>>>" (:body res))
         (_handle-res s res (fn [s res]
+                             (swap! s assoc-in [:data :prj] (:body res))
                              ;; Load the disk usage for the project - JBG
                              (usage s)
                              ))
