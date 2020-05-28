@@ -64,6 +64,15 @@
    ]
   )
 
+(defn handle-manual [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (data/get-citation-types s)
+  (panels/show-overlay s true)
+  (swap! s assoc-in [:ui :panels :citations-manual] true)
+  (close s)
+  )
+
 (defn- _edit-citation [e s c]
   (.preventDefault e)
   (.stopPropagation e)
@@ -119,15 +128,6 @@
   (.stopPropagation e)
   (panels/show-overlay s true)
   (swap! s assoc-in [:ui :panels :citations-doi] true)
-  (close s)
-  )
-
-(defn handle-manual [s e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (data/get-citation-types s)
-  (panels/show-overlay s true)
-  (swap! s assoc-in [:ui :panels :citations-manual] true)
   (close s)
   )
 

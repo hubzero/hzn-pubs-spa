@@ -7,6 +7,7 @@
     [hzn-pubs-spa.routes :as routes]
     [hzn-pubs-spa.comps.panels :as panels]
     [hzn-pubs-spa.comps.files :as files]
+    [hzn-pubs-spa.comps.dropdown :as dropdown]
     [hzn-pubs-spa.comps.tags :as tags]
     [hzn-pubs-spa.comps.authors :as authors]
     [hzn-pubs-spa.comps.options :as options] 
@@ -327,10 +328,17 @@
   (panels/show s e true key)
   )
 
-(defn handle-author-options [s e key]
+(defn handle-author-options [s e k]
   (.preventDefault e)
   (.stopPropagation e)
   (swap! s assoc-in [:ui :options :authors] true) 
+  )
+
+(defn master-types [s]
+  (dropdown/dropdown s :master-type {:name :master-type
+                                     :label "Master Type"
+                                     :options (map #(:type %) (:master-types @s))
+                                     })
   )
 
 (defn essentials [s]
@@ -339,6 +347,7 @@
     [:legend "Essentials"]
     [:div.note "all fields required"]
     ]
+   (master-types s)
    (textfield s "a-title" "Title:" "title")
    (textarea s "a-abstract" "Abstract:" "abstract")
    (collection s "a-content" "Content:" :content nil handle-files-options)

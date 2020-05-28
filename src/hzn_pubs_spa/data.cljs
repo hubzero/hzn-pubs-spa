@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-  (secretary/dispatch! "/error")
-  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
+;  (secretary/dispatch! "/error")
+;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -325,7 +325,19 @@
     )
   )
 
-(defn get-pub [s & [validate?]]
+
+(defn get-prj [s]
+  (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
+        (prn "PRJ >>>>>" (:body res))
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc-in [:data :prj] (:body res))
+                             ;; Load the disk usage for the project - JBG
+                             (usage s)
+                             ))
+        ))
+  )
+
+(defn _get-pub [s]
   (go (let [res (<! (http/get (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
@@ -333,7 +345,7 @@
         (prn "<<< PUB" (:body res))
         (_handle-res s res (fn [s res]
                              (->> (:body res)
-                                  (mutate/coerce)
+                                  (mutate/coerce s)
                                   (swap! s assoc :data)
                                   )
                              (get-prj s)
@@ -342,15 +354,27 @@
                              (get-tags s)
                              (get-license s)
                              (get-citations s)
-                             ;(usage s)
                              ))
         ))
   )
 
+(defn get-master-types [s]
+  (go (let [res (<! (http/get (str url "/types")
+                              (options s)))]
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc :master-types (:body res))
+                             (_get-pub s)
+                             ))
+        ))
+  )
+ 
+(defn get-pub [s]
+  (get-master-types s)
+  )
 
 (defn save-pub [s & [callback]]
   (as-> (:data @s) $
-    (mutate/prepare $)
+    (mutate/prepare s $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
           (prn "SENT PUB >>>" $)
           (prn "<<< RECEIVED"(:body res))
@@ -364,7 +388,7 @@
 
 (defn submit-pub [s]
   (as-> (:data @s) $
-    (mutate/prepare $)
+    (mutate/prepare s $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
           (prn "SENT PUB >>>" $)
           (prn "<<< RECEIVED"(:body res))
@@ -382,16 +406,6 @@
         ))
   )
 
-(defn get-prj [s]
-  (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
-        (prn "PRJ >>>>>" (:body res))
-        (_handle-res s res (fn [s res]
-                             (swap! s assoc-in [:data :prj] (:body res))
-                             ;; Load the disk usage for the project - JBG
-                             (usage s)
-                             ))
-        ))
-  )
 
 (defn add-tag
   "s is the state, tag-str is the tag as a str - JBG"
