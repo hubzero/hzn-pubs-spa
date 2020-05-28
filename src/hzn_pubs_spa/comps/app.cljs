@@ -527,6 +527,10 @@
    ]
   )
 
+(defn master-type [s]
+  [:span.restype.indlist[:span.dataset "dataset"]]
+  )
+
 (defn- _breadcrumbs [s]
   [:div
    [:h3.publications.c-header
@@ -551,6 +555,8 @@
                         (get-in @s [:data :pub-id])
                         )
                 } (if (> (count (get-in @s [:data :title])) 0) (get-in @s [:data :title]) "Untitled")]]
+    " » "
+    (master-type s)
     ]
    ]
   )
