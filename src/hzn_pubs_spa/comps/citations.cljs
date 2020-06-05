@@ -38,15 +38,25 @@
    [:input {:type :text :onChange #(_search s (-> % .-target .-value))}]
    ]
   )
+(defn- handle-click [s c e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  ;; If it has an id, it's from our DB so just try it to the pub
+  (if (:id c)
+    (data/add-citation s c) 
+    ;; No id? probably from doi.org, will need to be added to our DB
+    (do
+      (swap! s assoc-in [:data :citations-manual] c)
+      (data/create-citation s)
+      (panels/close s e)   
+      )
+    )
+  )
 
 (defn citation [s key c]
   [:p.formatted-meta.key {:class (:id c)
                           :key (:id c)
-                          :on-click (fn [e]
-                                      (.preventDefault e)
-                                      (.stopPropagation e)
-                                      (data/add-citation s c)
-                                      )
+                          :on-click #(handle-click s c %)
                           } (utils/format-citation c)]
   )
 
@@ -136,7 +146,7 @@
                                   {:name :edition :label "Edition" :type :text}
                                   {:name :publisher :label "Publisher" :type :text}
                                   {:name :url :label "URL" :type :text}
-                                  {:name :citation :label "Formatted citation" :type :textfield :hint "IF PROVIDED, FORMATTED CITATION WILL APPEAR AS TYPED. RECOMMENDED FORMAT: APA"}
+                                  {:name :formatted :label "Formatted citation" :type :textfield :hint "IF PROVIDED, FORMATTED CITATION WILL APPEAR AS TYPED. RECOMMENDED FORMAT: APA"}
                                   ] )) 
     ]
    [:hr]

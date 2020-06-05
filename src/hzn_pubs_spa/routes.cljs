@@ -61,7 +61,7 @@
     (swap! s assoc-in [:data :ver-id] (:ver-id params))
 
     ;; true is there to validate the pub after it comes back - JBG
-    (data/get-pub s true)
+    (data/get-pub s)
     (-> js/window (.scrollTo 0 0))
     )
 

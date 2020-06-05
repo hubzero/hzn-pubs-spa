@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-;  (secretary/dispatch! "/error")
-;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
+  (secretary/dispatch! "/error")
+  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -362,12 +362,16 @@
   (go (let [res (<! (http/get (str url "/types")
                               (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s assoc :master-types (:body res))
+                             (->>
+                               (:body res)
+                               (filter #(some #{(:type %)} ["File(s)" "Databases" "Series"]))
+                               (swap! s assoc :master-types)
+                               )
                              (_get-pub s)
                              ))
         ))
   )
- 
+
 (defn get-pub [s]
   (get-master-types s)
   )
@@ -392,8 +396,11 @@
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
           (prn "SENT PUB >>>" $)
           (prn "<<< RECEIVED"(:body res))
-          (get-pub s)
-          ;(set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
+          ;(get-pub s)
+          (_handle-res s res (fn [s res]
+                               (set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
+
+                               ))
           ))
     )
   )
