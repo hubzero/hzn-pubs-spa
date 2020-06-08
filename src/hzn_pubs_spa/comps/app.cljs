@@ -431,7 +431,13 @@
                                    (get-in @s [:data :prj-id])
                                    "/publications"
                                    )} "Save & Close"]
-
+     ;; https://localhost/projects/broodje/publications/274/continue
+     [:a.btn.secondary {:href (str "/projects/"
+                                   (get-in @s [:data :prj-id])
+                                   "/publications/"
+                                   (get-in @s [:data :pub-id])
+                                   "/continue"
+                                   )} "Switch to classic"]
      ]
     ]
    ]

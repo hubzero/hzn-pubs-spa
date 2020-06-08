@@ -377,16 +377,18 @@
   )
 
 (defn save-pub [s & [callback]]
-  (as-> (:data @s) $
-    (mutate/prepare s $)
-    (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
-          (prn "SENT PUB >>>" $)
-          (prn "<<< RECEIVED"(:body res))
-          (_handle-res s res (fn [s res]
-                               (swap! s update :data merge (:body res))
-                               (if callback (callback))
-                               ))
-          ))
+  (if (not (= (get-in @s [:data :state]) 1))
+    (as-> (:data @s) $
+      (mutate/prepare s $)
+      (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
+            (prn "SENT PUB >>>" $)
+            (prn "<<< RECEIVED"(:body res))
+            (_handle-res s res (fn [s res]
+                                 (swap! s update :data merge (:body res))
+                                 (if callback (callback))
+                                 ))
+            ))
+      )  
     )
   )
 
@@ -394,12 +396,11 @@
   (as-> (:data @s) $
     (mutate/prepare s $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
-          (prn "SENT PUB >>>" $)
-          (prn "<<< RECEIVED"(:body res))
+          (prn "SUBMIT PUB >>>" $)
+          (prn "<<< RECEIVED" res)
           ;(get-pub s)
           (_handle-res s res (fn [s res]
                                (set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
-
                                ))
           ))
     )
