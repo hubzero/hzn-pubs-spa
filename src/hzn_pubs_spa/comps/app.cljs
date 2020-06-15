@@ -69,6 +69,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -84,6 +85,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -133,6 +135,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -162,6 +165,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options :citation (:id c)] true)
                               )}
     (ui/icon s "#icon-dots")

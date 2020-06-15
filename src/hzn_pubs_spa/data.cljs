@@ -22,15 +22,7 @@
     )
   )
 
-(defn options [s]
-  {
-   ;:with-credentials? true
-   :headers {
-             "Accept" "application/edn"
-             "Content-Type" "application/edn"
-             }
-   }
-  )
+(defn options [s] {})
 
 (defn get-user [s]
   (go (let [res (<! (http/get (str url "/users/me")
@@ -44,12 +36,10 @@
 (defn add-file
   "s is the state, file is a map - :type, :index, :path, :name - JBG"
   [s file]
-  (prn "ADD-FILE" file)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/files")  {:edn-params file}))]
-        (prn "FILE ADDED <<<<<< " res)
         (as-> (:body res) $
           (:generated_key $)
           (swap! s assoc-in [:data (:type file) $] (assoc file :id $))
@@ -60,7 +50,6 @@
 (defn rm-file
   "s is the state, k is the type - :content, :images, :support-docs, and file-id - JBG"
   [s k file-id]
-  (prn "RM-FILE" k file-id)
   (go (let [res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -75,7 +64,6 @@
 (defn ls-files [s]
   (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id]) "/files")
                               (options s)))]
-        ;(prn (:body res))
         (swap! s assoc :files (cljs.reader/read-string (:body res)))
         (swap! s assoc-in [:ui :current-folder] [["Project files" (first (first (:files @s)))]])
         ))
@@ -111,11 +99,7 @@
 (defn search-users [s]
   (go (let [res (<! (http/post (str url "/users/search")
                                {:edn-params {:q (:user-query @s)}}
-                               ))]
-        (prn "USER RESPONSE" (:body res))
-        (swap! s assoc :user-results (:body res))
-        ))
-  )
+                               ))] (swap! s assoc :user-results (:body res)))))
 
 (defn get-authors [s]
   (go (let [res (<! (http/get (str url
@@ -137,19 +121,16 @@
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/authors")  {:edn-params author}))]
-        (prn "<<< AUTHOR" (:body res))
         (get-authors s)
         ))
   )
 
 (defn new-author
   [s author]
-  (prn "AUTHOR >>>" author)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/authors/new") {:edn-params author}))]
-        (prn "<<< OWNER" (:body res))
         (as-> (:body res) $
           (:generated_key $)
           (assoc author :id $)
@@ -161,22 +142,15 @@
 
 (defn update-author
   [s author]
-  (prn "UPDATE AUTHOR >>>>" author)
   (go (let [res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/authors/" (:id author)) {:edn-params author}))]
-        (_handle-res s res (fn [s res]
-                             (prn "<<< UPDATED AUTHOR" (:body res))
-                             (get-authors s)
-                             ))
-        ))
-  )
+        (_handle-res s res (fn [s res] (get-authors s))))))
 
 (defn rm-author 
   "s is the state, and author-id - JBG"
   [s author-id]
-  (prn "REMOVING AUTHOR" author-id)
   (go (let [res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -190,19 +164,17 @@
 
 (defn get-licenses [s]
   (go (let [res (<! (http/get (str url "/licenses") (options s)))]
-        ;(prn (:body res))
-        (->>
-          (cljs.reader/read-string (:body res))
-          (swap! s assoc :licenses))
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc :licenses (:body res))
+                             ))
         ))
   )
 
 (defn search-citations [s]
   (go (let [res (<! (http/post (str url "/citations/search") {:edn-params {:doi (:doi-query @s)}}
                                ))]
-        (prn "CITATIONS<<<<<<<" (:body res))
-        (swap! s assoc :doi-results (:body res)) 
-        ))
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc :doi-results (:body res))))))
   )
 
 (defn get-citation-types [s]
@@ -217,12 +189,10 @@
 (defn add-citation
   "s is the state, tag-str is the tag as a str - JBG"
   [s c]
-  (prn "ADDING CITATION" c)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/citations")  {:edn-params c}))]
-        (prn "<<< CITATION" (:body res))
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :citations] assoc (:id c) c)
                              ))
@@ -232,13 +202,11 @@
 (defn rm-citation
   "s is the state, and citation-id - JBG"
   [s citation-id]
-  (prn "RM CITATION>>>" citation-id)
   (go (let [res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
                                       "/citations/" citation-id) 
                                  (options s)))]
-        (prn "<<< RM CITATION" citation-id)
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :citations] dissoc citation-id)
                              ))
@@ -248,8 +216,6 @@
 (defn create-citation [s]
   (go (let [c (get-in @s [:data :citations-manual])
             res (<! (http/post (str url "/citations") {:edn-params c}))]
-        (prn "CREATE CITATION >>>>> " c)
-        (prn "<<<< CITATION" (:body res))
         (->>
           (:body res)
           (:generated_key)
@@ -266,8 +232,6 @@
 (defn usage [s]
   (go (let [data (map #(:path %) (vals (get-in @s [:data :content] {})))
             res (<! (http/post (str url "/prjs/" (get-in @s [:data :prj-id]) "/usage" ) {:edn-params data}))]
-        (prn "USAGE >>>" data)
-        (prn "<<< USAGE" (:body res))
         (swap! s assoc :usage (:body res))
         ))
   )
@@ -278,7 +242,6 @@
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/tags") 
                               (options s)))]
-        (prn "<<< TAGS" (:body res))
         (_handle-res s res (fn [s res]
                              (swap! s assoc-in [:data :tags]
                                     (->>
@@ -298,7 +261,6 @@
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/citations") 
                               (options s)))]
-        (prn "<<< CITATIONS" (:body res))
         (_handle-res s res (fn [s res]
                              (swap! s assoc-in [:data :citations]
                                     (->>
@@ -317,7 +279,6 @@
   (if-let [license-type (get-in @s [:data :license_type])]
     (go (let [res (<! (http/get (str url "/licenses/" license-type)
                                 (options s)))]
-          (prn "<<< LICENSE" (:body res))
           (_handle-res s res (fn [s res]
                                (swap! s assoc-in [:data :licenses] (:body res))
                                ))
@@ -328,7 +289,6 @@
 
 (defn get-prj [s]
   (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
-        (prn "PRJ >>>>>" (:body res))
         (_handle-res s res (fn [s res]
                              (swap! s assoc-in [:data :prj] (:body res))
                              ;; Load the disk usage for the project - JBG
@@ -342,7 +302,6 @@
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
                                    ) (options s)))]
-        (prn "<<< PUB" (:body res))
         (_handle-res s res (fn [s res]
                              (->> (:body res)
                                   (mutate/coerce s)
@@ -381,8 +340,6 @@
     (as-> (:data @s) $
       (mutate/prepare s $)
       (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
-            (prn "SENT PUB >>>" $)
-            (prn "<<< RECEIVED"(:body res))
             (_handle-res s res (fn [s res]
                                  (swap! s update :data merge (:body res))
                                  (if callback (callback))
@@ -396,9 +353,6 @@
   (as-> (:data @s) $
     (mutate/prepare s $)
     (go (let [res (<! (http/post (str url "/pubs") {:edn-params $}))]
-          (prn "SUBMIT PUB >>>" $)
-          (prn "<<< RECEIVED" res)
-          ;(get-pub s)
           (_handle-res s res (fn [s res]
                                (set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
                                ))
@@ -418,12 +372,10 @@
 (defn add-tag
   "s is the state, tag-str is the tag as a str - JBG"
   [s tag-str]
-  (prn "ADDING TAG" tag-str)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/tags")  {:edn-params {:tag tag-str}}))]
-        (prn "<<< TAG" (:body res))
         (get-tags s)
         (swap! s assoc-in [:ui :tag] false)
         ))
@@ -447,7 +399,6 @@
   (go (let [res (<! (http/post (str url "/tags/search")
                                {:edn-params {:q (:tag-query @s)}}
                                ))]
-        (prn "SEARCH TAG RESPONSE" (:body res))
         (swap! s assoc :tag-results (:body res))
         ))
   )
