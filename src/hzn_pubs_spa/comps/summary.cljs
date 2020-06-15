@@ -1,8 +1,8 @@
-(ns hubzero-pubs.comps.summary
+(ns hzn-pubs-spa.comps.summary
   (:require 
-    [hubzero-pubs.utils :as utils] 
-    [hubzero-pubs.data :as data] 
-    [hubzero-pubs.comps.ui :as ui] 
+    [hzn-pubs-spa.utils :as utils] 
+    [hzn-pubs-spa.data :as data] 
+    [hzn-pubs-spa.comps.ui :as ui] 
     )  
   )
 
@@ -125,6 +125,7 @@
                [[:data :abstract] "Abstract" :text false]
                [[:data :content] "Content" :files false]
                [[:data :authors-list] "Authors" :authors-list false]
+               [[:data :tags] "Tags" :tags false]
                [[:data :licenses] "License" :license false]
                [[:terms] "Agreements" :text false]
                ]) 
@@ -134,7 +135,6 @@
   (_section s [[[:data :images] "Image Gallery" :images false]
                [[:data :url] "External website URL" :text false]
                [[:data :support-docs] "Supporting documents" :files false]
-               [[:data :tags] "Tags" :tags false]
                [[:data :citations] "Citations" :citations false]
                [[:data :release-notes] "Version release notes" :text false]
                ])

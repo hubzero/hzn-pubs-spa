@@ -1,9 +1,9 @@
-(ns hubzero-pubs.core
+(ns hzn-pubs-spa.core
   (:require [reagent.core :as r]
-            [hubzero-pubs.routes :as routes]
-            [hubzero-pubs.utils :as utils]
-            [hubzero-pubs.data :as data]
-            [hubzero-pubs.comps.app :as app]
+            [hzn-pubs-spa.routes :as routes]
+            [hzn-pubs-spa.utils :as utils]
+            [hzn-pubs-spa.data :as data]
+            [hzn-pubs-spa.comps.app :as app]
             )
   )
 

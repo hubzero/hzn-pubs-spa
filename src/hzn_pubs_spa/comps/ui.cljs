@@ -1,4 +1,4 @@
-(ns hubzero-pubs.comps.ui)
+(ns hzn-pubs-spa.comps.ui)
 
 (defn icon [s i]
   [:div {:class "icon"} [:svg [:use {:xlinkHref i}]]]

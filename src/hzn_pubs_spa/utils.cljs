@@ -1,4 +1,4 @@
-(ns hubzero-pubs.utils
+(ns hzn-pubs-spa.utils
   )
 
 (defn find-ancestor [el sel]
@@ -15,14 +15,17 @@
   )
 
 (defn format-citation [c]
-  (str (:author c) ". "
-       (:year c) ". "
-       (:title c) ". "
-       (:journal c) ", "
-       (:volume c) ", "
-       (:pages c) ". "
-       "doi:" (:doi c)
-       ) 
+  (if (and (:formatted c) (> (count (:formatted c)) 0)) 
+    (:formatted c) 
+    (str (if (:author c) (str (:author c) ". "))
+         (if (:year c) (str (:year c) ". "))
+         (if (:title c) (str (:title c) ". "))
+         (if (:journal c) (str (:journal c) ", " ))
+         (if (:volume c) (str (:volume c) ", "))
+         (if (:pages c) (str (:pages c) ". "))
+         (if (:doi c) (str "doi:" (:doi c)))
+         ) 
+    )
   )
 
 (defn savable? [s]
@@ -35,12 +38,26 @@
 (defn authors-new-valid? [s]
   (swap! s assoc-in [:ui :errors]
          (reduce (fn [errors [k v]]
-                   (if (= 0 (count (get-in @s [:data :authors-new k])))
-                     (assoc errors k v)
-                     errors
+                   (as-> (get-in @s [:data :authors-new k]) $
+                     (if $ (clojure.string/trim $) $)
+                     (if (= 0 (count $)) (assoc errors k v) errors)
                      )
                    ) {} {:firstname ["Firstname" "can not be empty"]
                          :lastname ["Lastname" "can not be empty"]
+                         })
+         )
+  (= (count (get-in @s [:ui :errors])) 0)
+  )
+
+(defn citations-manual-valid? [s]
+  (swap! s assoc-in [:ui :errors]
+         (reduce (fn [errors [k v]]
+                   (if (= 0 (count (get-in @s [:data :citations-manual k])))
+                     (assoc errors k v)
+                     errors
+                     )
+                   ) {} {:citation-type ["Type" "can not be empty"]
+                         :title ["Title" "can not be empty"]
                          })
          )
   (= (count (get-in @s [:ui :errors])) 0)
@@ -107,3 +124,17 @@
   (into {} (for [[k v] m] [(keyword k) v]))
   )
 
+(defn fillname [v]
+  (assoc v
+         :firstname (or (:firstname v) (first (clojure.string/split (:fullname v) #" ")))
+         :lastname (or (:lastname v) (last (clojure.string/split (:fullname v) #" "))))
+  )
+
+(defn water-citation [s c]
+  (swap! s assoc-in [:data :citations-manual]
+         (-> c
+             (assoc :book (:booktitle c))
+             )
+         )
+  )
+ 

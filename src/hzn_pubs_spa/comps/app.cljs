@@ -1,21 +1,22 @@
-(ns hubzero-pubs.comps.app
+(ns hzn-pubs-spa.comps.app
   (:require
     [secretary.core :as secretary]
     [react-sortablejs :refer [ReactSortable]]
-    [hubzero-pubs.utils :as utils]
-    [hubzero-pubs.data :as data]
-    [hubzero-pubs.routes :as routes]
-    [hubzero-pubs.comps.panels :as panels]
-    [hubzero-pubs.comps.files :as files]
-    [hubzero-pubs.comps.tags :as tags]
-    [hubzero-pubs.comps.authors :as authors]
-    [hubzero-pubs.comps.options :as options] 
-    [hubzero-pubs.comps.licenses :as licenses] 
-    [hubzero-pubs.comps.citations :as citations] 
-    [hubzero-pubs.comps.errors :as errors] 
-    [hubzero-pubs.comps.help :as help] 
-    [hubzero-pubs.comps.ui :as ui] 
-    [hubzero-pubs.comps.summary :as summary] 
+    [hzn-pubs-spa.utils :as utils]
+    [hzn-pubs-spa.data :as data]
+    [hzn-pubs-spa.routes :as routes]
+    [hzn-pubs-spa.comps.panels :as panels]
+    [hzn-pubs-spa.comps.files :as files]
+    [hzn-pubs-spa.comps.dropdown :as dropdown]
+    [hzn-pubs-spa.comps.tags :as tags]
+    [hzn-pubs-spa.comps.authors :as authors]
+    [hzn-pubs-spa.comps.options :as options] 
+    [hzn-pubs-spa.comps.licenses :as licenses] 
+    [hzn-pubs-spa.comps.citations :as citations] 
+    [hzn-pubs-spa.comps.errors :as errors] 
+    [hzn-pubs-spa.comps.help :as help] 
+    [hzn-pubs-spa.comps.ui :as ui] 
+    [hzn-pubs-spa.comps.summary :as summary] 
     )
   )
 
@@ -98,16 +99,11 @@
   (data/update-author s (get-in @s [:data :authors-list id]))
   )
 
-(defn- _fillname [v]
-  (assoc v
-         :firstname (or (:firstname v) (first (clojure.string/split (:fullname v) #" ")))
-         :lastname (or (:lastname v) (last (clojure.string/split (:fullname v) #" "))))
-  )
 
 (defn edit-author [s v e]
   (.preventDefault e)
   (.stopPropagation e)
-  (swap! s assoc-in [:data :authors-new] (_fillname v))
+  (swap! s assoc-in [:data :authors-new] (utils/fillname v))
   (options/handle-author false s e)
   )
 
@@ -145,18 +141,11 @@
    ]
   )
 
-(defn- _water-citation [s c]
-  (swap! s assoc-in [:data :citations-manual]
-         (-> c
-             (assoc :book (:booktitle c))
-             )
-         )
-  )
 
 (defn edit-citation [s c e]
   (.preventDefault e)
   (.stopPropagation e)
-  (_water-citation s c)
+  (utils/water-citation s c)
   (options/handle-manual s e)
   )
 
@@ -339,10 +328,17 @@
   (panels/show s e true key)
   )
 
-(defn handle-author-options [s e key]
+(defn handle-author-options [s e k]
   (.preventDefault e)
   (.stopPropagation e)
   (swap! s assoc-in [:ui :options :authors] true) 
+  )
+
+(defn master-types [s]
+  (dropdown/dropdown s :master-type {:name :master-type
+                                     :label "Master Type"
+                                     :options (map #(:type %) (:master-types @s))
+                                     })
   )
 
 (defn essentials [s]
@@ -351,6 +347,7 @@
     [:legend "Essentials"]
     [:div.note "all fields required"]
     ]
+   (master-types s)
    (textfield s "a-title" "Title:" "title")
    (textarea s "a-abstract" "Abstract:" "abstract")
    (collection s "a-content" "Content:" :content nil handle-files-options)
@@ -434,7 +431,13 @@
                                    (get-in @s [:data :prj-id])
                                    "/publications"
                                    )} "Save & Close"]
-
+     ;; https://localhost/projects/broodje/publications/274/continue
+     [:a.btn.secondary {:href (str "/projects/"
+                                   (get-in @s [:data :prj-id])
+                                   "/publications/"
+                                   (get-in @s [:data :pub-id])
+                                   "/continue"
+                                   )} "Switch to classic"]
      ]
     ]
    ]
@@ -547,6 +550,40 @@
    ]
   )
 
+(defn master-type [s]
+  [:span.restype.indlist[:span.dataset "dataset"]]
+  )
+
+(defn- _breadcrumbs [s]
+  [:div
+   [:h3.publications.c-header
+    [:span [:a {:href (str "/projects/" (get-in @s [:data :prj :alias]))} "Projects"]]
+    " / "
+    [:span [:a {:href (str
+                        "/projects/"
+                        (get-in @s [:data :prj :alias]))
+
+                } (get-in @s [:data :prj :title])]]
+    " / "
+    [:span [:a {:href (str
+                        "/projects/"
+                        (get-in @s [:data :prj :alias])
+                        "/publications"
+                        )} "Publications"]]
+    " / "
+    [:span [:a {:href (str
+                        "/projects/"
+                        (get-in @s [:data :prj :alias])
+                        "/publications/"       
+                        (get-in @s [:data :pub-id])
+                        )
+                } (if (> (count (get-in @s [:data :title])) 0) (get-in @s [:data :title]) "Untitled")]]
+    " » "
+    (master-type s)
+    ]
+   ]
+  )
+
 (defn page-main [s]
   [:div {:class (concat [:page :page-main :--remove]
                         (if (get-in @s [:ui :summary])
@@ -561,11 +598,13 @@
 
 (defn wrap [s]
   [:div.wrap {:on-click (fn [e] (options/close s)) }
+   (_breadcrumbs s)
    (if (get-in @s [:ui :summary])
      (summary/page-summary s) 
      (page-main s)
      ) 
    ])
+
 
 (defn- _save [s]
   ;; Only save if we are not scrubbing history - JBG

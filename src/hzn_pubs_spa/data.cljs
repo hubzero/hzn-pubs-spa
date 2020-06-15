@@ -1,10 +1,10 @@
-(ns hubzero-pubs.data
+(ns hzn-pubs-spa.data
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.core.async :refer [<!]] 
             [cljs-http.client :as http]   
             [secretary.core :as secretary]
-            [hubzero-pubs.mutate :as mutate]
-            [hubzero-pubs.utils :as utils]
+            [hzn-pubs-spa.mutate :as mutate]
+            [hzn-pubs-spa.utils :as utils]
             )
   )
 
@@ -13,8 +13,8 @@
 (def cap (str url "/cap/api"))
 
 (defn- _error [s code]
-;  (secretary/dispatch! "/error")
-;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))
+  (secretary/dispatch! "/error")
+  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -283,13 +283,16 @@
             res (<! (http/post (str  api "/citations") {:edn-params c}))]
         (prn "CREATE CITATION >>>>> " c)
         (prn "<<<< CITATION" (:body res))
-
         (->>
           (:body res)
           (:generated_key)
           (assoc c :id)
           (add-citation s)
           )
+        ;; Clear form - JBG
+        (swap! s update :data dissoc :citations-manual)
+        ;; Scroll form, am I a dirty hack? ... yes. - JBG
+        (-> js/document (.querySelector ".citations-manual .inner") (.scrollTo 0 0)) 
         ))
   )
 
@@ -355,17 +358,28 @@
     )
   )
 
-(defn get-pub [s & [validate?]]
-  (go (let [res (<! (http/get (str api 
+(defn get-prj [s]
+  (go (let [res (<! (http/get (str api "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc-in [:data :prj] (:body res))
+                             ;; Load the disk usage for the project - JBG
+                             (usage s)
+                             ))
+        ))
+  )
+
+(defn _get-pub [s]
+  (go (let [res (<! (http/get (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
                                    ) (options s)))]
         (prn "<<< PUB" (:body res))
         (_handle-res s res (fn [s res]
                              (->> (:body res)
-                                  (mutate/coerce)
+                                  (mutate/coerce s)
                                   (swap! s assoc :data)
                                   )
+                             (get-prj s)
                              (get-files s)
                              (get-authors s)
                              (get-tags s)
@@ -378,41 +392,54 @@
         ))
   )
 
+(defn get-master-types [s]
+  (go (let [res (<! (http/get (str url "/types")
+                              (options s)))]
+        (_handle-res s res (fn [s res]
+                             (->>
+                               (:body res)
+                               (filter #(some #{(:type %)} ["File(s)" "Databases" "Series"]))
+                               (swap! s assoc :master-types)
+                               )
+                             (_get-pub s)
+                             ))
+        ))
+  )
+
+(defn get-pub [s]
+  (get-master-types s)
+  )
 
 (defn save-pub [s & [callback]]
-  (as-> (:data @s) $
-    (mutate/prepare $)
-    (go (let [res (<! (http/post (str api "/pubs") {:edn-params $}))]
-          (prn "SENT PUB >>>" $)
-          (prn "<<< RECEIVED"(:body res))
-          (_handle-res s res (fn [s res]
-                               (swap! s update :data merge (:body res))
-                               (if callback (callback))
-                               ))
-          ))
+  (if (not (= (get-in @s [:data :state]) 1))
+    (as-> (:data @s) $
+      (mutate/prepare s $)
+      (go (let [res (<! (http/post (str api "/pubs") {:edn-params $}))]
+            (prn "SENT PUB >>>" $)
+            (prn "<<< RECEIVED"(:body res))
+            (_handle-res s res (fn [s res]
+                                 (swap! s update :data merge (:body res))
+                                 (if callback (callback))
+                                 ))
+            ))
+      )  
     )
   )
 
 (defn submit-pub [s]
   (as-> (:data @s) $
-    (mutate/prepare $)
+    (mutate/prepare s $)
     (go (let [res (<! (http/post (str api "/pubs") {:edn-params $}))]
-          (prn "SENT PUB >>>" $)
-          (prn "<<< RECEIVED"(:body res))
-          (get-pub s) 
+          (prn "SUBMIT PUB >>>" $)
+          (prn "<<< RECEIVED" res)
+          ;(get-pub s)
+          (_handle-res s res (fn [s res]
+                               (set! (-> js/window .-location) (str "/publications/" (get-in @s [:data :pub-id])))
+                               ))
           ))
     )
   )
 
-
-(defn get-prj [s]
-  (go (let [res (<! (http/get (str api "/prjs/" (get-in @s [:data :prj-id])) (options s)))]
-        (_handle-res s res (fn [s res]
-                             ;; Load the disk usage for the project - JBG
-                             (usage s)
-                             ))
-        ))
-  )
 
 (defn add-tag
   "s is the state, tag-str is the tag as a str - JBG"

@@ -1,6 +1,6 @@
-(ns hubzero-pubs.comps.errors
+(ns hzn-pubs-spa.comps.errors
   (:require
-    [hubzero-pubs.comps.panels :as panels] 
+    [hzn-pubs-spa.comps.panels :as panels] 
     ) 
   )
 

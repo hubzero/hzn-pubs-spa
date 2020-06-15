@@ -1,10 +1,10 @@
-(ns hubzero-pubs.comps.files
+(ns hzn-pubs-spa.comps.files
   (:require
-    [hubzero-pubs.utils :as utils] 
-    [hubzero-pubs.data :as data]
-    [hubzero-pubs.comps.ui :as ui] 
-    [hubzero-pubs.comps.panels :as panels] 
-    [hubzero-pubs.comps.folders :as folders] 
+    [hzn-pubs-spa.utils :as utils] 
+    [hzn-pubs-spa.data :as data]
+    [hzn-pubs-spa.comps.ui :as ui] 
+    [hzn-pubs-spa.comps.panels :as panels] 
+    [hzn-pubs-spa.comps.folders :as folders] 
     ) 
   )
 

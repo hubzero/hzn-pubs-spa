@@ -1,9 +1,9 @@
-(ns hubzero-pubs.comps.authors
+(ns hzn-pubs-spa.comps.authors
   (:require
-    [hubzero-pubs.utils :as utils] 
-    [hubzero-pubs.data :as data] 
-    [hubzero-pubs.comps.ui :as ui] 
-    [hubzero-pubs.comps.panels :as panels] 
+    [hzn-pubs-spa.utils :as utils] 
+    [hzn-pubs-spa.data :as data] 
+    [hzn-pubs-spa.comps.ui :as ui] 
+    [hzn-pubs-spa.comps.panels :as panels] 
     ) 
   )
 
@@ -58,12 +58,11 @@
   )
 
 (defn- _handle-author [s k e]
-  (let [u (get-in @s [:data k])]
+  (let [u (get-in @s [:data k])
+        u (assoc u :fullname (str (:firstname u) " " (:lastname u)))
+        ]
     (if (get-in @s [:ui :author-options :is-new]) 
-      (data/new-author s (assoc u
-                                :fullname (str (:firstname u) " " (:lastname u))
-                                :id (:id u 0)
-                                ))
+      (data/new-author s u)
       (data/update-author s u)
       ) 
     (panels/close s e)

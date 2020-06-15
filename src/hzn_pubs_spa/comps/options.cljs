@@ -1,13 +1,22 @@
-(ns hubzero-pubs.comps.options
+(ns hzn-pubs-spa.comps.options
   (:require
-    [hubzero-pubs.utils :as utils]
-    [hubzero-pubs.data :as data]
-    [hubzero-pubs.comps.panels :as panels]
+    [hzn-pubs-spa.utils :as utils]
+    [hzn-pubs-spa.data :as data]
+    [hzn-pubs-spa.comps.panels :as panels]
     )
   )
 
 (defn close [s]
   (swap! s assoc-in [:ui :options] nil)
+  )
+
+(defn handle-author [is-new s e]
+   (.preventDefault e)
+   (.stopPropagation e)
+   (panels/show-overlay s true)
+   (swap! s assoc-in [:ui :panels :authors-new] true)
+   (swap! s assoc-in [:ui :author-options :is-new] is-new)
+   (close s) ;; why?
   )
  
 (defn item [s i name f]
@@ -32,12 +41,21 @@
     )
   )
 
+(defn- _edit-author [e s v]
+  (.preventDefault e) 
+  (.stopPropagation e)
+  (swap! s assoc-in [:data :authors-new] (utils/fillname v))
+  (handle-author false s e)
+  )
+
 (defn items [s k v id]
   [:div.options-list.--as-panel {:class (if (get-in @s [:ui :options k id]) :open) }
    [:div.inner
     (merge
       [:ul]
-      ;(item s "#icon-edit" "Rename" #())
+      (if (= k :authors-list)
+        (item s "#icon-edit" "Rename" (fn [s e] (_edit-author e s v)))
+        )
       ;(item s "#icon-download" "Download" #())
       (item s "#icon-delete" "Remove" (fn [s e]
                                         (_remove s e k id)
@@ -46,12 +64,29 @@
    ]
   )
 
+(defn handle-manual [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (data/get-citation-types s)
+  (panels/show-overlay s true)
+  (swap! s assoc-in [:ui :panels :citations-manual] true)
+  (close s)
+  )
+
+(defn- _edit-citation [e s c]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (utils/water-citation s c)
+  (handle-manual s e)
+  )
+
 (defn citation [s k c]
   (prn "CITATION" c)
   [:div.options-list.--as-panel {:class (if (get-in @s [:ui :options :citation (:id c)]) :open) }
    [:div.inner
     (merge
       [:ul]
+      (item s "#icon-edit" "Edit" (fn [s e] (_edit-citation e s c)))
       (item s "#icon-delete" "Remove" (fn [s e]
                                         (.preventDefault e)
                                         (.stopPropagation e)
@@ -62,14 +97,6 @@
    ]
   )
 
-(defn handle-author [is-new s e]
-   (.preventDefault e)
-   (.stopPropagation e)
-   (panels/show-overlay s true)
-   (swap! s assoc-in [:ui :panels :authors-new] true)
-   (swap! s assoc-in [:ui :author-options :is-new] is-new)
-   (close s) ;; why?
-  )
 
 (defn handle-add-author [s e]
   (.preventDefault e)
@@ -101,15 +128,6 @@
   (.stopPropagation e)
   (panels/show-overlay s true)
   (swap! s assoc-in [:ui :panels :citations-doi] true)
-  (close s)
-  )
-
-(defn handle-manual [s e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (data/get-citation-types s)
-  (panels/show-overlay s true)
-  (swap! s assoc-in [:ui :panels :citations-manual] true)
   (close s)
   )
 

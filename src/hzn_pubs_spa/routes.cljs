@@ -1,13 +1,13 @@
-(ns hubzero-pubs.routes
+(ns hzn-pubs-spa.routes
   (:require-macros [secretary.core :refer [defroute]])
   (:import [goog History]
            [goog.history EventType])
   (:require [secretary.core :as secretary]
             [goog.events :as events]
             [reagent.core :as reagent]            
-            [hubzero-pubs.data :as data]
-            [hubzero-pubs.comps.panels :as panels]
-            [hubzero-pubs.utils :as utils]
+            [hzn-pubs-spa.data :as data]
+            [hzn-pubs-spa.comps.panels :as panels]
+            [hzn-pubs-spa.utils :as utils]
             )
   )
 
@@ -35,17 +35,24 @@
 
 (def pubsroot "/pubs/:id/v/:ver-id")
 
+(defn- _new-pub [s prj-id]
+  (swap! s assoc-in [:ui :summary] false)
+  (swap! s assoc-in [:data :prj-id] prj-id)
+  ;; Create a new pub - JBG
+  (data/save-pub s #(redirect (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
+                                   "/v/" (get-in @s [:data :ver-id])
+                                   "/edit")
+                              )) 
+  )
+
 (defn app-routes [s]
   (secretary/set-config! :prefix "#")
 
   (defroute "/prjs/:id" {:as params}
-    (swap! s assoc-in [:ui :summary] false)
-    (swap! s assoc-in [:data :prj-id] (:id params))
-    ;; Create a new pub - JBG
-    (data/save-pub s #(redirect (str "/pubs/#/pubs/" (get-in @s [:data :pub-id])
-                                     "/v/" (get-in @s [:data :ver-id])
-                                     "/edit")
-                                ))
+    (if (not (get-in @s [:data :pub-id]))
+      (_new-pub s (:id params))
+      (redirect (str "/projects/" (:id params) "/publications"))
+      )
     )
 
   (defroute (str pubsroot) {:as params}
@@ -54,7 +61,8 @@
     (swap! s assoc-in [:data :ver-id] (:ver-id params))
 
     ;; true is there to validate the pub after it comes back - JBG
-    (data/get-pub s true)
+    (data/get-pub s)
+    (-> js/window (.scrollTo 0 0))
     )
 
   (defroute (str pubsroot "/edit") {:as params}

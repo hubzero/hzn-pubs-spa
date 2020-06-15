@@ -1,7 +1,7 @@
-(ns hubzero-pubs.comps.help
+(ns hzn-pubs-spa.comps.help
   (:require
-    [hubzero-pubs.comps.ui :as ui] 
-    [hubzero-pubs.comps.panels :as panels]     
+    [hzn-pubs-spa.comps.ui :as ui] 
+    [hzn-pubs-spa.comps.panels :as panels]     
     )
   )
 

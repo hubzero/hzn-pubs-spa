@@ -1,17 +1,20 @@
-(ns hubzero-pubs.comps.citations
+(ns hzn-pubs-spa.comps.citations
   (:require
-    [hubzero-pubs.utils :as utils] 
-    [hubzero-pubs.data :as data] 
-    [hubzero-pubs.comps.ui :as ui] 
-    [hubzero-pubs.comps.panels :as panels] 
+    [hzn-pubs-spa.utils :as utils] 
+    [hzn-pubs-spa.data :as data] 
+    [hzn-pubs-spa.comps.ui :as ui] 
+    [hzn-pubs-spa.comps.panels :as panels] 
+    [hzn-pubs-spa.comps.dropdown :as dropdown] 
     )
   )
 
 (defn create-citation [s e]
   (.preventDefault e)
   (.stopPropagation e)
-  (data/create-citation s)
-  (panels/close s e)
+  (when (utils/citations-manual-valid? s)
+    (data/create-citation s)
+    (panels/close s e)   
+    )
   )
 
 (defn add-doi [s e]
@@ -35,15 +38,25 @@
    [:input {:type :text :onChange #(_search s (-> % .-target .-value))}]
    ]
   )
+(defn- handle-click [s c e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  ;; If it has an id, it's from our DB so just try it to the pub
+  (if (:id c)
+    (data/add-citation s c) 
+    ;; No id? probably from doi.org, will need to be added to our DB
+    (do
+      (swap! s assoc-in [:data :citations-manual] c)
+      (data/create-citation s)
+      (panels/close s e)   
+      )
+    )
+  )
 
 (defn citation [s key c]
   [:p.formatted-meta.key {:class (:id c)
                           :key (:id c)
-                          :on-click (fn [e]
-                                      (.preventDefault e)
-                                      (.stopPropagation e)
-                                      (data/add-citation s c)
-                                      )
+                          :on-click #(handle-click s c %)
                           } (utils/format-citation c)]
   )
 
@@ -71,7 +84,7 @@
   )
 
 (defn text [s key f]
-  [:div.field {:key (:name f)}
+  [:div.field.anchor.err {:key (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
    [:label {:for :title} (str (:label f) ":")]
    [:input {:type :text
             :value (get-in @s [:data key (:name f)])
@@ -80,7 +93,7 @@
                         (.stopPropagation e)
                         (swap! s assoc-in [:data key (:name f)] (-> e .-target .-value))
                         )}]
-
+   (ui/val-error s (:name f))
    ]
   )
 
@@ -99,57 +112,11 @@
     ) 
   )
 
-(defn- _handle-dropdown [s key f e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (swap! s update-in [:ui key (:name f)] not)
-  )
-
-(defn- _option-click [s key f o e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (swap! s assoc-in [:data key (:name f)] o)
-  (swap! s assoc-in [:ui key (:name f)] false)
-  )
-
-(defn- _option-rm [s key f e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (swap! s assoc-in [:data key (:name f)] "")
-  (swap! s assoc-in [:ui key (:name f)] false)
-  )
-
-(defn dropdown [s key f]
-  [:div.field {:key (:name f)}
-   [:label {:for (:name f)} (str (:label f) ":")]
-   [:div.proto-dropdown {:class (if (get-in @s [:ui key (:name f)]) :open)}
-    [:div.input-wrap
-     [:input {:type :text
-              :value (get-in @s [:data key (:name f)])
-              :onChange #(swap! s assoc-in [:data key (:name f)])
-              }]
-     [:a.icon {:on-click #(_option-rm s key f %)}
-      (ui/icon s "#icon-cross")
-      ]
-     ]
-    (merge
-      [:ul.dropdown-menu.roll.listbox]    
-      (doall (map (fn [o] [:li {:key o
-                                :role :option
-                                :on-click #(_option-click s key f o %)
-                                } o]) (:options f)))
-      )
-    [:a.icon {:href "#"
-              :on-click #(_handle-dropdown s key f %)
-              } (ui/icon s "#icon-left")]
-    ]
-   ]
-  )
 
 (defn field [s key f]
   (((:type f) {:text #(text s key f)
                :textfield #(textfield s key f)
-               :dropdown #(dropdown s key f)
+               :dropdown #(dropdown/dropdown s key f)
                }))
   )
 
@@ -179,7 +146,7 @@
                                   {:name :edition :label "Edition" :type :text}
                                   {:name :publisher :label "Publisher" :type :text}
                                   {:name :url :label "URL" :type :text}
-                                  {:name :citation :label "Formatted citation" :type :textfield :hint "IF PROVIDED, FORMATTED CITATION WILL APPEAR AS TYPED. RECOMMENDED FORMAT: APA"}
+                                  {:name :formatted :label "Formatted citation" :type :textfield :hint "IF PROVIDED, FORMATTED CITATION WILL APPEAR AS TYPED. RECOMMENDED FORMAT: APA"}
                                   ] )) 
     ]
    [:hr]
