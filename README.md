@@ -36,4 +36,6 @@ It can be handy to maintain an "up-arrow" history ...
 
 You can do all sorts of trickery for development environment purposes ... but at the end of the day, there needs to be a `main.js` in `app/componentes/com_pubs/site/assets/js/`.
 
+*You will need to change this for your environment in the `shadow-cljs.edn` file.*
+
 
