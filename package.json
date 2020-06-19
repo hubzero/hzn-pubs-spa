@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {},
   "dependencies": {
+    "buffer": "^5.6.0",
     "create-react-class": "^15.6.3",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

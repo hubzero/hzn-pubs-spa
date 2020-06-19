@@ -5,6 +5,7 @@
     [hzn-pubs-spa.utils :as utils]
     [hzn-pubs-spa.data :as data]
     [hzn-pubs-spa.routes :as routes]
+    [hzn-pubs-spa.mutate :as mutate]
     [hzn-pubs-spa.comps.panels :as panels]
     [hzn-pubs-spa.comps.files :as files]
     [hzn-pubs-spa.comps.dropdown :as dropdown]
@@ -17,6 +18,7 @@
     [hzn-pubs-spa.comps.help :as help] 
     [hzn-pubs-spa.comps.ui :as ui] 
     [hzn-pubs-spa.comps.summary :as summary] 
+    ["hzn-hubcap-comp" :as hubcap]
     )
   )
 
@@ -69,6 +71,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -84,6 +87,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -133,6 +137,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options k id] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -162,6 +167,7 @@
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
                               (.stopPropagation e)
+                              (options/close s)
                               (swap! s assoc-in [:ui :options :citation (:id c)] true)
                               )}
     (ui/icon s "#icon-dots")
@@ -457,25 +463,17 @@
    ]
   )
 
-(defn- _get-state [s e]
-  (prn "GET STATE" (-> e .-target .-value))
-  (swap! s assoc :t (js/parseInt (-> e .-target .-value)))
-  (swap! s assoc-in [:cap :lock] true)
-  (data/get-state s)
-  )
-
-(defn history-slider [s]
-  [:input {:type :range
-           :min (get-in @s [:cap :min])
-           :max (get-in @s [:cap :max])
-           :value (get @s :t (get-in @s [:cap :max]))
-           :onInput #(_get-state s %)
-           }]
+(defn convert [m]
+  (into {} (for [[k v] m] [(keyword k) (cond
+                                         (map? v) (convert v)
+                                         (integer? (js/parseInt v)) (js/parseInt v)
+                                         :else v)]))
   )
 
 (defn main-form [s]
   [:main
-   (history-slider s)
+   (hubcap/slider (mutate/coerce-ui-state s)
+                  #(->> % js->clj convert (reset! s)))
    [:form
     (essentials s) 
     (additional-details s)
@@ -608,11 +606,10 @@
 
 (defn- _save [s]
   ;; Only save if we are not scrubbing history - JBG
-  (when (not (get-in @s [:cap :lock]))
+  (when (not (hubcap/locked?))
     (prn "STATE" @s)
     (if (utils/savable? s) (data/save-pub s))
-    (data/save-state s)
-    (data/state-frame s)
+    (hubcap/save (mutate/coerce-ui-state s))
     )
   )
 
