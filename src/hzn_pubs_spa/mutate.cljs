@@ -44,10 +44,5 @@
   )
 
 (defn coerce-ui-state [s]
-  (->
-    ;; This is a dom node reference which doesn't tavel well - JBG
-    (update @s :ui dissoc :current-panel) 
-    ;; Going to npm components requires a toggle between interops - JBG
-    clj->js 
-    ) 
+  (update @s :ui dissoc :current-panel) 
   )

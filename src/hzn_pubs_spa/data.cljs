@@ -5,6 +5,7 @@
             [secretary.core :as secretary]
             [hzn-pubs-spa.mutate :as mutate]
             [hzn-pubs-spa.utils :as utils]
+            [hzn-hubcap-comp.index :as hubcap]
             )
   )
 
@@ -316,6 +317,7 @@
                              (get-license s)
                              (get-citations s)
                              (usage s)
+                             (hubcap/get-frame s)
                              ))
         ))
   )

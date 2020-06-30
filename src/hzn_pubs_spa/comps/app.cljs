@@ -18,7 +18,7 @@
     [hzn-pubs-spa.comps.help :as help] 
     [hzn-pubs-spa.comps.ui :as ui] 
     [hzn-pubs-spa.comps.summary :as summary] 
-    ["hzn-hubcap-comp" :as hubcap]
+    [hzn-hubcap-comp.index :as hubcap]
     )
   )
 
@@ -472,8 +472,7 @@
 
 (defn main-form [s]
   [:main
-   (hubcap/slider (mutate/coerce-ui-state s)
-                  #(->> % js->clj convert (reset! s)))
+   (hubcap/slider s)
    [:form
     (essentials s) 
     (additional-details s)
@@ -606,8 +605,7 @@
 
 (defn- _save [s]
   ;; Only save if we are not scrubbing history - JBG
-  (when (not (hubcap/locked?))
-    (prn "STATE" @s)
+  (when (not (hubcap/locked? s))
     (if (utils/savable? s) (data/save-pub s))
     (hubcap/save (mutate/coerce-ui-state s))
     )

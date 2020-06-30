@@ -2,6 +2,7 @@
  :dependencies [[cljs-http "0.1.46"]
                 [reagent "0.8.1"]
                 [clj-commons/secretary "1.2.4"]
+                [hzn-hubcap-comp "0.1.0-SNAPSHOT"]
                 ]
  :builds {:app {:target :browser
                 :output-to "/home/jbg/Development/hub/app/components/com_pubs/site/assets/js/compiled/hubzero_pubs.js"
