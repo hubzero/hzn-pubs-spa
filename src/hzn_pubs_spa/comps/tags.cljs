@@ -30,6 +30,7 @@
   (data/add-tag s (-> js/document
                       (.querySelector ".new-tag")
                       .-value))
+  (swap! s assoc-in [:ui :tag-str] "")
   )
 
 (defn- _result-click [s tag e]
