@@ -185,21 +185,13 @@
   )
 
 (defn- _set-list [s k l]
-  (->> l 
-       (js->clj)
-       (map (fn [[k v]] [k (utils/keywordize v)]))
-       (into {})
-       (swap! s assoc-in [:data k])
-       )
-  ;; Update all the author indexes/sort order - JBG
   (doall
-    (case k
-      :authors-list
-      (map-indexed (fn [i a] (data/update-author s 
-                                                 (assoc a :index i)
-                                                 )) (vals (get-in @s [:data k])))
-      (prn "SKIP UPDATE")
-      )
+    (map-indexed (fn [i [id item]]
+                   (swap! s assoc-in [:data k (keyword id) :index] i)
+                   (if (= k :authors-list)
+                     (data/update-author s (assoc (utils/keywordize item) :index i))
+                     )
+                   ) (->> l js->clj))
     )
   )
 
@@ -212,7 +204,7 @@
   )
 
 (defn items [s k]
-  (if-let [l (into [] (get-in @s [:data k]))]
+  (if-let [l (sort-by #(:index (second %)) (into [] (get-in @s [:data k])))]
     (_sortitems s k l)
     )
   )

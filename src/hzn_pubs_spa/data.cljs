@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-  (secretary/dispatch! "/error")
-  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
+;  (secretary/dispatch! "/error")
+;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -146,7 +146,10 @@
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/authors/" (:id author)) {:edn-params author}))]
-        (_handle-res s res (fn [s res] (get-authors s))))))
+        (_handle-res s res (fn [s res]
+                             ;(get-authors s)
+                             
+                             )))))
 
 (defn rm-author 
   "s is the state, and author-id - JBG"
