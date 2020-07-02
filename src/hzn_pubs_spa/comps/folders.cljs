@@ -91,12 +91,11 @@
     (first $)
     (reduce (fn [c f]
               (if (clojure.string/includes? (first f) $)
-                (and c
-                     (reduce (fn [x y] (and x y)) (reduce (fn [c2 f2]
-                                                            (and c2 (get-in @s [:data key (get-id s key (first f) f2)]))
-                                                            ) c (last f)))
+                (and c 
+                     (reduce (fn [c2 f2]
+                               (and c2 (boolean (get-in @s [:data key (get-id s key (first f) f2)])))
+                               ) true (last f))
                      )
-
                 c)
               )
             true (:files @s)) 
