@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-;  (secretary/dispatch! "/error")
-;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
+  ;  (secretary/dispatch! "/error")
+  ;  (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -21,6 +21,7 @@
     (_error s (:status res))
     )
   )
+
 
 (defn options [s] {})
 
@@ -50,15 +51,18 @@
 (defn rm-file
   "s is the state, k is the type - :content, :images, :support-docs, and file-id - JBG"
   [s k file-id]
-  (go (let [res (<! (http/delete (str url
+  (prn "RM FILE" file-id)
+  (go (let [id (if (keyword? file-id) (utils/keyword-to-int file-id) file-id)
+            res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
-                                      "/files/" file-id) 
+                                      "/files/"
+                                      id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data k] dissoc file-id)
                              ))
-        )) 
+        ))
   )
 
 (defn ls-files [s]
@@ -75,11 +79,9 @@
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/files")
                               (options s)))]
-        (prn (:body res))
         (_handle-res s res (fn [s res]
                              (swap! s update :data merge (:body res))
                              ))
-
         ))
   )
 
@@ -142,27 +144,30 @@
 
 (defn update-author
   [s author]
-  (go (let [res (<! (http/put (str url
+  (go (let [id (as-> (:id author) $ (if (keyword? $) (utils/keyword-to-int $) $))
+            res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
                                    "/authors/" (:id author)) {:edn-params author}))]
         (_handle-res s res (fn [s res]
                              ;(get-authors s)
-                             
                              )))))
 
 (defn rm-author 
   "s is the state, and author-id - JBG"
   [s author-id]
-  (go (let [res (<! (http/delete (str url
+  (go (let [id (if (keyword? author-id) (utils/keyword-to-int author-id) author-id)
+            res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
-                                      "/authors/" author-id) 
+                                      "/authors/"
+                                      id
+                                      )
                                  (options s)))]
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :authors-list] dissoc author-id)
                              ))
-        )) 
+        ))
   )
 
 (defn get-licenses [s]
@@ -205,10 +210,12 @@
 (defn rm-citation
   "s is the state, and citation-id - JBG"
   [s citation-id]
-  (go (let [res (<! (http/delete (str url
+  (go (let [id (if (keyword? citation-id) (utils/keyword-to-int citation-id) citation-id)
+            res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
-                                      "/citations/" citation-id) 
+                                      "/citations/"
+                                      id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :citations] dissoc citation-id)
@@ -387,10 +394,12 @@
 (defn rm-tag
   "s is the state, and tag-id - JBG"
   [s tag-id]
-  (go (let [res (<! (http/delete (str url
+  (go (let [id (if (keyword? tag-id) (utils/keyword-to-int tag-id) tag-id)
+            res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
-                                      "/tags/" tag-id) 
+                                      "/tags/"
+                                      id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
                              (swap! s update-in [:data :tags] dissoc tag-id)

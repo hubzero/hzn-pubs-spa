@@ -7,6 +7,10 @@
     )
   )
 
+(defn keyword-to-int [k]
+  (js/parseInt (name k))
+  )
+
 (defn author-key [a]
   (str (:id a) "_"
        (:user_id a) "_"

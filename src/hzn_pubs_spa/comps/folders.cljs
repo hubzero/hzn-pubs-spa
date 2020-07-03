@@ -35,7 +35,7 @@
 (defn folder-push [s name path e]
   (.preventDefault e)
   (.stopPropagation e)
-  (let [node (-> e 
+  (when-let [node (-> e 
                  .-target
                  (utils/find-ancestor "li")
                  (.querySelector ".panel-subpanel")
@@ -98,7 +98,7 @@
                      )
                 c)
               )
-            true (:files @s)) 
+            true (:files @s))
     )
   )
 

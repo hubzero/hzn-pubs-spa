@@ -184,15 +184,17 @@
        })) 
   )
 
-(defn- _set-list [s k l]
+(defn- set-authors [s k l]
   (doall
     (map-indexed (fn [i [id item]]
                    (swap! s assoc-in [:data k (keyword id) :index] i)
-                   (if (= k :authors-list)
-                     (data/update-author s (assoc (utils/keywordize item) :index i))
-                     )
+                   (data/update-author s (assoc (utils/keywordize item) :index i))
                    ) (->> l js->clj))
     )
+  )
+
+(defn- _set-list [s k l]
+  (if (= k :authors-list) (set-authors s k l)) 
   )
 
 (defn- _sortitems [s k l]
