@@ -8,7 +8,7 @@
   )
 
 (defn keyword-to-int [k]
-  (js/parseInt (name k))
+  (if (keyword? k) (js/parseInt (name k)) k)
   )
 
 (defn author-key [a]

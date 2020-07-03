@@ -52,7 +52,7 @@
   "s is the state, k is the type - :content, :images, :support-docs, and file-id - JBG"
   [s k file-id]
   (prn "RM FILE" file-id)
-  (go (let [id (if (keyword? file-id) (utils/keyword-to-int file-id) file-id)
+  (go (let [id (utils/keyword-to-int file-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -60,7 +60,7 @@
                                       id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data k] dissoc file-id)
+                             (swap! s update-in [:data k] dissoc (keyword file-id))
                              ))
         ))
   )
@@ -119,6 +119,7 @@
 (defn add-author
   "s is the state, author is a map - JBG"
   [s author]
+  (prn "ADD AUTHOR" author)
   (go (let [res (<! (http/post (str url
                                     "/pubs/" (get-in @s [:data :pub-id])
                                     "/v/" (get-in @s [:data :ver-id])
@@ -144,19 +145,21 @@
 
 (defn update-author
   [s author]
-  (go (let [id (as-> (:id author) $ (if (keyword? $) (utils/keyword-to-int $) $))
+  (go (let [id (utils/keyword-to-int (:id author))
             res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
-                                   "/authors/" (:id author)) {:edn-params author}))]
+                                   "/authors/"
+                                   id) {:edn-params author}))]
         (_handle-res s res (fn [s res]
-                             ;(get-authors s)
+                             (get-authors s)
                              )))))
 
 (defn rm-author 
   "s is the state, and author-id - JBG"
   [s author-id]
-  (go (let [id (if (keyword? author-id) (utils/keyword-to-int author-id) author-id)
+  (prn "RM AUTHOR" author-id)
+  (go (let [id (utils/keyword-to-int author-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -165,7 +168,7 @@
                                       )
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data :authors-list] dissoc author-id)
+                             (swap! s update-in [:data :authors-list] dissoc (keyword author-id))
                              ))
         ))
   )
@@ -210,7 +213,7 @@
 (defn rm-citation
   "s is the state, and citation-id - JBG"
   [s citation-id]
-  (go (let [id (if (keyword? citation-id) (utils/keyword-to-int citation-id) citation-id)
+  (go (let [id (utils/keyword-to-int citation-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -218,7 +221,7 @@
                                       id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data :citations] dissoc citation-id)
+                             (swap! s update-in [:data :citations] dissoc (keyword citation-id))
                              ))
         ))
   )
@@ -394,7 +397,7 @@
 (defn rm-tag
   "s is the state, and tag-id - JBG"
   [s tag-id]
-  (go (let [id (if (keyword? tag-id) (utils/keyword-to-int tag-id) tag-id)
+  (go (let [id (utils/keyword-to-int tag-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -402,7 +405,7 @@
                                       id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data :tags] dissoc tag-id)
+                             (swap! s update-in [:data :tags] dissoc (keyword tag-id))
                              ))
         ))
   )
