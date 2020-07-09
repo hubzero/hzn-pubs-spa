@@ -24,6 +24,14 @@
        )  
   )
 
+(defn prj-route [db]
+  (str "/"
+       "prjs/"
+       (get-in db [:data :prj-id])
+       )  
+  )
+
+
 (defn handle [res s event-key]
   (if (= 200 (:status res))
     (dispatch [event-key (:body res)])
@@ -44,4 +52,5 @@
 (defn me [db] (do-get db "/users/me" :res/me))
 (defn master-types [db] (do-get db "/types" :res/master-types))
 (defn pub [db] (do-get db (ver-route db) :res/pub))
+(defn prj [db] (do-get db (prj-route db) :res/prj))
  

@@ -21,15 +21,22 @@
 (deftest master-types
   (with-redefs [pubs.hub/pub pubs.hub-test/pub
                 pubs.hub/master-types pubs.hub-test/master-types]
+
     (rf/reg-sub :mt (fn [db _] (:master-types db)))
     (rf/reg-sub :data (fn [db _] (:data db)))
+
     (rf-test/run-test-sync
       (let [mt (rf/subscribe [:mt])
             data (rf/subscribe [:data])
             ]
         (dispatch [:req/pub])
+
         (->> @mt nil? not is)
         (->> @data (:master-type) (:master-type) nil? not is)
+        ;; authors
+        ;;tags
+        ;;citations
+
         )
       )
     )

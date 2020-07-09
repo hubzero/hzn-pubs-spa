@@ -29,7 +29,13 @@
 
 (defn pub [db [_ res]]
   (let [pub (pub-master-type db res)]
-    (assoc db :data pub)
+    (-> (assoc db :data pub)
+        (hub/prj)
+      )
     )
+  )
+
+(defn prj [db [_ res]]
+  (assoc-in db [:data :prj] res)
   )
 

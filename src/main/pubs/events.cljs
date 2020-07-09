@@ -13,8 +13,10 @@
 (rf/reg-event-db :req/me req/me)
 (rf/reg-event-db :req/pub req/pub)
 (rf/reg-event-db :req/master-types req/master-types)
+;(rf/reg-event-db :req/prj req/prj)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
 (rf/reg-event-db :res/master-types res/master-types)
+;(rf/reg-event-db :res/prj res/prj)
 
