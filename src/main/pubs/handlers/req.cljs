@@ -1,4 +1,4 @@
-(ns pubs.req
+(ns pubs.handlers.req
   (:require [pubs.db :as db]
     [pubs.hub :as hub])
   )
@@ -20,5 +20,9 @@
       (assoc-in [:data :ver-id] (:ver-id params))
       (hub/master-types)
       )
+  )
+
+(defn prj [db [_ params]]
+  (hub/prj db)
   )
 

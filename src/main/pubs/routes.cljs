@@ -7,7 +7,7 @@
     [reitit.frontend.easy :as rfez :refer [href]]
     [reitit.coercion.spec :as rss]
     [pubs.controllers :as controllers]
-    [pubs.comps.app :as app]
+    [pubs.containers.app :as app]
     ))
 
 ;; Triggering navigation from events.
@@ -20,11 +20,8 @@
 (def routes
   [["/pubs/:pub-id/v/:ver-id" {:name :pub
                                :view app/render
-                               ;:controller controllers/pub
-                               :controllers [{:start (fn [& params] (prn "Entering home page"))
-                                              :stop (fn [& params] (prn "Leaving home page"))}]
+                               :controllers [{:start controllers/pub}]
                                }]
-
    ]
   )
 

@@ -6,6 +6,5 @@
   ;(dispatch [:req/master-types params])
   (dispatch [:req/pub params])
   ;(dispatch [:req/me])
-  db
   )
 

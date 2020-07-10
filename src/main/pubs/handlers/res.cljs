@@ -1,4 +1,4 @@
-(ns pubs.res
+(ns pubs.handlers.res
   (:require [pubs.hub :as hub])
   )
 
@@ -36,6 +36,7 @@
   )
 
 (defn prj [db [_ res]]
+  (prn db)
   (assoc-in db [:data :prj] res)
   )
 
