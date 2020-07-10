@@ -28,32 +28,43 @@
   (re-frame.core/dispatch [:dropdown/rm k f e])
   )
 
+(defn- input [s k f]
+  [:div.input-wrap
+   [:input {:type :text
+            :value (get-in s [:data k (:name f)])
+            :onChange #(change s k f %)
+            }]
+   [:a.icon {:on-click #(rm s k f %)}
+    (ui/icon s "#icon-cross")
+    ]
+   ]
+  )
+
+(defn- menu [s k f]
+  (merge
+    [:ul.dropdown-menu.roll.listbox]    
+    (doall (map (fn [o] [:li {:key o
+                              :role :option
+                              :on-click #(click s k f o %)
+                              } o]) (:options f)))
+    )
+  )
+
+(defn- icon [s k f]
+  [:a.icon {:href "#"
+            :on-click #(show s k f %)
+            } (ui/icon s "#icon-left")]
+  )
+
 (defn render [s k f]
-  (prn "DD" s k f)
   [:div.field.anchor.err {:key (:name f) :class (if (get-in s [:ui :errors (:name f)]) :with-error)}
    [:label {:for (:name f)} (str (:label f) ":")]
    [:div.proto-dropdown {:class (if (get-in s [:ui k (:name f)]) :open)}
-    [:div.input-wrap
-     [:input {:type :text
-              :value (get-in s [:data k (:name f)])
-              :onChange #(change s k f %)
-              }]
-     [:a.icon {:on-click #(rm s k f %)}
-      (ui/icon s "#icon-cross")
-      ]
-     ]
-    (merge
-      [:ul.dropdown-menu.roll.listbox]    
-      (doall (map (fn [o] [:li {:key o
-                                :role :option
-                                :on-click #(click s k f o %)
-                                } o]) (:options f)))
-      )
-    [:a.icon {:href "#"
-              :on-click #(show s k f %)
-              } (ui/icon s "#icon-left")]
+    (input s k f) 
+    (menu s k f)
+    (icon s k f)
     ]
    (ui/val-error s (:name f))
    ]
   )
- 
+

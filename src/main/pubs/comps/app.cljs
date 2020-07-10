@@ -23,48 +23,9 @@
     )
   )
 
-;(defn- _handle-value [e s name]
-;  (.preventDefault e)
-;  (.stopPropagation e)
-;  (swap! s assoc-in [:data (keyword name)] (-> e .-target .-value))
-;  )
-;
-;(defn- _help [s]
-;  [:a.icon {:href "#" :on-click (fn [e]
-;                                  (.preventDefault e)
-;                                  (.stopPropagation e)
-;                                  (panels/show s e true :help-center)
-;                                  )}
-;   (ui/icon s "#icon-question")
-;   ]
-;  )
-;
-;
-;(defn textfield [s id title name]
-;  [:div.field.anchor.err {:id id :class (if (get-in @s [:ui :errors (keyword name)]) :with-error)}
-;   [:label {:for :title} title
-;    (_help s)
-;    ]
-;   [:input {:type :text
-;            :name name
-;            :value (get-in @s [:data (keyword name)])
-;            :on-change #(_handle-value % s name)
-;            }]
-;   (ui/val-error s (keyword name))
-;   ]
-;  )
-;
-;(defn textarea [s id title name]
-;  [:div.field {:id id :class (if (get-in @s [:ui :errors (keyword name)]) :with-error)}
-;   [:label {:for :title} title]
-;   [:textarea {:name name
-;               :value (get-in @s [:data (keyword name)])
-;               :on-change #(_handle-value % s name)
-;               }]
-;   (ui/val-error s (keyword name))
-;   ]
-;  )
-;
+
+
+
 ;(defn file [s k v id]
 ;  [:li.item {:key id}
 ;   (ui/icon s "#icon-file-text2")

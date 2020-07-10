@@ -1,22 +1,25 @@
-(ns hzn-pubs-spa.comps.help
+(ns pubs.comps.help
   (:require
-    [hzn-pubs-spa.comps.ui :as ui] 
-    [hzn-pubs-spa.comps.panels :as panels]     
+    [pubs.comps.ui :as ui] 
+    ;[pubs.comps.panels :as panels]     
     )
   )
 
-(defn- _header [s]
+(defn- header [s]
   [:header
    [:div.content
     [:h1 "Help Center"]
     ]
-   [:a.icon {:on-click #(panels/close s %)}
+   [:a.icon {
+             ;:on-click #(panels/close s %)
+             
+             }
     (ui/icon s "#icon-close")
     ]
    ]
   )
 
-(defn- _container [s]
+(defn- container [s]
   [:div.overlay-panel-scroll-container
    [:div.inner
     [:dl
@@ -30,11 +33,21 @@
    ]  
   )
 
-(defn help [s k]
-  [:div.page-panel.as-panel.page-panel-nonmodal.help-center {:class (if (get-in @s [:ui :panels k]) :open)}
+(defn render [s k]
+  [:div.page-panel.as-panel.page-panel-nonmodal.help-center {:class (if (get-in s [:ui :panels k]) :open)}
    [:div.inner
-    (_header s)
-    (_container s)
+    (header s)
+    (container s)
     ]
    ]
   )
+
+(defn icon [s]
+  [:a.icon {:href "#" :on-click (fn [e]
+                                  (.preventDefault e)
+                                  (.stopPropagation e)
+                                  ;(panels/show s e true :help-center)
+                                  )}
+   (ui/icon s "#icon-question")
+   ]
+)

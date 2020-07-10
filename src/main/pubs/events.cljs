@@ -5,6 +5,7 @@
    [pubs.handlers.req :as req]
    [pubs.handlers.res :as res]
    [pubs.handlers.dropdown :as dropdown]
+   [pubs.handlers.text :as text]
    ))
 
 (rf/reg-event-db ::initialize-db handler/initialize-db)
@@ -25,4 +26,6 @@
 (rf/reg-event-db :dropdown/change dropdown/change)
 (rf/reg-event-db :dropdown/click dropdown/click)
 (rf/reg-event-db :dropdown/rm dropdown/rm)
+
+(rf/reg-event-db :text/change text/change)
 
