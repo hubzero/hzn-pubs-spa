@@ -22,7 +22,15 @@
       )
   )
 
-(defn prj [db [_ params]]
+(defn prj [db _]
   (hub/prj db)
+  )
+
+(defn files [db _]
+  (hub/files db)
+  )
+
+(defn ls-files [db _]
+  ;(hub/ls-files db)
   )
 

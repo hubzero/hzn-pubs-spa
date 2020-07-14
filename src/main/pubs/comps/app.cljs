@@ -6,7 +6,6 @@
     ;[hzn-pubs-spa.data :as data]
     ;[hzn-pubs-spa.routes :as routes]
 ;    [pubs.comps.panels :as panels]
-;    [pubs.comps.files :as files]
 ;    [pubs.comps.dropdown :as dropdown]
 ;    [pubs.comps.tags :as tags]
 ;    [pubs.comps.authors :as authors]
@@ -18,6 +17,8 @@
 ;    [pubs.comps.ui :as ui] 
 ;    [pubs.comps.summary :as summary] 
     [pubs.comps.breadcrumbs :as breadcrumbs]
+    [pubs.comps.files :as files]
+    [pubs.comps.overlay :as overlay]
     [pubs.comps.main :as main]
     [pubs.comps.summary :as summary]
     )
@@ -26,22 +27,7 @@
 
 
 
-;(defn file [s k v id]
-;  [:li.item {:key id}
-;   (ui/icon s "#icon-file-text2")
-;   [:div.main [:span (:name v)]]
-;   [:div.options {:on-click (fn [e]
-;                              (.preventDefault e)
-;                              (.stopPropagation e)
-;                              (options/close s)
-;                              (swap! s assoc-in [:ui :options k id] true)
-;                              )}
-;    (ui/icon s "#icon-dots")
-;    (options/items s k v id)
-;    ]
-;   ] 
-;  )
-;
+
 ;(defn image [s k v id]
 ;  [:li.item {:key id}
 ;   (ui/icon s "#icon-file-picture")
@@ -148,69 +134,7 @@
 ;       })) 
 ;  )
 ;
-;(defn- _set-list [s k l]
-;  (->> l 
-;       (js->clj)
-;       (map (fn [[k v]] [k (utils/keywordize v)]))
-;       (into {})
-;       (swap! s assoc-in [:data k])
-;       )
-;  ;; Update all the author indexes/sort order - JBG
-;  (doall
-;    (case k
-;      :authors-list
-;      (map-indexed (fn [i a] (data/update-author s 
-;                                                 (assoc a :index i)
-;                                                 )) (vals (get-in @s [:data k])))
-;      (prn "SKIP UPDATE")
-;      )
-;    )
-;  )
-;
-;(defn- _sortitems [s k l]
-;  [:> ReactSortable {:tag "ul" :list l :setList #(_set-list s k %)}
-;   (doall
-;     (map #(item s k %) l)
-;     )
-;   ] 
-;  )
-;
-;(defn items [s k]
-;  (if-let [l (into [] (get-in @s [:data k]))]
-;    (_sortitems s k l)
-;    )
-;  )
-;
-;(defn selector-classes [s key classes]
-;  (concat classes (key {:authors-list [:options
-;                                       :author-selector
-;                                       (if (get-in @s [:ui :options :authors]) :open)
-;                                       ]
-;                        :citations [:options
-;                                    :citations-selector
-;                                    (if (get-in @s [:ui :options :citations]) :open)
-;                                    ]
-;                        }))
-;  )
-;
-;(defn selector-button [s key options-comp f]
-;  [:div {:class (selector-classes s key [:selector]) }
-;   [:a.selector-button {:href "#" :on-click #(f s % key)}
-;    (ui/icon s "#icon-plus")
-;    ] options-comp]
-;  )
-;
-;(defn collection [s id title k options-comp f]
-;  [:div.field.anchor.err {:id id :class (if (get-in @s [:ui :errors k]) :with-error)}
-;   [:label {:for :title} title]
-;   [:div.collection
-;    (items s k)
-;    (selector-button s k options-comp f)
-;    ]
-;   (ui/val-error s k)
-;   ]
-;  )
-;
+
 ;(defn acknowledge [s]
 ;  [:div.details.last-child
 ;   [:div.inner
@@ -425,10 +349,11 @@
   ;(_save s)
   (merge
     ;[:div {:on-click #(swap! s assoc-in [:ui :tag] false)}]
+    [:div]
     (wrap s)
-;    (panels/overlay s)
+    (overlay/render s)
 ;    (errors/errors s :errors)
-;    (files/files s :content)
+    (files/render s :content)
 ;    (files/files s :images)
 ;    (files/files s :support-docs)
 ;    (authors/authors-list s :authors-list)

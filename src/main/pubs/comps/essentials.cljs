@@ -1,8 +1,17 @@
 (ns pubs.comps.essentials
-  (:require [pubs.comps.master-types :as master-types]
+  (:require [pubs.comps.collection :as collection] 
+            [pubs.comps.master-types :as master-types]
             [pubs.comps.textfield :as textfield] 
             [pubs.comps.textarea :as textarea] 
             ) 
+  )
+
+(defn- files [s k e]
+  (prn "BLAH BLAH BLAH" k)
+  (.preventDefault e)
+  (.stopPropagation e)
+  ;(re-frame.core/dispatch [:req/ls-files])
+  (re-frame.core/dispatch [:panels/show k true])
   )
 
 (defn render [s]
@@ -14,8 +23,7 @@
    (master-types/render s)
    (textfield/render s "a-title" "Title:" :title)
    (textarea/render s "a-abstract" "Abstract:" :abstract)
-
-   ;   (collection s "a-content" "Content:" :content nil handle-files-options)
+   (collection/render s "a-content" "Content:" :content nil files)
    ;   (collection s "a-authors" "Authors (drag to reorder):" :authors-list (options/authors s) handle-author-options)
    ;   (tags/tags s)
    ;   (licenses s)

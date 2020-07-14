@@ -31,12 +31,27 @@
   (let [pub (pub-master-type db res)]
     (-> (assoc db :data pub)
         (hub/prj)
+        (hub/files)
       )
     )
   )
 
 (defn prj [db [_ res]]
-  (prn db)
   (assoc-in db [:data :prj] res)
+  )
+
+(defn files [db [_ res]]
+  (update db :data merge res)
+  )
+
+(defn rm-file [db [_ [res k id]]]
+  (update-in db [:data k] dissoc id)
+  )
+
+(defn ls-files [db [_ res]]
+  (-> db
+      (assoc :files res)
+      (assoc-in [:ui :current-folder] [["Project files" (first (first res))]])
+      )
   )
 

@@ -42,3 +42,20 @@
     )
   )
 
+(deftest rm-file
+  (with-redefs [pubs.hub/files pubs.hub-test/files
+                pubs.hub/rm-file pubs.hub-test/rm-file
+                ]
+
+    (rf/reg-sub :content (fn [db _] (get-in db [:data :content])))
+
+    (rf-test/run-test-sync
+      (let [content (rf/subscribe [:content])]
+        (dispatch [:req/files])
+        (dispatch [:file/rm :content :1264])
+        (-> @content count (= 0) is)
+        )
+      )
+    )
+  )
+
