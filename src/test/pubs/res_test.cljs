@@ -60,3 +60,9 @@
     )
   )
 
+(deftest usage 
+  (let [db (res/usage {} [:res/usage (:usage resps)])]
+    (-> db (:usage) nil? not is)
+    )
+  )
+

@@ -25,17 +25,19 @@
        )  
   )
 
-(defn prj-route [db]
-  (str "/"
-       "prjs/"
+(defn prj-route [db & [route]]
+  (str "/prjs/"
        (get-in db [:data :prj-id])
+       route
        )  
   )
 
-
 (defn handle [res s event-key args]
   (if (= 200 (:status res))
-    (dispatch (into [] (concat [event-key (:body res)] args)))
+    (if (vector? args)
+      (dispatch (into [] (concat [event-key (:body res)] args)))
+      (dispatch [event-key (:body res) args])
+      )
     (dispatch [:err (:status res)])
    )
   )
@@ -51,7 +53,17 @@
   )
 
 (defn do-get [db route event-key & [method args]]
-  (req db route event-key http/get args) 
+  (req db route event-key method args) 
+  )
+
+(defn do-post [db route event-key & [method data]]
+  (go (-> route
+          get-url
+          ((or method http/post) {:edn-params data})
+          <!
+          (handle db event-key data)
+          ))
+  db
   )
 
 (defn me [db]
@@ -69,6 +81,15 @@
 (defn files [db]
   (do-get db (ver-route db "/files") :res/files))
 
+(defn add-file [db file]
+  (do-post db (ver-route db "/files") :res/add-file http/post file))
+
 (defn rm-file [db k id]
-  (do-get db (ver-route db) :res/rm-file http/delete [k id]))
+  (do-get db (ver-route db (str "/files/" id)) :res/rm-file http/delete [k id]))
+
+(defn ls-files [db]
+  (do-get db (prj-route db "/files") :res/ls-files))
+
+(defn usage [db files]
+  (do-post db (prj-route db "/usage") :res/usage http/post files))
  

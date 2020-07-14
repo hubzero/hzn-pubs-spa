@@ -7,10 +7,10 @@
   )
 
 (defn- files [s k e]
-  (prn "BLAH BLAH BLAH" k)
   (.preventDefault e)
   (.stopPropagation e)
-  ;(re-frame.core/dispatch [:req/ls-files])
+  (re-frame.core/dispatch [:req/ls-files])
+  (re-frame.core/dispatch [:req/usage])
   (re-frame.core/dispatch [:panels/show k true])
   )
 

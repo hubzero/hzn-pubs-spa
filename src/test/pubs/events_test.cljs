@@ -6,9 +6,15 @@
             )
   )
 
+
+(rf/reg-sub :content (fn [db _] (get-in db [:data :content])))
+(rf/reg-sub :user-id (fn [db _] (get-in db [:data :user-id]))) 
+(rf/reg-sub :mt (fn [db _] (:master-types db)))
+(rf/reg-sub :data (fn [db _] (:data db))) 
+(rf/reg-sub :usage (fn [db _] (:usage db)))
+
 (deftest me
   (with-redefs [pubs.hub/me pubs.hub-test/me]
-    (rf/reg-sub :user-id (fn [db _] (get-in db [:data :user-id]))) 
     (rf-test/run-test-sync
       (let [user-id (rf/subscribe [:user-id])]
         (dispatch [:req/me])
@@ -21,22 +27,30 @@
 (deftest master-types
   (with-redefs [pubs.hub/pub pubs.hub-test/pub
                 pubs.hub/master-types pubs.hub-test/master-types]
-
-    (rf/reg-sub :mt (fn [db _] (:master-types db)))
-    (rf/reg-sub :data (fn [db _] (:data db)))
-
     (rf-test/run-test-sync
       (let [mt (rf/subscribe [:mt])
             data (rf/subscribe [:data])
             ]
         (dispatch [:req/pub])
-
         (->> @mt nil? not is)
         (->> @data (:master-type) (:master-type) nil? not is)
-        ;; authors
-        ;;tags
-        ;;citations
+        )
+      )
+    )
+  )
 
+(deftest add-file
+  (with-redefs [pubs.hub/files pubs.hub-test/files
+                pubs.hub/add-file pubs.hub-test/add-file]
+    (rf-test/run-test-sync
+      (let [content (rf/subscribe [:content])]
+        (dispatch [:req/files])
+        (dispatch [:req/add-file {:type :content
+                                  :index 2
+                                  :path "prjfoobar/files/foo"
+                                  :name "foo"}])
+        (-> @content count (= 2) is)
+        (->> @content keys (every? keyword?) is)
         )
       )
     )
@@ -44,16 +58,24 @@
 
 (deftest rm-file
   (with-redefs [pubs.hub/files pubs.hub-test/files
-                pubs.hub/rm-file pubs.hub-test/rm-file
-                ]
-
-    (rf/reg-sub :content (fn [db _] (get-in db [:data :content])))
-
+                pubs.hub/rm-file pubs.hub-test/rm-file]
     (rf-test/run-test-sync
       (let [content (rf/subscribe [:content])]
         (dispatch [:req/files])
-        (dispatch [:file/rm :content :1264])
+        (dispatch [:req/rm-file :content :1264])
         (-> @content count (= 0) is)
+        )
+      )
+    )
+  )
+
+(deftest usage 
+  (with-redefs [pubs.hub/pub pubs.hub-test/pub
+                pubs.hub/usage pubs.hub-test/usage]
+    (rf-test/run-test-sync
+      (let [usage (rf/subscribe [:usage])]
+        (dispatch [:req/usage])
+        (->> @usage nil? not is)
         )
       )
     )

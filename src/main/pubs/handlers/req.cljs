@@ -1,6 +1,8 @@
 (ns pubs.handlers.req
   (:require [pubs.db :as db]
-    [pubs.hub :as hub])
+            [pubs.hub :as hub]
+            [pubs.utils :as utils]
+            )
   )
 
 (defn me [db [_ _]]
@@ -10,7 +12,7 @@
       )
   )
 
-(defn master-types [db [_ res]]
+(defn master-types [db _]
   (hub/master-types db)
   )
 
@@ -31,6 +33,22 @@
   )
 
 (defn ls-files [db _]
-  ;(hub/ls-files db)
+  (hub/ls-files db)
+  )
+
+(defn usage [db _]
+  (->> (get-in db [:data :content] {})
+       (vals)
+       (map #(:path %))
+       (hub/usage db)
+       )
+  )
+
+(defn add-file [db [_ file]]
+  (hub/add-file db file)
+  )
+
+(defn rm-file [db [_ k file-id]]
+  (hub/rm-file db k (utils/keyword->int file-id))
   )
 

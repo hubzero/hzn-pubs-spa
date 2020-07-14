@@ -18,10 +18,10 @@
     (apply rfez/push-state route)))
 
 (def routes
-  [["/pubs/:pub-id/v/:ver-id" {:name :pub
-                               :view app/render
-                               :controllers [{:start controllers/pub}]
-                               }]
+  [["/pubs/:pub-id/v/:ver-id/edit" {:name :pub
+                                    :view app/render
+                                    :controllers [{:start controllers/pub}]
+                                    }]
    ]
   )
 
