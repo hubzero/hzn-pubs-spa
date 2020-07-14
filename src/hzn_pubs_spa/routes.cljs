@@ -86,7 +86,7 @@
 
   ;; Catch all
   (defroute "*" []
-    (set-html! "<h1>LOL! YOU LOST!</h1>"))
+    (set-html! "<h1>Page not found.</h1>"))
 
   (hook-browser-navigation!))
 
