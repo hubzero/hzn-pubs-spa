@@ -27,6 +27,8 @@
 (rf/reg-event-db :req/add-file req/add-file)
 (rf/reg-event-db :req/rm-file req/rm-file)
 (rf/reg-event-db :req/usage req/usage)
+(rf/reg-event-db :req/authors req/authors)
+(rf/reg-event-db :req/owners req/owners)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -37,11 +39,14 @@
 (rf/reg-event-db :res/rm-file res/rm-file)
 (rf/reg-event-db :res/ls-files res/ls-files)
 (rf/reg-event-db :res/usage res/usage)
+(rf/reg-event-db :res/authors res/authors)
+(rf/reg-event-db :res/owners res/owners)
 
 ;; Component handlers - JBG
 
 (rf/reg-event-db :options/show options/show)
 (rf/reg-event-db :options/close options/close)
+(rf/reg-event-db :options/authors options/authors)
 
 (rf/reg-event-db :dropdown/show dropdown/show)
 (rf/reg-event-db :dropdown/change dropdown/change)

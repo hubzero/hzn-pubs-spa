@@ -66,3 +66,15 @@
     )
   )
 
+(deftest authors 
+  (let [db (res/authors {} [:res/authors (:authors resps)])]
+    (-> db (get-in [:data :authors-list]) nil? not is)
+    )
+  )
+
+(deftest owners 
+  (let [db (res/owners {} [:res/owners (:owners resps)])]
+    (-> db (:users) nil? not is)
+    )
+  )
+

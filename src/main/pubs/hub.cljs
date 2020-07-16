@@ -92,4 +92,10 @@
 
 (defn usage [db files]
   (do-post db (prj-route db "/usage") :res/usage http/post files))
+
+ (defn authors [db]
+  (do-get db (ver-route db "/authors") :res/authors))
+
+(defn owners [db]
+  (do-get db (prj-route db "/owners") :res/owners))
  

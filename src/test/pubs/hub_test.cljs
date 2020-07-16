@@ -11,6 +11,8 @@
             :rm-file ""
             :ls-files [["broodje/files" ["Foo"] []] ["broodje/files/Foo" ["Bar"] []] ["broodje/files/Foo/Bar" ["Baz"] []] ["broodje/files/Foo/Bar/Baz" [] ["Screenshot_2020-07-02 PURR - PURR.png" "Screen Shot 2020-06-08 at 1.45.09 PM.png"]]]
             :usage {:size "0.0000", :units "GB", :percent "0.00", :max "1.00"}
+            :authors {:422 {:email "fb@example.com", :project_owner_id 41, :userid 0, :index 1, :lastname "Blok", :fullname "Femke Blokje", :organization "Homegirl", :firstname "Femke", :id 422, :poc 0, :credit ""}, :431 {:email "ps@example.com", :project_owner_id 42, :userid 0, :index 3, :lastname "Smart", :fullname "Petra Smart", :organization "foo", :firstname "Petra", :id 431, :poc 0, :credit ""}, :452 {:email "jbg@example.com", :project_owner_id 1, :userid 0, :index 0, :lastname "G", :fullname "J B G", :organization "Bob Taco Stand Baz", :firstname "J B", :id 452, :poc 0, :credit ""}, :456 {:email "bos@example.com", :project_owner_id 107, :userid 0, :index 2, :lastname nil, :fullname "Annet Bos", :organization nil, :firstname nil, :id 456, :poc 0, :credit ""}}
+            :owners [{:role 1, :projectid 121, :userid 1001, :created_by_user 1001, :lastname "G", :added "2020-04-22T14:16:38Z", :name "J B G", :invited_email "", :username "jbg", :groupname nil, :params nil, :fullname "J B G", :invited_name nil, :invited_code nil, :organization "", :lastvisit nil, :num_visits 0, :firstname "J", :native 1, :groupid 0, :status 1, :id 133, :picture "", :groupdesc nil, :prev_visit nil}]
             }
   )
 
@@ -35,12 +37,12 @@
   )
 
 (defn add-file [db file]
-  (dispatch [:res/add-file [(:add-file resps) file]])
+  (dispatch [:res/add-file (:add-file resps) file])
   db
   )
 
 (defn rm-file [db k id]
-  (dispatch [:res/rm-file [(:rm-file resps) k id]])
+  (dispatch [:res/rm-file (:rm-file resps) k id])
   db
   )
 
@@ -54,4 +56,13 @@
   db
   )
 
+(defn authors [db]
+  (dispatch [:res/authors (:authors resps)])
+  db
+  )
+
+(defn owners [db]
+  (dispatch [:res/owners (:owners resps)])
+  db
+  )
 

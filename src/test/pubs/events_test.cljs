@@ -8,10 +8,12 @@
 
 
 (rf/reg-sub :content (fn [db _] (get-in db [:data :content])))
+(rf/reg-sub :authors (fn [db _] (get-in db [:data :authors-list])))
 (rf/reg-sub :user-id (fn [db _] (get-in db [:data :user-id]))) 
 (rf/reg-sub :mt (fn [db _] (:master-types db)))
 (rf/reg-sub :data (fn [db _] (:data db))) 
 (rf/reg-sub :usage (fn [db _] (:usage db)))
+(rf/reg-sub :owners (fn [db _] (:users db)))
 
 (deftest me
   (with-redefs [pubs.hub/me pubs.hub-test/me]
@@ -34,6 +36,19 @@
         (dispatch [:req/pub])
         (->> @mt nil? not is)
         (->> @data (:master-type) (:master-type) nil? not is)
+        )
+      )
+    )
+  )
+
+(deftest authors 
+  (with-redefs [pubs.hub/pub pubs.hub-test/pub
+                pubs.hub/authors pubs.hub-test/authors]
+    (rf-test/run-test-sync
+      (let [authors (rf/subscribe [:authors])]
+        (dispatch [:req/authors])
+        (->> @authors nil? not is)
+        (->> @authors count (= 4) is)
         )
       )
     )
@@ -76,6 +91,18 @@
       (let [usage (rf/subscribe [:usage])]
         (dispatch [:req/usage])
         (->> @usage nil? not is)
+        )
+      )
+    )
+  )
+
+(deftest owners 
+  (with-redefs [pubs.hub/owners pubs.hub-test/owners]
+    (rf-test/run-test-sync
+      (let [owners (rf/subscribe [:owners])]
+        (dispatch [:req/owners])
+        (->> @owners nil? not is)
+        (->> @owners count (= 1) is)
         )
       )
     )

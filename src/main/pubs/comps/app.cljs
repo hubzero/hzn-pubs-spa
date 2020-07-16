@@ -8,7 +8,6 @@
 ;    [pubs.comps.panels :as panels]
 ;    [pubs.comps.dropdown :as dropdown]
 ;    [pubs.comps.tags :as tags]
-;    [pubs.comps.authors :as authors]
 ;    [pubs.comps.options :as options] 
 ;    [pubs.comps.licenses :as licenses] 
 ;    [pubs.comps.citations :as citations] 
@@ -16,6 +15,7 @@
 ;    [pubs.comps.help :as help] 
 ;    [pubs.comps.ui :as ui] 
 ;    [pubs.comps.summary :as summary] 
+    [pubs.comps.authors :as authors]
     [pubs.comps.breadcrumbs :as breadcrumbs]
     [pubs.comps.files :as files]
     [pubs.comps.overlay :as overlay]
@@ -220,12 +220,6 @@
 ;  (panels/show s e true key)
 ;  )
 ;
-;(defn handle-author-options [s e k]
-;  (.preventDefault e)
-;  (.stopPropagation e)
-;  (swap! s assoc-in [:ui :options :authors] true) 
-;  )
-;
 
 ;(defn handle-citation-options [s e key]
 ;  (.preventDefault e)
@@ -356,7 +350,7 @@
     (files/render s :content)
 ;    (files/files s :images)
 ;    (files/files s :support-docs)
-;    (authors/authors-list s :authors-list)
+;    (authors/render s :authors-list)
 ;    (authors/authors-new s :authors-new)
 ;    (licenses/license-list s :licenses)
 ;    (citations/doi s :citations-doi)

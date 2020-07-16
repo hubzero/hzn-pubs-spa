@@ -6,15 +6,6 @@
     )
   )
 
-;(defn handle-author [is-new s e]
-;   (.preventDefault e)
-;   (.stopPropagation e)
-;   (panels/show-overlay s true)
-;   (swap! s assoc-in [:ui :panels :authors-new] true)
-;   (swap! s assoc-in [:ui :author-options :is-new] is-new)
-;   (close s) ;; why?
-;  )
-; 
 
 (defn- _remove [s e k id]
   (.preventDefault e)
@@ -28,14 +19,7 @@
     )
   )
 ;
-;(defn- _edit-author [e s v]
-;  (.preventDefault e) 
-;  (.stopPropagation e)
-;  (swap! s assoc-in [:data :authors-new] (utils/fillname v))
-;  (handle-author false s e)
-;  )
-;
-;
+
 ;(defn handle-manual [s e]
 ;  (.preventDefault e)
 ;  (.stopPropagation e)
@@ -70,31 +54,9 @@
 ;  )
 ;
 ;
-;(defn handle-add-author [s e]
-;  (.preventDefault e)
-;  (.stopPropagation e)
-;  (data/get-owners s)
-;  (panels/show-overlay s true)
-;  (swap! s assoc-in [:ui :panels :authors-list] true)
-;  (close s)
-;  )
-;
-;(defn handle-new-author [s e]
-;  (handle-author true s e)
-;  )
-;
-;(defn authors [s]
-;  [:div.authors-options.options-list {:class (if (get-in @s [:ui :options :authors]) :open)}
-;   [:div.inner
-;    (merge
-;      [:ul]
-;      (item s "#icon-user" "Add from project" handle-add-author)
-;      (item s "#icon-user" "Add new" handle-new-author)
-;      )
-;    ]
-;   ]
-;  )
-;
+
+
+
 ;(defn handle-doi [s e]
 ;  (.preventDefault e)
 ;  (.stopPropagation e)

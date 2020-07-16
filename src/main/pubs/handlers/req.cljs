@@ -52,3 +52,11 @@
   (hub/rm-file db k (utils/keyword->int file-id))
   )
 
+(defn authors [db _]
+  (hub/authors db)
+  )
+
+(defn owners [db _]
+  (hub/owners db)
+  )
+

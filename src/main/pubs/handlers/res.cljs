@@ -34,6 +34,7 @@
     (-> (assoc db :data pub)
         (hub/prj)
         (hub/files)
+        (hub/authors)
       )
     )
   )
@@ -47,7 +48,6 @@
   )
 
 (defn add-file [db [_ res file]]
-  (prn "ADD FILE" res file)
   (as-> (:generated_key res) $
     (assoc-in db [:data (:type file) (utils/int->keyword $)] (assoc file :id $))
     )
@@ -66,5 +66,17 @@
 
 (defn usage [db [_ res]]
   (assoc db :usage res)
+  )
+
+(defn authors [db [_ res]]
+  (assoc-in db [:data :authors-list] res)
+  )
+
+(defn owners [db [_ res]]
+  (->> res
+       (map (fn [u] [(:id u) u]))
+       (into {})
+       (assoc db :users)
+       )
   )
 
