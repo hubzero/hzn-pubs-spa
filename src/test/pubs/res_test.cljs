@@ -78,3 +78,27 @@
     )
   )
 
+(deftest rm-author 
+  (let [db (-> (res/authors {} [:res/authors (:authors resps)])
+               (res/rm-author [:res/rm-author (:rm-author resps) 456]) )]
+    (-> db (get-in [:data :authors-list]) nil? not is)
+    (-> db (get-in [:data :authors-list]) count (= 3) is)
+    )
+  )
+
+(deftest update-author 
+  (let [db (-> (res/authors {} [:res/authors (:authors resps)])
+               (res/update-author [:res/update-author (:update-author resps)]) )]
+    (-> db (get-in [:data :authors-list]) nil? not is)
+    (-> db (get-in [:data :authors-list]) count (= 4) is)
+    )
+  )
+
+(deftest add-author 
+  (let [db (-> (res/authors {} [:res/authors (:authors resps)])
+               (res/add-author [:res/add-author (:add-author resps)]) )]
+    (-> db (get-in [:data :authors-list]) nil? not is)
+    (-> db (get-in [:data :authors-list]) count (= 5) is)
+    )
+  )
+

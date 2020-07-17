@@ -13,6 +13,9 @@
             :usage {:size "0.0000", :units "GB", :percent "0.00", :max "1.00"}
             :authors {:422 {:email "fb@example.com", :project_owner_id 41, :userid 0, :index 1, :lastname "Blok", :fullname "Femke Blokje", :organization "Homegirl", :firstname "Femke", :id 422, :poc 0, :credit ""}, :431 {:email "ps@example.com", :project_owner_id 42, :userid 0, :index 3, :lastname "Smart", :fullname "Petra Smart", :organization "foo", :firstname "Petra", :id 431, :poc 0, :credit ""}, :452 {:email "jbg@example.com", :project_owner_id 1, :userid 0, :index 0, :lastname "G", :fullname "J B G", :organization "Bob Taco Stand Baz", :firstname "J B", :id 452, :poc 0, :credit ""}, :456 {:email "bos@example.com", :project_owner_id 107, :userid 0, :index 2, :lastname nil, :fullname "Annet Bos", :organization nil, :firstname nil, :id 456, :poc 0, :credit ""}}
             :owners [{:role 1, :projectid 121, :userid 1001, :created_by_user 1001, :lastname "G", :added "2020-04-22T14:16:38Z", :name "J B G", :invited_email "", :username "jbg", :groupname nil, :params nil, :fullname "J B G", :invited_name nil, :invited_code nil, :organization "", :lastvisit nil, :num_visits 0, :firstname "J", :native 1, :groupid 0, :status 1, :id 133, :picture "", :groupdesc nil, :prev_visit nil}]
+            :rm-author {:role nil, :repository_contact 0, :project_owner_id 107, :publication_version_id 196, :lastname "Bos", :name "Annet Bos", :created "2020-07-17T10:11:00Z", :organization nil, :modified nil, :ordering 3, :firstname "Annet", :status 1, :id 456, :user_id 0, :modified_by 0, :credit "", :created_by 1001}
+            :update-author {:role nil, :repository_contact 0, :project_owner_id 107, :publication_version_id 196, :lastname "Bos", :name "Annet Bos", :created "2020-07-17T10:11:00Z", :organization nil, :modified nil, :ordering 3, :firstname "Annet", :status 1, :id 456, :user_id 0, :modified_by 0, :credit "", :created_by 1001} 
+            :add_author {:role nil, :repository_contact 0, :project_owner_id 134, :publication_version_id 196, :lastname nil, :name "Bob Taco", :created "2020-07-17T12:54:07Z", :organization nil, :modified nil, :ordering nil, :firstname nil, :status 1, :id 564, :user_id 0, :modified_by 0, :credit "", :created_by 1001}
             }
   )
 
@@ -63,6 +66,21 @@
 
 (defn owners [db]
   (dispatch [:res/owners (:owners resps)])
+  db
+  )
+
+(defn rm-author [db id]
+  (dispatch [:res/rm-author (:rm-author resps) id])
+  db
+  )
+
+(defn update-author [db]
+  (dispatch [:res/update-author (:update-author resps)])
+  db
+  )
+
+(defn add-author [db]
+  (dispatch [:res/add-author (:add-author resps)])
   db
   )
 

@@ -49,12 +49,12 @@
 
 (defn add-file [db [_ res file]]
   (as-> (:generated_key res) $
-    (assoc-in db [:data (:type file) (utils/int->keyword $)] (assoc file :id $))
+    (assoc-in db [:data (:type file) (utils/->keyword $)] (assoc file :id $))
     )
   )
 
 (defn rm-file [db [_ res k id]]
-  (update-in db [:data k] dissoc (utils/int->keyword id))
+  (update-in db [:data k] dissoc (utils/->keyword id))
   )
 
 (defn ls-files [db [_ res]]
@@ -78,5 +78,17 @@
        (into {})
        (assoc db :users)
        )
+  )
+
+(defn rm-author [db [_ res id]]
+  (update-in db [:data :authors-list] dissoc (utils/->keyword id))
+  )
+
+(defn update-author [db [_ res]]
+  (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
+  )
+
+(defn add-author [db [_ res]]
+  (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
   )
 

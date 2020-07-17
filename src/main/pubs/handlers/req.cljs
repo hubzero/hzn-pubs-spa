@@ -49,7 +49,7 @@
   )
 
 (defn rm-file [db [_ k file-id]]
-  (hub/rm-file db k (utils/keyword->int file-id))
+  (hub/rm-file db k (utils/->int file-id))
   )
 
 (defn authors [db _]

@@ -350,7 +350,7 @@
     (files/render s :content)
 ;    (files/files s :images)
 ;    (files/files s :support-docs)
-;    (authors/render s :authors-list)
+    (authors/render s :authors-list)
 ;    (authors/authors-new s :authors-new)
 ;    (licenses/license-list s :licenses)
 ;    (citations/doi s :citations-doi)

@@ -1,6 +1,7 @@
 (ns pubs.events
   (:require
    [re-frame.core :as rf :refer [dispatch dispatch-sync]]
+   [pubs.handlers.authors :as authors]
    [pubs.handlers.collection :as collection]
    [pubs.handlers.dropdown :as dropdown]
    [pubs.handlers.folders :as folders]
@@ -41,6 +42,9 @@
 (rf/reg-event-db :res/usage res/usage)
 (rf/reg-event-db :res/authors res/authors)
 (rf/reg-event-db :res/owners res/owners)
+(rf/reg-event-db :res/rm-author res/rm-author)
+(rf/reg-event-db :res/update-author res/update-author)
+(rf/reg-event-db :res/add-author res/add-author)
 
 ;; Component handlers - JBG
 
@@ -64,4 +68,12 @@
 
 (rf/reg-event-db :folders/pop folders/!pop)
 (rf/reg-event-db :folders/push folders/push)
+
+(rf/reg-event-db :authors/edit authors/edit)
+(rf/reg-event-db :authors/name authors/fillname)
+(rf/reg-event-db :authors/rm authors/rm)
+(rf/reg-event-db :authors/poc authors/poc)
+(rf/reg-event-db :authors/add authors/add)
+
+
 

@@ -1,62 +1,64 @@
 (ns pubs.comps.authors
   (:require
-    ;[pubs.utils :as utils] 
+    [pubs.utils :as utils] 
     ;[pubs.data :as data] 
-    ;[pubs.comps.ui :as ui] 
+    [pubs.comps.ui :as ui] 
     [pubs.comps.panels :as panels] 
     )
   )
-;
-;(defn- _author? [s k po-id]
-;  (->
-;    (group-by :project_owner_id (vals (get-in @s [:data k])))
-;    (get po-id)
-;    (first)
-;    )
-;  )
-;
-;(defn user-click [s k u e]
-;    (if-let [a (_author? s k (:id u))] 
-;      (data/rm-author s (:id a))
-;      (data/add-author s u)
-;      )
-;  )
-;
-;(defn user [s k u]
-;  [:li {:key (utils/author-key u) :on-click #(user-click s k u %)}
-;   [:div.inner
-;    [:div.selected-indicator {:class (if (_author? s k (:id u)) :selected)}
-;     [:div.icon
-;      (ui/icon s "#icon-checkmark")
-;      [:span.name "Selected"]
-;      ]
-;     ]
-;    [:div.icon
-;     (ui/icon s "#icon-user")
-;     ] 
-;    (:fullname u)
-;    ]
-;   ]
-;  )
-;
-;(defn users [s key]
-;  (merge
-;    [:ul.ui.user-selector.item-selector]
-;    (doall
-;      (map #(user s key %) (vals (:users @s)))
-;      )
-;    )
-;  )
-;
-(defn render [s k]
-  [:div.page-panel.as-panel {:class [key (if (get-in s [:ui :panels k]) :open)]}
+
+(defn- author? [s k id]
+  (->
+    (group-by :project_owner_id (vals (get-in s [:data k])))
+    (get id)
+    (first)
+    )
+  )
+
+(defn user-click [s k u e]
+    (if-let [a (author? s k (:id u))] 
+      (re-frame.core/dispatch [:authors/rm (:id a)])
+      (re-frame.core/dispatch [:authors/add u])
+      )
+  )
+
+(defn user [s k u]
+  [:li {:key (utils/author-key u)
+        :on-click #(user-click s k u %)
+        }
    [:div.inner
-    (panels/header s "Add authors from project team")
-    ;(users s key)
+    [:div.selected-indicator {:class (if (author? s k (:id u)) :selected)}
+     [:div.icon
+      (ui/icon s "#icon-checkmark")
+      [:span.name "Selected"]
+      ]
+     ]
+    [:div.icon
+     (ui/icon s "#icon-user")
+     ] 
+    (:fullname u)
     ]
    ]
   )
-;
+
+(defn users [s k]
+  (merge
+    [:ul.ui.user-selector.item-selector]
+    (doall
+      (map #(user s k %) (vals (:users s)))
+      )
+    )
+  )
+
+(defn render [s k]
+  [:div.page-panel.as-panel {:class [k (if (get-in s [:ui :panels k]) :open)]}
+   [:div.inner
+    (panels/header s "Add authors from project team")
+    (users s k)
+    ]
+   ]
+  )
+
 ;(defn- _handle-author [s k e]
 ;  (let [u (get-in @s [:data k])
 ;        u (assoc u :fullname (str (:firstname u) " " (:lastname u)))

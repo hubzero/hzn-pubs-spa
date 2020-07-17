@@ -85,7 +85,11 @@
   (do-post db (ver-route db "/files") :res/add-file http/post file))
 
 (defn rm-file [db k id]
-  (do-get db (ver-route db (str "/files/" id)) :res/rm-file http/delete [k id]))
+  (do-get db
+          (ver-route db (str "/files/" id))
+          :res/rm-file
+          http/delete
+          [k id]))
 
 (defn ls-files [db]
   (do-get db (prj-route db "/files") :res/ls-files))
@@ -93,9 +97,26 @@
 (defn usage [db files]
   (do-post db (prj-route db "/usage") :res/usage http/post files))
 
- (defn authors [db]
+(defn authors [db]
   (do-get db (ver-route db "/authors") :res/authors))
 
 (defn owners [db]
   (do-get db (prj-route db "/owners") :res/owners))
- 
+
+(defn rm-author [db id]
+  (do-get db (ver-route db (str "/authors/" id)) :res/rm-author http/delete id))
+
+(defn update-author [db author]
+  (do-post db
+           (ver-route db (str "/authors/" (:id author)))
+           :res/update-author
+           http/put
+           author))
+
+(defn add-author [db author]
+  (do-post db
+           (ver-route db "/authors")
+           :res/add-author
+           http/post
+           author))
+

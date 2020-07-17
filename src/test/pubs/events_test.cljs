@@ -108,3 +108,33 @@
     )
   )
 
+(deftest rm-author
+  (with-redefs [pubs.hub/authors pubs.hub-test/authors
+                pubs.hub/rm-author pubs.hub-test/rm-author]
+    (rf-test/run-test-sync
+      (let [authors (rf/subscribe [:authors])]
+        (dispatch [:req/authors])
+        (-> @authors count (= 4) is)
+        (dispatch [:authors/rm :456])
+        (-> @authors count (= 3) is)
+        )
+      )
+    )
+  )
+
+(deftest add-author
+  (with-redefs [pubs.hub/authors pubs.hub-test/authors
+                pubs.hub/add-author pubs.hub-test/add-author]
+    (rf-test/run-test-sync
+      (let [a {:role 2, :projectid 1, :userid 0, :created_by_user 1001, :lastname nil, :added "2020-01-29T10:32:28Z", :name nil, :invited_email nil, :username nil, :groupname nil, :params nil, :fullname "Femke Blokje", :invited_name "Femke Blokje", :invited_code "JPNCMSQLHN", :organization nil, :lastvisit nil, :num_visits 0, :firstname nil, :native 0, :groupid 0, :status 0, :id 41, :picture nil, :groupdesc nil, :prev_visit nil}
+            authors (rf/subscribe [:authors])]
+        (dispatch [:req/authors])
+        (-> @authors count (= 4) is)
+        (dispatch [:authors/add a])
+        (-> @authors count (= 5) is)
+        )
+      )
+    )
+  )
+
+
