@@ -120,3 +120,18 @@
            http/post
            author))
 
+(defn new-author [db author]
+  (do-post db
+           (ver-route db "/authors/new")
+           :res/new-author
+           http/post
+           author))
+
+(defn search-users [db v]
+  (do-post db
+           "/users/search"
+           :res/search-users
+           http/post
+           {:q v}
+           ))
+

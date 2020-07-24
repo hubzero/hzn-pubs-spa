@@ -102,3 +102,11 @@
     )
   )
 
+(deftest search-users 
+  (let [db (res/search-users {} [:res/search-users (:search-users resps)]) ]
+    (-> db :user-results count (= 1) is)  
+    )
+  )
+
+
+

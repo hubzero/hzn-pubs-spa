@@ -92,3 +92,11 @@
   (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
   )
 
+(defn new-author [db [_ res]]
+  (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
+  )
+
+(defn search-users [db [_ res]]
+  (assoc db :user-results res)
+  )
+

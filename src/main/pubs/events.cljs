@@ -45,6 +45,8 @@
 (rf/reg-event-db :res/rm-author res/rm-author)
 (rf/reg-event-db :res/update-author res/update-author)
 (rf/reg-event-db :res/add-author res/add-author)
+(rf/reg-event-db :res/search-users res/search-users)
+(rf/reg-event-db :res/new-author res/new-author)
 
 ;; Component handlers - JBG
 
@@ -65,6 +67,7 @@
 (rf/reg-event-db :panels/close panels/close)
 (rf/reg-event-db :panels/pop panels/!pop)
 (rf/reg-event-db :panels/push panels/push)
+(rf/reg-event-db :panels/field panels/field)
 
 (rf/reg-event-db :folders/pop folders/!pop)
 (rf/reg-event-db :folders/push folders/push)
@@ -74,6 +77,9 @@
 (rf/reg-event-db :authors/rm authors/rm)
 (rf/reg-event-db :authors/poc authors/poc)
 (rf/reg-event-db :authors/add authors/add)
-
-
+(rf/reg-event-db :authors/search authors/search)
+(rf/reg-event-db :authors/result authors/result)
+(rf/reg-event-db :authors/upsert authors/upsert)
+(rf/reg-event-db :authors/modify authors/modify)
+(rf/reg-event-db :authors/order authors/order)
 

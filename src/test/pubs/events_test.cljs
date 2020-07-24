@@ -14,6 +14,7 @@
 (rf/reg-sub :data (fn [db _] (:data db))) 
 (rf/reg-sub :usage (fn [db _] (:usage db)))
 (rf/reg-sub :owners (fn [db _] (:users db)))
+(rf/reg-sub :user-results (fn [db _] (:user-results db)))
 
 (deftest me
   (with-redefs [pubs.hub/me pubs.hub-test/me]
@@ -132,6 +133,17 @@
         (-> @authors count (= 4) is)
         (dispatch [:authors/add a])
         (-> @authors count (= 5) is)
+        )
+      )
+    )
+  )
+
+(deftest search-users 
+  (with-redefs [pubs.hub/search-users pubs.hub-test/search-users]
+    (rf-test/run-test-sync
+      (let [ur (rf/subscribe [:user-results])]
+        (dispatch [:authors/search "j"])
+        (->> @ur count (= 1) is)
         )
       )
     )

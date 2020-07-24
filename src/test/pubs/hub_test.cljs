@@ -16,6 +16,7 @@
             :rm-author {:role nil, :repository_contact 0, :project_owner_id 107, :publication_version_id 196, :lastname "Bos", :name "Annet Bos", :created "2020-07-17T10:11:00Z", :organization nil, :modified nil, :ordering 3, :firstname "Annet", :status 1, :id 456, :user_id 0, :modified_by 0, :credit "", :created_by 1001}
             :update-author {:role nil, :repository_contact 0, :project_owner_id 107, :publication_version_id 196, :lastname "Bos", :name "Annet Bos", :created "2020-07-17T10:11:00Z", :organization nil, :modified nil, :ordering 3, :firstname "Annet", :status 1, :id 456, :user_id 0, :modified_by 0, :credit "", :created_by 1001} 
             :add_author {:role nil, :repository_contact 0, :project_owner_id 134, :publication_version_id 196, :lastname nil, :name "Bob Taco", :created "2020-07-17T12:54:07Z", :organization nil, :modified nil, :ordering nil, :firstname nil, :status 1, :id 564, :user_id 0, :modified_by 0, :credit "", :created_by 1001}
+            :search-users [{:rel 1, :email "jbg@example.com", :name "J B G", :username "jbg", :surname "G", :middlename "B", :org "Bob Taco Stand", :id 1001, :access 1, :givenname "J"}]
             }
   )
 
@@ -81,6 +82,11 @@
 
 (defn add-author [db]
   (dispatch [:res/add-author (:add-author resps)])
+  db
+  )
+
+(defn search-users [db]
+  (dispatch [:res/search-users (:search-users resps)])
   db
   )
 

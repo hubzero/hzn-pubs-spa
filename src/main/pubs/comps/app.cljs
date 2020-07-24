@@ -16,6 +16,7 @@
 ;    [pubs.comps.ui :as ui] 
 ;    [pubs.comps.summary :as summary] 
     [pubs.comps.authors :as authors]
+    [pubs.comps.authors-new :as authors-new]
     [pubs.comps.breadcrumbs :as breadcrumbs]
     [pubs.comps.files :as files]
     [pubs.comps.overlay :as overlay]
@@ -351,12 +352,11 @@
 ;    (files/files s :images)
 ;    (files/files s :support-docs)
     (authors/render s :authors-list)
-;    (authors/authors-new s :authors-new)
+    (authors-new/render s :authors-new)
 ;    (licenses/license-list s :licenses)
 ;    (citations/doi s :citations-doi)
 ;    (citations/manual s :citations-manual)
 ;    (help/help s :help-center)
     )
   )
-
 

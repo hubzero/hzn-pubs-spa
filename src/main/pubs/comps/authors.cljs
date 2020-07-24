@@ -3,7 +3,7 @@
     [pubs.utils :as utils] 
     ;[pubs.data :as data] 
     [pubs.comps.ui :as ui] 
-    [pubs.comps.panels :as panels] 
+    [pubs.comps.panel-header :as header] 
     )
   )
 
@@ -53,7 +53,7 @@
 (defn render [s k]
   [:div.page-panel.as-panel {:class [k (if (get-in s [:ui :panels k]) :open)]}
    [:div.inner
-    (panels/header s "Add authors from project team")
+    (header/render s "Add authors from project team")
     (users s k)
     ]
    ]

@@ -1,7 +1,7 @@
 (ns pubs.comps.files
   (:require
     [pubs.comps.folders :as folders] 
-    [pubs.comps.panels :as panels] 
+    [pubs.comps.panel-header :as header] 
     [pubs.comps.ui :as ui] 
     [pubs.comps.usage :as usage] 
     [pubs.utils :as utils] 
@@ -118,7 +118,7 @@
 (defn render [s k]
   [:div.page-panel.as-panel.-open {:class [k (if (get-in s [:ui :panels k]) :open)]}
    [:div.inner
-    (panels/header s "Add files from project")  
+    (header/render s "Add files from project")  
     (usage/render s)
     (subheader s)
     (container s (:files s) k 0)
