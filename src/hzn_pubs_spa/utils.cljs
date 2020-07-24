@@ -39,17 +39,35 @@
     )
   )
 
+(defn email-valid? [a errors]
+  (as-> (:email a) $
+    (clojure.string/trim $)
+    (if (or (= (count $) 0) (re-matches #".+\@.+\..+" $))
+      errors
+      (assoc errors :email ["Email" "must be valid"])
+      )
+    )
+  )
+
+(defn names-valid? [a errors]
+  (reduce (fn [errors [k v]]
+            (as-> (k a) $
+              (if $ (clojure.string/trim $) $)
+              (if (= 0 (count $)) (assoc errors k v) errors)
+              )
+            ) errors {:firstname ["Firstname" "can not be empty"]
+                      :lastname ["Lastname" "can not be empty"]
+                      })
+  )
+
 (defn authors-new-valid? [s]
-  (swap! s assoc-in [:ui :errors]
-         (reduce (fn [errors [k v]]
-                   (as-> (get-in @s [:data :authors-new k]) $
-                     (if $ (clojure.string/trim $) $)
-                     (if (= 0 (count $)) (assoc errors k v) errors)
-                     )
-                   ) {} {:firstname ["Firstname" "can not be empty"]
-                         :lastname ["Lastname" "can not be empty"]
-                         })
+  (let [a (get-in @s [:data :authors-new])]
+    (->> {}
+         (names-valid? a)
+         (email-valid? a)
+         (swap! s assoc-in [:ui :errors]) 
          )
+    )
   (= (count (get-in @s [:ui :errors])) 0)
   )
 

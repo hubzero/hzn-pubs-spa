@@ -11,8 +11,8 @@
 (def url (str (-> js/window .-location .-protocol) "//" (-> js/window .-location .-host) "/p"))
 
 (defn- _error [s code]
-    (secretary/dispatch! "/error")
-    (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
+;    (secretary/dispatch! "/error")
+;    (set! (-> js/window .-location) (str "/pubs?err=" code "&msg=Error"))     
   )
 
 (defn- _handle-res [s res f]
@@ -145,6 +145,7 @@
 
 (defn update-author
   [s author]
+  (prn "UPDATE AUTHOR" author)
   (go (let [id (utils/keyword-to-int (:id author))
             res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])

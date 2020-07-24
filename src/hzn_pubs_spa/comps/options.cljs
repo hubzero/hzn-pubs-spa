@@ -81,7 +81,6 @@
   )
 
 (defn citation [s k c]
-  (prn "CITATION" c)
   [:div.options-list.--as-panel {:class (if (get-in @s [:ui :options :citation (:id c)]) :open) }
    [:div.inner
     (merge
@@ -108,6 +107,7 @@
   )
 
 (defn handle-new-author [s e]
+  (swap! s assoc-in [:data :authors-new] nil)
   (handle-author true s e)
   )
 
