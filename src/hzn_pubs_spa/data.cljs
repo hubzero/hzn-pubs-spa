@@ -52,7 +52,7 @@
   "s is the state, k is the type - :content, :images, :support-docs, and file-id - JBG"
   [s k file-id]
   (prn "RM FILE" file-id)
-  (go (let [id (utils/keyword-to-int file-id)
+  (go (let [id (utils/->int file-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -145,8 +145,7 @@
 
 (defn update-author
   [s author]
-  (prn "UPDATE AUTHOR" author)
-  (go (let [id (utils/keyword-to-int (:id author))
+  (go (let [id (utils/->int (:id author))
             res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
                                    "/v/" (get-in @s [:data :ver-id])
@@ -160,7 +159,7 @@
   "s is the state, and author-id - JBG"
   [s author-id]
   (prn "RM AUTHOR" author-id)
-  (go (let [id (utils/keyword-to-int author-id)
+  (go (let [id (utils/->int author-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -214,7 +213,7 @@
 (defn rm-citation
   "s is the state, and citation-id - JBG"
   [s citation-id]
-  (go (let [id (utils/keyword-to-int citation-id)
+  (go (let [id (utils/->int citation-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])
@@ -398,7 +397,7 @@
 (defn rm-tag
   "s is the state, and tag-id - JBG"
   [s tag-id]
-  (go (let [id (utils/keyword-to-int tag-id)
+  (go (let [id (utils/->int tag-id)
             res (<! (http/delete (str url
                                       "/pubs/" (get-in @s [:data :pub-id])
                                       "/v/" (get-in @s [:data :ver-id])

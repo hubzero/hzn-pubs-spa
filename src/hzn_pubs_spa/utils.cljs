@@ -7,8 +7,24 @@
     )
   )
 
-(defn keyword-to-int [k]
-  (if (keyword? k) (js/parseInt (name k)) k)
+;(defn keyword-to-int [k]
+;  (if (keyword? k) (js/parseInt (name k)) k)
+;  )
+
+
+(defn ->int [k]
+  (cond
+    (integer? k) k
+    (keyword? k) (->> k name js/parseInt)
+    :else (js/parseInt k)
+    )
+  )
+
+(defn ->keyword [i]
+  (cond
+    (integer? i) (->> i str keyword)
+    :else (keyword i)
+    )
   )
 
 (defn author-key [a]
@@ -107,6 +123,21 @@
     )
   )
 
+(defn- poc-required [s errors]
+  ;; If we already have validation errors with authors, roll w/ those - JBG
+  (if (:authors-list errors)
+    errors
+    (let [poc? (reduce (fn [poc? [id a]]
+                         (or poc? (> (:poc a) 0))
+                         ) false (get-in @s [:data :authors-list]))]
+      (if (not poc?)
+        (assoc errors :authors-list ["Point of contact" "is required"])
+        errors
+        )
+      )  
+    )
+  )
+
 (defn- _errors [s]
   (->>
     (reduce (fn [errors [k v]]
@@ -120,15 +151,17 @@
                     :content ["Content" "can not be empty"]
                     :tags ["Tags" "can not be empty"]
                     :licenses ["Licenses" "can not be empty"]
-                    })   
+                    })
     (_date-valid? s)
-    (_ack-valid? s) 
+    (_ack-valid? s)
+    (poc-required s)
     )
   )
 
 (defn errors? [s]
   (let [errors (->> (_errors s) (_terms-valid? s))]
     (swap! s assoc-in [:ui :errors] errors)
+    (prn "ERRORS" errors)
     (-> errors (count) (= 0))
     )
   )
@@ -159,4 +192,4 @@
              )
          )
   )
- 
+
