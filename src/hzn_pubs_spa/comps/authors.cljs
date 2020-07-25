@@ -63,7 +63,7 @@
         ]
     (if (get-in @s [:ui :author-options :is-new]) 
       (data/new-author s u)
-      (data/update-author s u)
+      (data/update-author s u true)
       ) 
     (panels/close s e)
     ;; Clear form - JBG

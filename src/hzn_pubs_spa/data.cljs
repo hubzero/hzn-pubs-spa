@@ -144,7 +144,7 @@
   )
 
 (defn update-author
-  [s author]
+  [s author & [refresh?]]
   (go (let [id (utils/->int (:id author))
             res (<! (http/put (str url
                                    "/pubs/" (get-in @s [:data :pub-id])
@@ -152,7 +152,7 @@
                                    "/authors/"
                                    id) {:edn-params author}))]
         (_handle-res s res (fn [s res]
-                             (get-authors s)
+                             (if refresh?  (get-authors s))
                              )))))
 
 (defn rm-author 
