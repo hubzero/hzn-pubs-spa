@@ -65,21 +65,31 @@
     )
   )
 
-(defn names-valid? [a errors]
+(defn year-valid? [c errors]
+  (as-> (:year c) $
+    (if (not (nil? $)) (clojure.string/trim $) "")
+    (if (re-matches #"^(19|20)\d{2}$" $)
+      errors
+      (assoc errors :year ["Year" "must be valid 4 digits"])
+      )
+    )
+  )
+
+(defn fields-valid? [a fields errors]
   (reduce (fn [errors [k v]]
             (as-> (k a) $
               (if $ (clojure.string/trim $) $)
               (if (= 0 (count $)) (assoc errors k v) errors)
               )
-            ) errors {:firstname ["Firstname" "can not be empty"]
-                      :lastname ["Lastname" "can not be empty"]
-                      })
+            ) errors fields)
   )
 
 (defn authors-new-valid? [s]
   (let [a (get-in @s [:data :authors-new])]
     (->> {}
-         (names-valid? a)
+         (fields-valid? a {:firstname ["Firstname" "can not be empty"]
+                           :lastname ["Lastname" "can not be empty"]
+                           })
          (email-valid? a)
          (swap! s assoc-in [:ui :errors]) 
          )
@@ -88,19 +98,19 @@
   )
 
 (defn citations-manual-valid? [s]
-  (swap! s assoc-in [:ui :errors]
-         (reduce (fn [errors [k v]]
-                   (if (= 0 (count (get-in @s [:data :citations-manual k])))
-                     (assoc errors k v)
-                     errors
-                     )
-                   ) {} {:citation-type ["Type" "can not be empty"]
-                         :title ["Title" "can not be empty"]
-                         })
+  (let [c (get-in @s [:data :citations-manual])]
+    (->> {}
+         (fields-valid? c {:type ["Type" "can not be empty"]
+                           :title ["Title" "can not be empty"]
+                           :year ["Year" "can not be empty"]
+                           })
+         (year-valid? c)
+         (swap! s assoc-in [:ui :errors]) 
          )
+    )
   (= (count (get-in @s [:ui :errors])) 0)
   )
- 
+
 (defn- _date-valid? [s errors]
   (if (and (get-in @s [:data :publication-date])
     (< (js/Date. (get-in @s [:data :publication-date])) (js/Date.)))

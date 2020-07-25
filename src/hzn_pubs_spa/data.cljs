@@ -189,11 +189,11 @@
   )
 
 (defn get-citation-types [s]
-  (go (let [res (<! (http/get (str url "/citation-types") (options s)))]
-        ;(prn (:body res))
-        (->>
-          (cljs.reader/read-string (:body res))
-          (swap! s assoc :citation-types))
+  (go (let [res (<! (http/get (str url "/citations/types") (options s)))]
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc :citation-types (:body res)) 
+                             )
+                     )
         ))
   )
 
@@ -205,7 +205,7 @@
                                     "/v/" (get-in @s [:data :ver-id])
                                     "/citations")  {:edn-params c}))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data :citations] assoc (:id c) c)
+                             (swap! s assoc-in [:data :citations (utils/->keyword (:id c))] c)
                              ))
         ))
   )
@@ -221,7 +221,7 @@
                                       id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data :citations] dissoc (keyword citation-id))
+                             (swap! s update-in [:data :citations] dissoc (utils/->keyword citation-id))
                              ))
         ))
   )
@@ -279,7 +279,7 @@
                                     (->>
                                       (:body res)
                                       (group-by :id)
-                                      (map (fn [[k v]] [k (first v)]))
+                                      (map (fn [[k v]] [(utils/->keyword k) (first v)]))
                                       (into {})
                                       )
                                     )

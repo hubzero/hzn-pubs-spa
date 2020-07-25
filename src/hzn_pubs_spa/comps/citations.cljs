@@ -35,7 +35,9 @@
 (defn search-doi [s key]
   [:div.field
    [:label {:for :doi} "DOI:"]
-   [:input {:type :text :onChange #(_search s (-> % .-target .-value))}]
+   [:input {:type :text
+            :value (:doi-query @s)
+            :onChange #(_search s (-> % .-target .-value))}]
    ]
   )
 (defn- handle-click [s c e]
@@ -48,9 +50,11 @@
     (do
       (swap! s assoc-in [:data :citations-manual] c)
       (data/create-citation s)
-      (panels/close s e)   
       )
     )
+  (swap! s assoc :doi-query "")
+  (swap! s dissoc :doi-results)
+  (panels/close s e)   
   )
 
 (defn citation [s key c]
@@ -83,50 +87,57 @@
    ]
   )
 
-(defn text [s key f]
-  [:div.field.anchor.err {:key (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
+(defn text [s k f]
+  [:div.field.anchor.err {:k (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
    [:label {:for :title} (str (:label f) ":")]
    [:input {:type :text
-            :value (get-in @s [:data key (:name f)])
+            :value (get-in @s [:data k (:name f)])
             :onChange (fn [e]
                         (.preventDefault e)
                         (.stopPropagation e)
-                        (swap! s assoc-in [:data key (:name f)] (-> e .-target .-value))
+                        (swap! s assoc-in [:data k (:name f)] (-> e .-target .-value))
                         )}]
    (ui/val-error s (:name f))
    ]
   )
 
-(defn textfield [s key f]
+(defn textfield [s k f]
   (merge
-    [:div.field {:key (:name f)}]
+    [:div.field {:k (:name f)}]
     [:label {:for :citation} (str (:label f) ":")]
     [:textarea {:name :citation
-                :value (get-in @s [:data key (:name f)])
+                :value (get-in @s [:data k (:name f)])
                 :onChange (fn [e]
                             (.preventDefault e)
                             (.stopPropagation e)
-                            (swap! s assoc-in [:data key (:name f)] (-> e .-target .-value))
+                            (swap! s assoc-in [:data k (:name f)] (-> e .-target .-value))
                             )}]
     (if (:hint f) [:p.hint (:hint f)])
     ) 
   )
 
 
-(defn field [s key f]
-  (((:type f) {:text #(text s key f)
-               :textfield #(textfield s key f)
-               :dropdown #(dropdown/dropdown s key f)
+(defn field [s k f]
+  (((:type f) {:text #(text s k f)
+               :textfield #(textfield s k f)
+               :dropdown #(dropdown/dropdown s k f)
                }))
+  )
+
+(defn- types [s]
+  (->> (:citation-types @s)
+       (map :type_title) 
+       (into [])
+       )
   )
 
 (defn- _manual [s key]
   [:fieldset.citations-manual
    [:div.selected-item
-    (doall (map #(field s key %) [{:name :citation-type
+    (doall (map #(field s key %) [{:name :type
                                    :label "Type"
                                    :type :dropdown
-                                   :options ["Journal" "Article"]}
+                                   :options (types s)}
                                   {:name :title :label "Title" :type :text}
                                   {:name :year :label "Year" :type :text}
                                   {:name :month
