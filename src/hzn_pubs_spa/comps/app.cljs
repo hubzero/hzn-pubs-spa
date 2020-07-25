@@ -373,6 +373,14 @@
    ]
   )
 
+(defn handle-date [s e]
+  (let [v (-> e .-target .-value)]
+    (if (= (count v) 0)
+      (swap! s update :data dissoc :publication-date)
+      )
+    )
+  )
+
 (defn pub-date [s]
   [^{:component-did-mount
      (fn []
@@ -389,7 +397,8 @@
      [:div#a-pub-date.field.anchor.err {:class (if (get-in @s [:ui :errors :publication-date]) :with-error)}
       [:label {:for :title} "Embargo date:"]
       [:input {:type :text
-               :name "publication-date" 
+               :name "publication-date"
+               :onChange #(handle-date s %)
                }]
       (ui/val-error s :publication-date)
       ]
