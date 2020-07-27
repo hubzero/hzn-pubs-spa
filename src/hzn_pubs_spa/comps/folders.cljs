@@ -36,11 +36,11 @@
   (.preventDefault e)
   (.stopPropagation e)
   (when-let [node (-> e 
-                 .-target
-                 (utils/find-ancestor "li")
-                 (.querySelector ".panel-subpanel")
-                 )
-        ]
+                      .-target
+                      (utils/find-ancestor "li")
+                      (.querySelector ".panel-subpanel")
+                      )
+             ]
     (-> node .-classList (.toggle "open"))
     (-> js/document (.querySelector (str ".page-panel.open .inner")) (.scrollTo 0 0))
     (swap! s update-in [:ui :current-panel] conj node)
@@ -76,17 +76,17 @@
 (defn folder-click [s key index e]
   (.stopPropagation e)
   (let [classes (-> e 
-      .-target
-      (utils/find-ancestor "li")
-      (.querySelector ".selected-indicator")
-      .-classList
-      )]
-      (toggle-folder-files s key index (not (boolean (some #{"selected"} (js/Array.from classes)))))
-      (.toggle classes "selected")
+                    .-target
+                    (utils/find-ancestor "li")
+                    (.querySelector ".selected-indicator")
+                    .-classList
+                    )]
+    (toggle-folder-files s key index (not (boolean (some #{"selected"} (js/Array.from classes)))))
+    (.toggle classes "selected")
     )
   )
 
-(defn _folder-selected? [s key index]
+(defn _folder-selected? [s k index]
   (as-> (:files @s) $
     (nth $ index) 
     (first $)
@@ -94,7 +94,9 @@
               (if (clojure.string/includes? (first f) $)
                 (and c 
                      (reduce (fn [c2 f2]
-                               (and c2 (boolean (get-in @s [:data key (get-id s key (first f) f2)])))
+                               (and c2 (boolean (get-in @s [:data k
+                                                            (utils/->keyword (get-id s k (first f) f2)) 
+                                                            ])))
                                ) true (last f))
                      )
                 c)
@@ -103,14 +105,14 @@
     )
   )
 
-(defn folder-selected? [s key index]
-  (if (= (count (:files @s)) 0) false (_folder-selected? s key index))
+(defn folder-selected? [s k index]
+  (if (= (count (:files @s)) 0) false (_folder-selected? s k index))
   )
 
-(defn folder [s path name key index subpanel]
-  [:li {:key name :on-click #(folder-push s name path %)}
+(defn folder [s path n k index subpanel]
+  [:li {:key n :on-click #(folder-push s n path %)}
    [:div {:class [:inner :folder]}
-    [:div {:class [:selected-indicator (if (folder-selected? s key index) :selected)] :on-click #(folder-click s key index %)}
+    [:div {:class [:selected-indicator (if (folder-selected? s k index) :selected)] :on-click #(folder-click s k index %)}
      [:div {:class :icon }
       (ui/icon s "#icon-checkmark")
       [:span {:class :name} "Selected indicator"]
@@ -121,11 +123,11 @@
       (ui/icon s "#icon-folder-open")
       [:span {:class :name} "Folder"]
       ]
-     name
+     n
      ]
     ]
    (if (< index (count (:files @s)))
-     (subpanel s (:files @s) name key index)
+     (subpanel s (:files @s) n k index)
      )
    ]
   )

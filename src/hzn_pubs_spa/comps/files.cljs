@@ -51,10 +51,10 @@
    ]
   )
 
-(defn select-all [s key index]
-  [:li {:class :select-all :on-click #(folders/folder-click s key index %)}
+(defn select-all [s k index]
+  [:li {:class :select-all :on-click #(folders/folder-click s k index %)}
    [:div {:class :inner}
-    [:div {:class [:selected-indicator (if (folders/folder-selected? s key index) :selected)]}
+    [:div {:class [:selected-indicator (if (folders/folder-selected? s k index) :selected)]}
      [:div {:class :icon}
       (ui/icon s "#icon-checkmark")
       [:span {:class :name} "Selected"]
@@ -82,20 +82,22 @@
   (data/rm-file s key k)
   )
 
-(defn file-click [s path name key e]
-  (let [k (folders/get-id s key path name)]
-    (if (get-in @s [:data key k])
-      (_rm-file s path name key k)
-      (_add-file s path name key k)
+(defn file-click [s path n k e]
+  (let [kk (utils/->keyword (folders/get-id s k path n))]
+    (if (get-in @s [:data k kk])
+      (_rm-file s path n k kk)
+      (_add-file s path n k kk)
       )   
     )
   (data/usage s)
   )
 
-(defn file [s path name key]
-  [:li {:key name :on-click #(file-click s path name key %)}
+(defn file [s path n k]
+  [:li {:key n :on-click #(file-click s path n k %)}
    [:div.inner
-    [:div.selected-indicator {:class (if (get-in @s [:data key (folders/get-id s key path name)]) :selected)}
+    [:div.selected-indicator {:class (if (get-in @s [:data k
+                                                     (utils/->keyword (folders/get-id s k path n)) 
+                                                     ]) :selected)}
      [:div.icon
       (ui/icon s "#icon-checkmark")
       [:span.name "Selected"]
@@ -105,22 +107,22 @@
      (ui/icon s "#icon-file-text2")
      [:span.name "Remove"]
      ] 
-    name
+    n
     ]
    ]
   )
 
-(defn file-selector [s files key index]
+(defn file-selector [s files k index]
   [:ul.ui.file-selection.item-selector
-   (select-all s key index)
-   (doall (map (fn [[path name]] (file s path name key)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (last $)))))
-   (doall (map (fn [[path name]] (folders/folder s path name key (inc index) subpanel)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (second $)))))
+   (select-all s k index)
+   (doall (map (fn [[path n]] (file s path n k)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (last $)))))
+   (doall (map (fn [[path n]] (folders/folder s path n k (inc index) subpanel)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (second $)))))
    ] 
   )
 
-(defn subpanel [s files name key index]
-  [:div.panel-subpanel.as-panel.files.-open {:id name}
-   (file-selector s files key index)
+(defn subpanel [s files n k index]
+  [:div.panel-subpanel.as-panel.files.-open {:id n}
+   (file-selector s files k index)
    ] 
   )
 

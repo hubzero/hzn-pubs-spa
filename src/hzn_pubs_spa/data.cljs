@@ -43,7 +43,7 @@
                                     "/files")  {:edn-params file}))]
         (as-> (:body res) $
           (:generated_key $)
-          (swap! s assoc-in [:data (:type file) $] (assoc file :id $))
+          (swap! s assoc-in [:data (:type file) (utils/->keyword $)] (assoc file :id $))
           )
         ))
   )
@@ -60,7 +60,7 @@
                                       id) 
                                  (options s)))]
         (_handle-res s res (fn [s res]
-                             (swap! s update-in [:data k] dissoc (keyword file-id))
+                             (swap! s update-in [:data k] dissoc (utils/->keyword file-id))
                              ))
         ))
   )
