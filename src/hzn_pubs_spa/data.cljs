@@ -66,10 +66,16 @@
   )
 
 (defn ls-files [s]
+  (prn "LS files")
   (go (let [res (<! (http/get (str url "/prjs/" (get-in @s [:data :prj-id]) "/files")
                               (options s)))]
-        (swap! s assoc :files (cljs.reader/read-string (:body res)))
-        (swap! s assoc-in [:ui :current-folder] [["Project files" (first (first (:files @s)))]])
+        (prn "LS RES" (:body res))
+        (_handle-res s res (fn [s res]
+                             (swap! s assoc :files (:body res))
+                             (swap! s assoc-in [:ui :current-folder] [["Project files" (first (first (:files @s)))]]) 
+                             ))
+
+
         ))
   )
 

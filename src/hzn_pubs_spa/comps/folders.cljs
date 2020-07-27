@@ -42,6 +42,7 @@
                  )
         ]
     (-> node .-classList (.toggle "open"))
+    (-> js/document (.querySelector (str ".page-panel.open .inner")) (.scrollTo 0 0))
     (swap! s update-in [:ui :current-panel] conj node)
     )
   (swap! s update-in [:ui :current-folder] conj [name path])

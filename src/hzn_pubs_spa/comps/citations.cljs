@@ -64,20 +64,20 @@
                           } (utils/format-citation c)]
   )
 
-(defn list-citations [s key]
+(defn list-citations [s k]
   (merge
     [:div.field] 
-    (doall (map #(citation s key %)
+    (doall (map #(citation s k %)
                 (:doi-results @s)
                 ))
     )
   )
 
-(defn- _doi [s key]
+(defn- _doi [s k]
   [:fieldset.citations-doi
    [:div.selected-item
-    (search-doi s key)
-    (list-citations s key)
+    (search-doi s k)
+    (list-citations s k)
     ]
    [:hr]
    [:div.field.buttons
@@ -88,7 +88,7 @@
   )
 
 (defn text [s k f]
-  [:div.field.anchor.err {:k (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
+  [:div.field.anchor.err {:key (:name f) :class (if (get-in @s [:ui :errors (:name f)]) :with-error)}
    [:label {:for :title} (str (:label f) ":")]
    [:input {:type :text
             :value (get-in @s [:data k (:name f)])
@@ -103,7 +103,7 @@
 
 (defn textfield [s k f]
   (merge
-    [:div.field {:k (:name f)}]
+    [:div.field {:key (:name f)}]
     [:label {:for :citation} (str (:label f) ":")]
     [:textarea {:name :citation
                 :value (get-in @s [:data k (:name f)])
@@ -134,7 +134,9 @@
 (defn- _manual [s key]
   [:fieldset.citations-manual
    [:div.selected-item
-    (doall (map #(field s key %) [{:name :type
+    (doall (map #(field s key %) [
+                                  
+                                  {:name :type
                                    :label "Type"
                                    :type :dropdown
                                    :options (types s)}
@@ -142,7 +144,7 @@
                                   {:name :year :label "Year" :type :text}
                                   {:name :month
                                    :label "Month"
-                                   :type :dropdown
+                                  :type :dropdown
                                    :options (:months @s)}
                                   {:name :author :label "Authors" :type :text}
                                   {:name :journal :label "Journal" :type :text}

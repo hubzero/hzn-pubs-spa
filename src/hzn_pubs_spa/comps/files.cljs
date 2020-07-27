@@ -142,13 +142,13 @@
    ]
   )
 
-(defn files [s key]
-  [:div.page-panel.as-panel.-open {:class [key (if (get-in @s [:ui :panels key]) :open)]}
+(defn files [s k]
+  [:div.page-panel.as-panel.-open {:class [k (if (get-in @s [:ui :panels k]) :open)]}
    [:div.inner
     (panels/header s "Add files from project")  
     (progress s)
     (subheader s)
-    (container s (:files @s) key 0)
+    (container s (:files @s) k 0)
     ]
    ]
   )
