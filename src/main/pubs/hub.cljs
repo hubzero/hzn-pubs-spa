@@ -107,6 +107,7 @@
   (do-get db (ver-route db (str "/authors/" id)) :res/rm-author http/delete id))
 
 (defn update-author [db author]
+  (prn "UPDATE AUTHOR hub" author)
   (do-post db
            (ver-route db (str "/authors/" (:id author)))
            :res/update-author

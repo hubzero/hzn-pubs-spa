@@ -24,7 +24,8 @@
   )
 
 (defn items [s k]
-  (if-let [l (into [] (get-in s [:data k]))]
+  (if-let [l (sort-by #(:index (second %)) (into [] (get-in s [:data k])))]
+;  (if-let [l (into [] (get-in s [:data k]))]
     (order s k l)
     )
   )
