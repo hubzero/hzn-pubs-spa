@@ -1,6 +1,7 @@
 (ns pubs.comps.essentials
   (:require [pubs.comps.authors-options :as authors-options]
             [pubs.comps.collection :as collection] 
+            [pubs.comps.licenses :as licenses]
             [pubs.comps.master-types :as master-types]
             [pubs.comps.tags :as tags]
             [pubs.comps.textfield :as textfield] 
@@ -40,7 +41,7 @@
                       authors)
 
    (tags/render s)
-   ;   (licenses s)
+   (licenses/render s)
    ;   (agreements s)
    ]
   )

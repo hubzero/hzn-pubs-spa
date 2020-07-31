@@ -1,69 +1,76 @@
-(ns hzn-pubs-spa.comps.licenses
-  (:require
-    [hzn-pubs-spa.utils :as utils] 
-    [hzn-pubs-spa.comps.ui :as ui] 
-    [hzn-pubs-spa.comps.panels :as panels] 
-    ) 
+(ns pubs.comps.licenses
+  (:require [pubs.comps.ui :as ui]
+            [pubs.comps.option :as option]
+            [pubs.comps.selector-button :as sb]
+            )
   )
 
-(defn license-click [s l key e]
-  (swap! s assoc-in [:ui key ] (:id l))
-  (swap! s assoc-in [:data key] l)
-  )
-
-(defn item [s key l]
-  [:div {:class :inner}
-   [:div {:class [:selected-indicator (if (= (get-in @s [:ui key]) (:id l)) :selected)]}
-    [:div {:class :icon}
-     (ui/icon s "#icon-checkmark")
-     [:span {:class :name} "Selected"]
+(defn- acknowledge [s]
+  [:div.details.last-child
+   [:div.inner
+    [:header "License acknowledgement"]
+    [:div.ui.checkbox.inline
+     [:input.important {:type :checkbox
+                        :name :ack
+                        :checked (or (get-in s [:data :ack]) false) 
+                        ;:onChange #(swap! s update-in [:data :ack] not)
+                        } ]
+     [:label {:for :poc}
+      "I have read the "
+      [:a {:href (get-in s [:data :licenses :url])
+           :target :_blank
+           } "license terms"]
+      " and agree to license my work under the attribution 3.0 unported license."
+      ]
      ]
     ]
-   [:div {:class :icon} (ui/icon s "#icon-file-text2")]
-   [:div {:class :info} (:title l)]
-   ]
+   ] 
   )
 
-(defn item-meta [s key l]
-  [:div {:class [:meta (if (= (get-in @s [:ui key]) (:id l)) :show)]}
-   [:div {:class :inner}
-    (:info l)
+(defn license-item [s n detail]
+  [:div.item {:key n}
+   [:div.main
+    [:header.subject n]   
+    [:div.details.meta detail]  
     ]
    ]
   )
 
-(defn license [s key l]
-  [:li {:class :with-meta :key (:id l) :on-click #(license-click s l key %)}
-   (item s key l) 
-   (item-meta s key l)
+(defn- options [s k e]
+  (.preventDefault e)
+  (.stopPropagation e)
+
+;  (data/get-licenses s)
+;  (panels/show s e true key)
+
+  (re-frame.core/dispatch [:panels/show k true])
+;  (re-frame.core/dispatch [:req/licenses])
+  )
+
+(defn render [s]
+  [:div.field.err {:class (if (or (get-in s [:ui :errors :licenses])
+                                  (get-in s [:ui :errors :ack])
+                                  ) 
+                            :with-error)}
+   [:label {:for :title} "License:"]
+   (merge
+     [:div.collection.single-item
+      [:div.item
+       [:div.main
+        [:header.subject
+         (get-in s [:data :licenses :title])
+         ]
+        [:div.meta
+         (get-in s [:data :licenses :info])
+         ]
+        ] 
+       ]
+      (if (get-in s [:data :licenses]) (acknowledge s))
+      (sb/render s :licenses nil options)
+      ]   
+     )
+   (ui/val-error s :licenses)
+   (ui/val-error s :ack)
    ]
   )
-
-(defn suggest-link [s]
-  [:li.with-meta
-   [:div.inner
-    [:p "Don't see a license in the list above that you would like to use? You can "
-     [:a {:href (str "/projects/" (get-in @s [:data :prj-id]) "/publications/" (get-in @s [:data :pub-id]) "?action=suggest_license&version=1")} "suggest a license"]]  
-    ]
-   ]
-  )
-
-(defn licenses [s k]
-  (merge
-    [:ul.ui.item-selector]
-    (doall
-      (map #(license s k %) (:licenses @s))
-      )
-    (suggest-link s)
-    )
-  )
-
-(defn license-list [s key]
-  [:div {:class [:page-panel :as-panel key (if (get-in @s [:ui :panels key]) :open)]}
-   [:div {:class :inner}
-    (panels/header s "Select licenses")
-    (licenses s key)
-    ]
-   ]
-  )
-
+ 

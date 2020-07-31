@@ -20,6 +20,7 @@
     [pubs.comps.panels.authors :as authors]
     [pubs.comps.panels.authors-new :as authors-new] 
     [pubs.comps.panels.files :as files]
+    [pubs.comps.panels.licenses :as licenses]
     [pubs.comps.main :as main]
     [pubs.comps.summary :as summary]
     )
@@ -136,69 +137,7 @@
 ;  )
 ;
 
-;(defn acknowledge [s]
-;  [:div.details.last-child
-;   [:div.inner
-;    [:header "License acknowledgement"]
-;    [:div.ui.checkbox.inline
-;     [:input.important {:type :checkbox
-;                        :name :ack
-;                        :checked (or (get-in @s [:data :ack]) false) 
-;                        :on-change #(swap! s update-in [:data :ack] not)
-;                        } ]
-;     [:label {:for :poc}
-;      "I have read the "
-;      [:a {:href (get-in @s [:data :licenses :url])
-;           :target :_blank
-;           } "license terms"]
-;      " and agree to license my work under the attribution 3.0 unported license."
-;      ]
-;     ]
-;    ]
-;   ] 
-;  )
-;
-;(defn license-item [s name detail]
-;  [:div.item {:key name}
-;   [:div.main
-;    [:header.subject name]   
-;    [:div.details.meta detail]  
-;    ]
-;   ]
-;  )
-;
-;(defn handle-licenses-options [s e key]
-;  (data/get-licenses s)
-;  (panels/show s e true key)
-;  )
-;
-;(defn licenses [s]
-;  [:div.field.err {:class (if (or (get-in @s [:ui :errors :licenses])
-;                                  (get-in @s [:ui :errors :ack])
-;                                  ) 
-;                            :with-error)}
-;   [:label {:for :title} "License:"]
-;   (merge
-;     [:div.collection.single-item
-;      [:div.item
-;       [:div.main
-;        [:header.subject
-;         (get-in @s [:data :licenses :title])
-;         ]
-;        [:div.meta
-;         (get-in @s [:data :licenses :info])
-;         ]
-;        ] 
-;       ]
-;      (if (get-in @s [:data :licenses]) (acknowledge s))
-;      (selector-button s :licenses nil handle-licenses-options)
-;      ]   
-;     )
-;   (ui/val-error s :licenses)
-;   (ui/val-error s :ack)
-;   ]
-;  )
-;
+
 ;(defn agreements [s]
 ;  [:div.field.err {:class (if (get-in @s [:ui :errors :terms]) :with-error)}
 ;   [:label {:for :agreement} "Agreements"]
@@ -353,7 +292,7 @@
 ;    (files/files s :support-docs)
     (authors/render s :authors-list)
     (authors-new/render s :authors-new)
-;    (licenses/license-list s :licenses)
+    (licenses/render s :licenses)
 ;    (citations/doi s :citations-doi)
 ;    (citations/manual s :citations-manual)
 ;    (help/help s :help-center)
