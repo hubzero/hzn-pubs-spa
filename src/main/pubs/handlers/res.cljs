@@ -35,6 +35,7 @@
         (hub/prj)
         (hub/files)
         (hub/authors)
+        (hub/tags)
       )
     )
   )
@@ -98,5 +99,32 @@
 
 (defn search-users [db [_ res]]
   (assoc db :user-results res)
+  )
+
+(defn tags [db [_ res]]
+  (->>
+    res
+    (group-by :id)
+    (map (fn [[k v]] [k (first v)]))
+    (into {})
+    (assoc-in db [:data :tags])
+    )
+  )
+
+(defn rm-tag [db _]
+  (hub/tags db)
+  )
+
+(defn add-tag [db _]
+  (-> db
+      (assoc-in [:ui :tag-str] "")
+      (dissoc :tag-query)
+      (assoc-in [:ui :tag] false)
+      (hub/tags)
+      ) 
+  )
+
+(defn search-tags [db [_ res]]
+  (assoc db :tag-results res) 
   )
 

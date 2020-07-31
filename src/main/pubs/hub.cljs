@@ -107,7 +107,6 @@
   (do-get db (ver-route db (str "/authors/" id)) :res/rm-author http/delete id))
 
 (defn update-author [db author]
-  (prn "UPDATE AUTHOR hub" author)
   (do-post db
            (ver-route db (str "/authors/" (:id author)))
            :res/update-author
@@ -135,4 +134,26 @@
            http/post
            {:q v}
            ))
+
+(defn tags [db]
+  (do-get db (ver-route db "/tags") :res/tags))
+
+(defn rm-tag [db id]
+  (do-get db (ver-route db (str "/tags/" id)) :res/rm-tag http/delete id))
+
+(defn add-tag [db tag-str]
+  (do-post db
+           (ver-route db "/tags")
+           :res/add-tag
+           http/post
+           {:tag tag-str}))
+
+(defn search-tags [db tag-str]
+  (do-post db
+           "/tags/search"
+           :res/search-tags
+           http/post
+           {:q tag-str})
+  )
+
 

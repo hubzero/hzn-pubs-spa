@@ -2,6 +2,7 @@
   (:require [pubs.comps.authors-options :as authors-options]
             [pubs.comps.collection :as collection] 
             [pubs.comps.master-types :as master-types]
+            [pubs.comps.tags :as tags]
             [pubs.comps.textfield :as textfield] 
             [pubs.comps.textarea :as textarea] 
             ) 
@@ -38,7 +39,7 @@
                       (authors-options/render s)
                       authors)
 
-   ;   (tags/tags s)
+   (tags/render s)
    ;   (licenses s)
    ;   (agreements s)
    ]

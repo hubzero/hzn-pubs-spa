@@ -10,6 +10,7 @@
    [pubs.handlers.panels :as panels]
    [pubs.handlers.req :as req]
    [pubs.handlers.res :as res]
+   [pubs.handlers.tags :as tags]
    [pubs.handlers.text :as text]
    ))
 
@@ -47,6 +48,10 @@
 (rf/reg-event-db :res/add-author res/add-author)
 (rf/reg-event-db :res/search-users res/search-users)
 (rf/reg-event-db :res/new-author res/new-author)
+(rf/reg-event-db :res/tags res/tags)
+(rf/reg-event-db :res/rm-tag res/rm-tag)
+(rf/reg-event-db :res/add-tag res/add-tag)
+(rf/reg-event-db :res/search-tags res/search-tags)
 
 ;; Component handlers - JBG
 
@@ -82,4 +87,9 @@
 (rf/reg-event-db :authors/upsert authors/upsert)
 (rf/reg-event-db :authors/modify authors/modify)
 (rf/reg-event-db :authors/order authors/order)
+
+(rf/reg-event-db :tags/creator tags/creator)
+(rf/reg-event-db :tags/rm tags/rm)
+(rf/reg-event-db :tags/add tags/add)
+(rf/reg-event-db :tags/search tags/search)
 
