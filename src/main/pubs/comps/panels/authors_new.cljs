@@ -1,91 +1,16 @@
-(ns pubs.comps.authors-new  
+(ns pubs.comps.panels.authors-new  
   (:require
     [pubs.utils :as utils] 
-    ;[pubs.data :as data] 
     [pubs.comps.ui :as ui] 
-    [pubs.comps.panel-field :as field] 
-    [pubs.comps.panel-header :as header] 
+    [pubs.comps.panels.field :as field] 
+    [pubs.comps.panels.header :as header] 
     )
   )
-
-;(defn- author? [s k id]
-;  (->
-;    (group-by :project_owner_id (vals (get-in s [:data k])))
-;    (get id)
-;    (first)
-;    )
-;  )
-;
-;(defn user-click [s k u e]
-;    (if-let [a (author? s k (:id u))] 
-;      (re-frame.core/dispatch [:authors/rm (:id a)])
-;      (re-frame.core/dispatch [:authors/add u])
-;      )
-;  )
-;
-;(defn user [s k u]
-;  [:li {:key (utils/author-key u)
-;        :on-click #(user-click s k u %)
-;        }
-;   [:div.inner
-;    [:div.selected-indicator {:class (if (author? s k (:id u)) :selected)}
-;     [:div.icon
-;      (ui/icon s "#icon-checkmark")
-;      [:span.name "Selected"]
-;      ]
-;     ]
-;    [:div.icon
-;     (ui/icon s "#icon-user")
-;     ] 
-;    (:fullname u)
-;    ]
-;   ]
-;  )
-;
-;(defn users [s k]
-;  (merge
-;    [:ul.ui.user-selector.item-selector]
-;    (doall
-;      (map #(user s k %) (vals (:users s)))
-;      )
-;    )
-;  )
-;
-;(defn render [s k]
-;  [:div.page-panel.as-panel {:class [k (if (get-in s [:ui :panels k]) :open)]}
-;   [:div.inner
-;    (panels/header s "Add authors from project team")
-;    (users s k)
-;    ]
-;   ]
-;  )
-;
-;(defn- _handle-author [s k e]
-;  (let [u (get-in @s [:data k])
-;        u (assoc u :fullname (str (:firstname u) " " (:lastname u)))
-;        ]
-;    (if (get-in @s [:ui :author-options :is-new]) 
-;      (data/new-author s u)
-;      (data/update-author s u)
-;      ) 
-;    (panels/close s e)
-;    ;; Clear form - JBG
-;    (swap! s update :data dissoc k)
-;    ;; Scroll form, am I a dirty hack? ... yes. - JBG
-;    (-> js/document (.querySelector (str "." (name k) " .inner")) (.scrollTo 0 0))    
-;    ) 
-;  )
 
 (defn add-click [s k e]
   (.preventDefault e)
   (.stopPropagation e)
-
-  ;  (if (utils/authors-new-valid? s)
-  ;    (_handle-author s k e)
-  ;    ) 
-
   (re-frame.core/dispatch [:authors/upsert k])
-
   )
 
 (defn close [e]

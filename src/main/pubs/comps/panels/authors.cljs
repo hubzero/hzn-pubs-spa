@@ -1,9 +1,8 @@
-(ns pubs.comps.authors
+(ns pubs.comps.panels.authors
   (:require
     [pubs.utils :as utils] 
-    ;[pubs.data :as data] 
     [pubs.comps.ui :as ui] 
-    [pubs.comps.panel-header :as header] 
+    [pubs.comps.panels.header :as header] 
     )
   )
 

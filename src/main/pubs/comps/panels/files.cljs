@@ -1,15 +1,12 @@
-(ns pubs.comps.files
+(ns pubs.comps.panels.files
   (:require
-    [pubs.comps.folders :as folders] 
-    [pubs.comps.panel-header :as header] 
+    [pubs.comps.panels.folders :as folders] 
+    [pubs.comps.panels.header :as header] 
     [pubs.comps.ui :as ui] 
     [pubs.comps.usage :as usage] 
     [pubs.utils :as utils] 
-    ;[hzn-pubs-spa.data :as data]
-    ;[hzn-pubs-spa.comps.ui :as ui] 
     ) 
   )
-
 
 (defn backarrow [s]
   [:a {:href "#"

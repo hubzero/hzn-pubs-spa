@@ -1,4 +1,4 @@
-(ns pubs.comps.folders
+(ns pubs.comps.panels.folders
   (:require
     [pubs.comps.ui :as ui] 
     [pubs.utils :as utils] 

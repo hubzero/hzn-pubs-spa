@@ -1,4 +1,4 @@
-(ns pubs.comps.panel-field
+(ns pubs.comps.panels.field
   (:require [pubs.comps.ui :as ui])
   )
 

@@ -1,4 +1,4 @@
-(ns pubs.comps.panel-header
+(ns pubs.comps.panels.header
   (:require
     [pubs.comps.ui :as ui] 
     ) 
