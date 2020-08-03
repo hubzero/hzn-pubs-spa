@@ -19,7 +19,6 @@
   (rt/init!))
 
 (defn init []
-  (rf/dispatch-sync [::events/initialize-db])
   (dev-setup)
   (-> js/document (.addEventListener "DOMContentLoaded" rt/init!))
   )

@@ -138,23 +138,7 @@
 ;
 
 
-;(defn agreements [s]
-;  [:div.field.err {:class (if (get-in @s [:ui :errors :terms]) :with-error)}
-;   [:label {:for :agreement} "Agreements"]
-;   [:div.field-wrapper
-;    [:div.item.ui.checkbox.inline
-;     [:input {:type :checkbox
-;              :name :terms
-;              :checked (or (get-in @s [:data :terms]) false) 
-;              :on-change #(swap! s update-in [:data :terms] not)
-;              }]
-;     [:label {:for :terms} (:terms @s)]
-;     ]
-;    ]
-;    (ui/val-error s :terms)
-;   ]
-;  )
-;
+
 ;(defn handle-files-options [s e key]
 ;  (data/ls-files s)
 ;  (panels/show s e true key)

@@ -1,6 +1,5 @@
 (ns pubs.handlers.req
-  (:require [pubs.db :as db]
-            [pubs.hub :as hub]
+  (:require [pubs.hub :as hub]
             [pubs.utils :as utils]
             )
   )
@@ -92,5 +91,9 @@
       )
     db
     )
+  )
+
+(defn agree [db _]
+  (update-in db [:data :terms] not)
   )
 

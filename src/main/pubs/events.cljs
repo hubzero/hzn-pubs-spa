@@ -15,7 +15,6 @@
    [pubs.handlers.text :as text]
    ))
 
-(rf/reg-event-db ::initialize-db handler/initialize-db)
 (rf/reg-event-db :actions/navigated handler/navigated)
 (rf/reg-event-db :err handler/err)
 
@@ -34,6 +33,7 @@
 (rf/reg-event-db :req/owners req/owners)
 (rf/reg-event-db :req/licenses req/licenses)
 (rf/reg-event-db :req/save-pub req/save-pub)
+(rf/reg-event-db :req/agree req/agree)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)

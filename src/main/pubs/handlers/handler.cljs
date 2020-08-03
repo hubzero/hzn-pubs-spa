@@ -1,10 +1,7 @@
 (ns pubs.handlers.handler
   (:require [reitit.frontend.controllers :as rfc]
-            [pubs.db :as db]
             [pubs.hub :as hub])
   )
-
-(defn initialize-db [_ _] db/default-db)
 
 (defn start-controller [new-match]
   (->> (get-in new-match [:data :controllers])
