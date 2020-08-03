@@ -5,9 +5,10 @@
     ) 
   )
 
-(defn click [s l k e]
-  ;(swap! s assoc-in [:ui key ] (:id l))
-  ;(swap! s assoc-in [:data key] l)
+(defn click [s k l e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (re-frame.core/dispatch [:licenses/select k l])
   )
 
 (defn item [s k l]
@@ -34,7 +35,7 @@
 (defn- license [s k l]
   [:li {:class :with-meta
         :key (:id l)
-        :on-click #(click s l k %)}
+        :on-click #(click s k l %)}
    (item s k l)
    (item-meta s k l)
    ]

@@ -36,6 +36,7 @@
         (hub/files)
         (hub/authors)
         (hub/tags)
+        (hub/license)
       )
     )
   )
@@ -126,5 +127,17 @@
 
 (defn search-tags [db [_ res]]
   (assoc db :tag-results res) 
+  )
+
+(defn licenses [db [_ res]]
+  (assoc db :licenses res)
+  )
+
+(defn license [db [_ res]]
+  (assoc-in db [:data :licenses] res)
+  )
+
+(defn save-pub [db [_ res pub]]
+  (update db :data merge res)
   )
 

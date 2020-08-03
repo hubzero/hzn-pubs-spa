@@ -6,6 +6,7 @@
    [pubs.handlers.dropdown :as dropdown]
    [pubs.handlers.folders :as folders]
    [pubs.handlers.handler :as handler]
+   [pubs.handlers.licenses :as licenses]
    [pubs.handlers.options :as options]
    [pubs.handlers.panels :as panels]
    [pubs.handlers.req :as req]
@@ -31,6 +32,8 @@
 (rf/reg-event-db :req/usage req/usage)
 (rf/reg-event-db :req/authors req/authors)
 (rf/reg-event-db :req/owners req/owners)
+(rf/reg-event-db :req/licenses req/licenses)
+(rf/reg-event-db :req/save-pub req/save-pub)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -52,6 +55,8 @@
 (rf/reg-event-db :res/rm-tag res/rm-tag)
 (rf/reg-event-db :res/add-tag res/add-tag)
 (rf/reg-event-db :res/search-tags res/search-tags)
+(rf/reg-event-db :res/licenses res/licenses)
+(rf/reg-event-db :res/license res/license)
 
 ;; Component handlers - JBG
 
@@ -92,4 +97,7 @@
 (rf/reg-event-db :tags/rm tags/rm)
 (rf/reg-event-db :tags/add tags/add)
 (rf/reg-event-db :tags/search tags/search)
+
+(rf/reg-event-db :licenses/ack licenses/ack)
+(rf/reg-event-db :licenses/select licenses/select)
 

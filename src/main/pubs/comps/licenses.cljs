@@ -5,6 +5,12 @@
             )
   )
 
+(defn- handle-ack [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (re-frame.core/dispatch [:licenses/ack])
+  )
+
 (defn- acknowledge [s]
   [:div.details.last-child
    [:div.inner
@@ -13,7 +19,7 @@
      [:input.important {:type :checkbox
                         :name :ack
                         :checked (or (get-in s [:data :ack]) false) 
-                        ;:onChange #(swap! s update-in [:data :ack] not)
+                        :onChange #(handle-ack s %)
                         } ]
      [:label {:for :poc}
       "I have read the "
@@ -39,12 +45,8 @@
 (defn- options [s k e]
   (.preventDefault e)
   (.stopPropagation e)
-
-;  (data/get-licenses s)
-;  (panels/show s e true key)
-
   (re-frame.core/dispatch [:panels/show k true])
-;  (re-frame.core/dispatch [:req/licenses])
+  (re-frame.core/dispatch [:req/licenses])
   )
 
 (defn render [s]

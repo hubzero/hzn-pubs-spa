@@ -156,4 +156,23 @@
            {:q tag-str})
   )
 
+(defn licenses [db]
+  (do-get db "/licenses" :res/licenses)
+  )
+
+(defn license [db]
+  (as-> db $
+    (get-in $ [:data :license_type])
+    (str "/licenses/" $)
+    (do-get db $ :res/license)
+    )
+  )
+
+(defn save-pub [db pub]
+ (do-post db
+           "/pubs"
+           :res/save-pub
+           http/post
+           pub)
+  )
 

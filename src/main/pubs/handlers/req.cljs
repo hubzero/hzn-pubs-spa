@@ -60,3 +60,37 @@
   (hub/owners db)
   )
 
+(defn licenses [db _]
+  (hub/licenses db)
+  )
+
+(defn- prepare-master-type [db]
+  (as-> (:master-types db) $
+    (group-by :type $)
+    ($ (get-in db [:data :master-type :master-type]))
+    (first $)
+    (:id $)
+    )
+  )
+
+(defn- prepare [db pub]
+  (assoc pub 
+         :license_type (:id (:licenses pub))
+         :master-type (prepare-master-type db)
+         )
+  )
+
+(defn save-pub [db _]
+  (if (-> (get-in db [:data :state])
+          (= 1)
+          (not)
+          )
+    (->>
+      (:data db)
+      (prepare db)
+      (hub/save-pub db)
+      )
+    db
+    )
+  )
+
