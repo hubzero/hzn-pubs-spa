@@ -1,4 +1,4 @@
-(ns pubs.comps.file
+(ns pubs.comps.image
   (:require [pubs.comps.ui :as ui]
             [pubs.comps.option :as option]
             )
@@ -15,10 +15,6 @@
    [:div.inner
     (merge
       [:ul]
-      ;(if (= k :authors-list)
-      ;  (item s "#icon-edit" "Rename" (fn [s e] (_edit-author e s v)))
-      ;  )
-      ;(item s "#icon-download" "Download" #())
       (option/render s "#icon-delete" "Remove" (fn [s e] (rm s k id e))))
     ]
    ]
@@ -26,7 +22,7 @@
 
 (defn render [s k v id]
   [:li.item {:key id}
-   (ui/icon s "#icon-file-text2")
+   (ui/icon s "#icon-file-picture")
    [:div.main [:span (:name v)]]
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
@@ -37,6 +33,6 @@
     (ui/icon s "#icon-dots")
     (options s k v id)
     ]
-   ] 
+   ]
   )
 

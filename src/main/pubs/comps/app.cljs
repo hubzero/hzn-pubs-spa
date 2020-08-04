@@ -30,22 +30,7 @@
 
 
 
-;(defn image [s k v id]
-;  [:li.item {:key id}
-;   (ui/icon s "#icon-file-picture")
-;   [:div.main [:span (:name v)]]
-;   [:div.options {:on-click (fn [e]
-;                              (.preventDefault e)
-;                              (.stopPropagation e)
-;                              (options/close s)
-;                              (swap! s assoc-in [:ui :options k id] true)
-;                              )}
-;    (ui/icon s "#icon-dots")
-;    (options/items s k v id)
-;    ]
-;   ]
-;  )
-;
+
 ;(defn handle-poc-click [s e id]
 ;  (.preventDefault e)
 ;  (.stopPropagation e)
@@ -151,17 +136,7 @@
 ;  (swap! s assoc-in [:ui :options :citations] true) 
 ;  )
 ;
-;(defn additional-details [s]
-;  [:fieldset.fieldset-section
-;   [:header [:legend "Additional Details"]]
-;   (collection s "a-image-gallery" "Image gallery:" :images nil handle-files-options)
-;   (textfield s "a-url" "External website URL:" "url")
-;   (collection s "a-docs" "Supporting docs:" :support-docs nil handle-files-options)
-;   (collection s "a-citations" "Citations:" :citations (options/citations s) handle-citation-options)
-;   (textarea s "a-verion-notes" "Version release notes:" "release-notes")
-;   ]
-;  )
-;
+
 ;(defn pub-date [s]
 ;  [^{:component-did-mount
 ;     (fn []
@@ -272,7 +247,7 @@
     (overlay/render s)
 ;    (errors/errors s :errors)
     (files/render s :content)
-;    (files/files s :images)
+    (files/render s :images)
 ;    (files/files s :support-docs)
     (authors/render s :authors-list)
     (authors-new/render s :authors-new)

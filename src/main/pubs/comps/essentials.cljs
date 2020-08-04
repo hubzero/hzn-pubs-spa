@@ -10,13 +10,6 @@
             ) 
   )
 
-(defn- files [s k e]
-  (.preventDefault e)
-  (.stopPropagation e)
-  (re-frame.core/dispatch [:req/ls-files])
-  (re-frame.core/dispatch [:req/usage])
-  (re-frame.core/dispatch [:panels/show k true])
-  )
 
 (defn authors [s k e]
   (.preventDefault e)
@@ -33,7 +26,7 @@
    (master-types/render s)
    (textfield/render s "a-title" "Title:" :title)
    (textarea/render s "a-abstract" "Abstract:" :abstract)
-   (collection/render s "a-content" "Content:" :content nil files)
+   (collection/render s "a-content" "Content:" :content nil collection/files)
    (collection/render s
                       "a-authors"
                       "Authors (drag to reorder):"

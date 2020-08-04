@@ -30,6 +30,14 @@
     )
   )
 
+(defn- files [s k e]
+  (.preventDefault e)
+  (.stopPropagation e)
+  (re-frame.core/dispatch [:req/ls-files])
+  (re-frame.core/dispatch [:req/usage])
+  (re-frame.core/dispatch [:panels/show k true])
+  )
+ 
 (defn render [s id title k opts f]
   [:div.field.anchor.err {:id id :class (if (get-in s [:ui :errors k]) :with-error)}
    [:label {:for :title} title]
