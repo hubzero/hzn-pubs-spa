@@ -248,7 +248,7 @@
 ;    (errors/errors s :errors)
     (files/render s :content)
     (files/render s :images)
-;    (files/files s :support-docs)
+    (files/render s :support-docs)
     (authors/render s :authors-list)
     (authors-new/render s :authors-new)
     (licenses/render s :licenses)

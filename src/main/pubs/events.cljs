@@ -63,6 +63,7 @@
 (rf/reg-event-db :options/show options/show)
 (rf/reg-event-db :options/close options/close)
 (rf/reg-event-db :options/authors options/authors)
+(rf/reg-event-db :options/citations options/citations)
 
 (rf/reg-event-db :dropdown/show dropdown/show)
 (rf/reg-event-db :dropdown/change dropdown/change)

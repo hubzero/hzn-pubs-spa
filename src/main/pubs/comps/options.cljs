@@ -7,19 +7,19 @@
   )
 
 
-(defn- _remove [s e k id]
-  (.preventDefault e)
-  (.stopPropagation e)
-;  (swap! s assoc-in [:data k] (dissoc (get-in @s [:data k]) id))
-  (case k
-    :content (re-frame.core/dispatch [:rm-file k id])
-    :images (re-frame.core/dispatch [:rm-file k id])
-    ;:support-docs (data/rm-file s k id)
-    ;:authors-list (data/rm-author s id)
-    )
-  )
+;(defn- _remove [s e k id]
+;  (.preventDefault e)
+;  (.stopPropagation e)
+;;  (swap! s assoc-in [:data k] (dissoc (get-in @s [:data k]) id))
+;  (case k
+;    :content (re-frame.core/dispatch [:rm-file k id])
+;    :images (re-frame.core/dispatch [:rm-file k id])
+;    ;:support-docs (data/rm-file s k id)
+;    ;:authors-list (data/rm-author s id)
+;    )
+;  )
+;;
 ;
-
 ;(defn handle-manual [s e]
 ;  (.preventDefault e)
 ;  (.stopPropagation e)

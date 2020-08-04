@@ -13,20 +13,20 @@
        (:organization a))
   )
 
-;(defn format-citation [c]
-;  (if (and (:formatted c) (> (count (:formatted c)) 0)) 
-;    (:formatted c) 
-;    (str (if (:author c) (str (:author c) ". "))
-;         (if (:year c) (str (:year c) ". "))
-;         (if (:title c) (str (:title c) ". "))
-;         (if (:journal c) (str (:journal c) ", " ))
-;         (if (:volume c) (str (:volume c) ", "))
-;         (if (:pages c) (str (:pages c) ". "))
-;         (if (:doi c) (str "doi:" (:doi c)))
-;         ) 
-;    )
-;  )
-;
+(defn format-citation [c]
+  (if (and (:formatted c) (> (count (:formatted c)) 0)) 
+    (:formatted c) 
+    (str (if (:author c) (str (:author c) ". "))
+         (if (:year c) (str (:year c) ". "))
+         (if (:title c) (str (:title c) ". "))
+         (if (:journal c) (str (:journal c) ", " ))
+         (if (:volume c) (str (:volume c) ", "))
+         (if (:pages c) (str (:pages c) ". "))
+         (if (:doi c) (str "doi:" (:doi c)))
+         ) 
+    )
+  )
+
 ;(defn savable? [s]
 ;  (-> 
 ;    (and (get-in @s [:data :prj-id] false)) 
