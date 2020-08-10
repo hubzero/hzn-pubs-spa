@@ -37,6 +37,7 @@
         (hub/authors)
         (hub/tags)
         (hub/license)
+        (hub/citations)
       )
     )
   )
@@ -139,5 +140,40 @@
 
 (defn save-pub [db [_ res pub]]
   (update db :data merge res)
+  )
+
+(defn citations [db [_ res]]
+  (->>
+    res
+    (group-by :id)
+    (map (fn [[k v]] [(utils/->keyword k) (first v)]))
+    (into {})
+    (assoc-in db [:data :citations])
+    )
+  )
+
+(defn add-citation [db [_ res]]
+  (assoc-in db [:data :citations (utils/->keyword (:id res))] res) 
+  )
+
+(defn search-citations [db [_ res]]
+  (assoc db :doi-results res)
+  )
+
+(defn citation-types [db [_ res]]
+  (assoc db :citation-types res)
+  )
+
+(defn rm-citation [db [_ res]]
+  (update-in db [:data :citations] dissoc (utils/->keyword (:id res)))
+  )
+
+(defn create-citation [db [_ res]]
+  ;; Scroll form, am I a dirty hack? ... yes. - JBG
+  (-> js/document (.querySelector ".citations-manual .inner") (.scrollTo 0 0))
+  (-> db
+      (hub/add-citation res)
+      (update :data dissoc :citations-manual)
+      )
   )
 

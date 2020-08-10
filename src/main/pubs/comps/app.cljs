@@ -19,6 +19,7 @@
     [pubs.comps.overlay :as overlay]
     [pubs.comps.panels.authors :as authors]
     [pubs.comps.panels.authors-new :as authors-new] 
+    [pubs.comps.panels.citations-doi :as citations-doi]
     [pubs.comps.panels.files :as files]
     [pubs.comps.panels.licenses :as licenses]
     [pubs.comps.main :as main]
@@ -252,7 +253,7 @@
     (authors/render s :authors-list)
     (authors-new/render s :authors-new)
     (licenses/render s :licenses)
-;    (citations/doi s :citations-doi)
+    (citations-doi/render s :citations-doi)
 ;    (citations/manual s :citations-manual)
 ;    (help/help s :help-center)
     )

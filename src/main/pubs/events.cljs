@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as rf :refer [dispatch dispatch-sync]]
    [pubs.handlers.authors :as authors]
+   [pubs.handlers.citations :as citations]
    [pubs.handlers.collection :as collection]
    [pubs.handlers.dropdown :as dropdown]
    [pubs.handlers.folders :as folders]
@@ -34,6 +35,7 @@
 (rf/reg-event-db :req/licenses req/licenses)
 (rf/reg-event-db :req/save-pub req/save-pub)
 (rf/reg-event-db :req/agree req/agree)
+(rf/reg-event-db :req/rm-citation req/rm-citation)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -57,6 +59,12 @@
 (rf/reg-event-db :res/search-tags res/search-tags)
 (rf/reg-event-db :res/licenses res/licenses)
 (rf/reg-event-db :res/license res/license)
+(rf/reg-event-db :res/citations res/citations)
+(rf/reg-event-db :res/add-citation res/add-citation)
+(rf/reg-event-db :res/search-citations res/search-citations)
+(rf/reg-event-db :res/citation-types res/citation-types)
+(rf/reg-event-db :res/rm-citation res/rm-citation)
+(rf/reg-event-db :res/create-citation res/create-citation)
 
 ;; Component handlers - JBG
 
@@ -101,4 +109,8 @@
 
 (rf/reg-event-db :licenses/ack licenses/ack)
 (rf/reg-event-db :licenses/select licenses/select)
+
+(rf/reg-event-db :citations/search citations/search)
+(rf/reg-event-db :citations/add citations/add)
+(rf/reg-event-db :citations/options citations/options)
 

@@ -1,9 +1,8 @@
 (ns pubs.comps.citation
-  (:require 
-    
-    [pubs.comps.ui :as ui]
-            
-            )  
+  (:require [pubs.comps.ui :as ui]
+            [pubs.comps.option :as option]
+            [pubs.utils :as utils]
+            )
   )
 
 (defn- rm [s id e]
@@ -12,11 +11,11 @@
   (re-frame.core/dispatch [:req/rm-citation id])
   )
 
-(defn- click [s c e]
+(defn- edit [s c e]
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:options/close])
-  ;(swap! s assoc-in [:ui :options :citation (:id c)] true)
+  (re-frame.core/dispatch [:citations/options (:id c)])
   )
 
 (defn options [s k c]
@@ -24,8 +23,8 @@
    [:div.inner
     (merge
       [:ul]
-      (item s "#icon-edit" "Edit" #(click s c %))
-      (item s "#icon-delete" "Remove" #(rm s (:id c) %)))
+      (option/render s "#icon-edit" "Edit" (fn [s e] (edit s c e)))
+      (option/render s "#icon-delete" "Remove" (fn [s e] (rm s (:id c) e))))
     ]
    ]
   )
@@ -40,7 +39,7 @@
           } (utils/format-citation c)]
      ]
     ]
-   [:div.options { :on-click #(click s c %) }
+   [:div.options { :on-click #(edit s c %) }
     (ui/icon s "#icon-dots")
     (options s k c)
     ]

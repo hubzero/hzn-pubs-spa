@@ -97,3 +97,7 @@
   (update-in db [:data :terms] not)
   )
 
+(defn rm-citation [db [_ id]]
+  (hub/rm-citation db id)
+  )
+

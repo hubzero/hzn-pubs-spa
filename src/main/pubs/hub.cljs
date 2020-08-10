@@ -176,3 +176,22 @@
            pub)
   )
 
+(defn citations [db]
+  (do-get db (ver-route db "/citations") :res/citations)
+  )
+
+(defn add-citation [db c]
+  (do-post db (ver-route db "/citations") :res/add-citation http/post c)
+  )
+
+(defn search-citations [db v]
+  (do-post db "/citations/search" :res/search-citations http/post {:doi v})
+  )
+
+(defn create-citation [db c]
+  (do-post db "/citations" :res/create-citation http/post c)
+  )
+
+(defn rm-citation [db id]
+  (do-get db (ver-route db (str "/citations/" id)) :res/rm-citation http/delete id))
+
