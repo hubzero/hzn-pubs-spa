@@ -195,3 +195,8 @@
 (defn rm-citation [db id]
   (do-get db (ver-route db (str "/citations/" id)) :res/rm-citation http/delete id))
 
+(defn citation-types [db]
+  (do-get db "/citations/types" :res/citation-types)
+  )
+
+

@@ -8,6 +8,7 @@
   ;(data/get-citation-types s)
   (re-frame.core/dispatch [:panels/show :citations-manual true])
   (re-frame.core/dispatch [:options/close])
+  (re-frame.core/dispatch [:req/citation-types])
   )
 
 (defn- doi [s e]

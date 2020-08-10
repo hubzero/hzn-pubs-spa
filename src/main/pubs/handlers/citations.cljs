@@ -36,3 +36,35 @@
   (assoc-in db [:ui :options :citation id] true)
   )
 
+(defn text [db [_ k f v]]
+  (assoc-in db [:data k (:name f)] v)
+  )
+
+(defn- errors [db]
+  (as-> db $
+    (reduce (fn [errors [k v]]
+              (if (= 0 (count (get-in $ [:data :citations-manual k])))
+                (assoc errors k v)
+                errors
+                )
+              ) {} {:citation-type ["Type" "can not be empty"]
+                    :title ["Title" "can not be empty"]
+                    })
+    (assoc-in db [:ui :errors] $)
+    )
+  )
+
+(defn manual [db _]
+  (as-> (errors db) $
+    (if (= (count (get-in $ [:ui :errors])) 0)
+      (do
+        (re-frame.core/dispatch [:panels/close])
+        (prn "CITATIONS MANUAL" (get-in $ [:data :citations-manual]))
+        (hub/create-citation $ (get-in $ [:data :citations-manual]))   
+        )
+      $
+      )
+    )
+  )
+
+

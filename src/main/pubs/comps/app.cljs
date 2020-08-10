@@ -20,6 +20,7 @@
     [pubs.comps.panels.authors :as authors]
     [pubs.comps.panels.authors-new :as authors-new] 
     [pubs.comps.panels.citations-doi :as citations-doi]
+    [pubs.comps.panels.citations-manual :as citations-manual]
     [pubs.comps.panels.files :as files]
     [pubs.comps.panels.licenses :as licenses]
     [pubs.comps.main :as main]
@@ -254,7 +255,7 @@
     (authors-new/render s :authors-new)
     (licenses/render s :licenses)
     (citations-doi/render s :citations-doi)
-;    (citations/manual s :citations-manual)
+    (citations-manual/render s :citations-manual)
 ;    (help/help s :help-center)
     )
   )

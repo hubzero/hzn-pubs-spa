@@ -101,3 +101,7 @@
   (hub/rm-citation db id)
   )
 
+(defn citation-types [db _]
+  (hub/citation-types db)
+  )
+
