@@ -27,6 +27,16 @@
     )
   )
 
+(defn year-valid? [year errors]
+  (as-> year $
+    (if (not (nil? $)) (clojure.string/trim $) "")
+    (if (re-matches #"^(19|20)\d{2}$" $)
+      errors
+      (assoc errors :year ["Year" "must be valid 4 digits"])
+      )
+    )
+  )
+
 ;(defn savable? [s]
 ;  (-> 
 ;    (and (get-in @s [:data :prj-id] false)) 
@@ -34,12 +44,6 @@
 ;    )
 ;  )
 ;
-(defn authors-new-valid? [s]
-  (swap! s assoc-in [:ui :errors]
-         
-         )
-  (= (count (get-in @s [:ui :errors])) 0)
-  )
 
 ;(defn citations-manual-valid? [s]
 ;  (swap! s assoc-in [:ui :errors]
