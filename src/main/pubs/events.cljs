@@ -10,6 +10,7 @@
    [pubs.handlers.licenses :as licenses]
    [pubs.handlers.options :as options]
    [pubs.handlers.panels :as panels]
+   [pubs.handlers.pub-date :as pub-date]
    [pubs.handlers.req :as req]
    [pubs.handlers.res :as res]
    [pubs.handlers.tags :as tags]
@@ -118,3 +119,4 @@
 (rf/reg-event-db :citations/manual citations/manual)
 (rf/reg-event-db :citations/text citations/text)
 
+(rf/reg-event-db :pub-date/select pub-date/select)

@@ -139,38 +139,7 @@
 ;  )
 ;
 
-;(defn pub-date [s]
-;  [^{:component-did-mount
-;     (fn []
-;       (js/Lightpick. (clj->js {:field (.querySelector js/document "input[name=publication-date]")
-;                                :onSelect (fn [date]
-;                                            (swap! s assoc-in [:data :publication-date] (.format date "MM/DD/YYYY"))
-;                                            )
-;                                }))
-;
-;       (set! (.-value (.querySelector js/document "input[name=publication-date]")) (get-in @s [:data :publication-date]))
-;       )
-;     }
-;   (fn []
-;     [:div#a-pub-date.field.anchor.err {:class (if (get-in @s [:ui :errors :publication-date]) :with-error)}
-;      [:label {:for :title} "Embargo date:"]
-;      [:input {:type :text
-;               :name "publication-date" 
-;               }]
-;      (ui/val-error s :publication-date)
-;      ]
-;     )
-;   ]
-;  )
-;
-;(defn publish-settings [s]
-;  [:fieldset.fieldset-section
-;   [:header#a-pub-settings.anchor.a-header [:legend "Publish Settings"]]
-;   (pub-date s)
-;   (textarea s "a-comments" "Comments to the administrator:" "comments")
-;   ]
-;  )
-;
+
 ;(defn- _submit-draft [s e]
 ;  (when (not (utils/errors? s)) 
 ;    (.preventDefault e) 
