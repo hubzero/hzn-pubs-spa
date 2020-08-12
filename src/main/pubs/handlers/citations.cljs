@@ -1,5 +1,6 @@
 (ns pubs.handlers.citations
-  (:require [pubs.hub :as hub]
+  (:require [pubs.handlers.validate :as validate]
+            [pubs.hub :as hub]
             [pubs.utils :as utils]
             )
   )
@@ -42,24 +43,9 @@
   (assoc-in db [:data k (:name f)] v)
   )
 
-(defn- errors [db]
-  (as-> db $
-    (reduce (fn [errors [k v]]
-              (if (= 0 (count (get-in $ [:data :citations-manual k])))
-                (assoc errors k v)
-                errors
-                )
-              ) {} {:type ["Type" "can not be empty"]
-                    :title ["Title" "can not be empty"]
-                    :year ["Year" "can not be empty"]
-                    })
-    (utils/year-valid? (get-in db [:data :citations-manual :year]) $)
-    (assoc-in db [:ui :errors] $)
-    )
-  )
 
 (defn manual [db _]
-  (as-> (errors db) $
+  (as-> (validate/citation db) $
     (if (= (count (get-in $ [:ui :errors])) 0)
       (do
         (re-frame.core/dispatch [:panels/close])

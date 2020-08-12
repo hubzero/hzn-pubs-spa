@@ -34,7 +34,7 @@
 (rf/reg-event-db :req/authors req/authors)
 (rf/reg-event-db :req/owners req/owners)
 (rf/reg-event-db :req/licenses req/licenses)
-(rf/reg-event-db :req/save-pub req/save-pub)
+(rf/reg-event-db :req/save-pub req/save)
 (rf/reg-event-db :req/agree req/agree)
 (rf/reg-event-db :req/rm-citation req/rm-citation)
 (rf/reg-event-db :req/citation-types req/citation-types)
@@ -90,6 +90,7 @@
 (rf/reg-event-db :panels/pop panels/!pop)
 (rf/reg-event-db :panels/push panels/push)
 (rf/reg-event-db :panels/field panels/field)
+(rf/reg-event-db :panels/errors panels/errors)
 
 (rf/reg-event-db :folders/pop folders/!pop)
 (rf/reg-event-db :folders/push folders/push)

@@ -2,6 +2,7 @@
   (:require [pubs.comps.additional-details :as ad]
             [pubs.comps.essentials :as es]
             [pubs.comps.pub-settings :as ps]
+            [pubs.comps.section-buttons :as sb]
             )
   )
 
@@ -11,7 +12,7 @@
     (es/render s) 
     (ad/render s)
     (ps/render s)
-    ;(section-buttons s)
+    (sb/render s)
     ]
    ]
   )

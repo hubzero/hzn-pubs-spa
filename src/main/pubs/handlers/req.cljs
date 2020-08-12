@@ -1,7 +1,9 @@
 (ns pubs.handlers.req
-  (:require [pubs.hub :as hub]
-            [pubs.utils :as utils]
-            )
+  (:require 
+    [pubs.handlers.validate :as validate]
+    [pubs.hub :as hub]
+    [pubs.utils :as utils]
+    )
   )
 
 (defn me [db [_ _]]
@@ -79,17 +81,20 @@
          )
   )
 
-(defn save-pub [db _]
-  (if (-> (get-in db [:data :state])
-          (= 1)
-          (not)
-          )
-    (->>
-      (:data db)
-      (prepare db)
-      (hub/save-pub db)
+(defn save [db _]
+  (->>
+    (:data db)
+    (prepare db)
+    (hub/save-pub db)
+    )
+  )
+
+(defn submit [db c]
+  (as-> db $
+    (if (and (validate/valid? $) (not (validate/submitted? $)))
+      (save db c)
+      $
       )
-    db
     )
   )
 

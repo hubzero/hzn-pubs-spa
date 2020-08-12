@@ -27,15 +27,6 @@
     )
   )
 
-(defn year-valid? [year errors]
-  (as-> year $
-    (if (not (nil? $)) (clojure.string/trim $) "")
-    (if (re-matches #"^(19|20)\d{2}$" $)
-      errors
-      (assoc errors :year ["Year" "must be valid 4 digits"])
-      )
-    )
-  )
 
 ;(defn savable? [s]
 ;  (-> 
@@ -59,56 +50,7 @@
 ;  (= (count (get-in @s [:ui :errors])) 0)
 ;  )
 ; 
-;(defn- _date-valid? [s errors]
-;  (if (and (get-in @s [:data :publication-date])
-;    (< (js/Date. (get-in @s [:data :publication-date])) (js/Date.)))
-;    (assoc errors :publication-date ["Embargo date" "can not be in the past"])
-;    errors
-;    ) 
-;  )
-;
-;(defn- _terms-valid? [s errors]
-;  (if (not (get-in @s [:data :terms])) 
-;    (assoc errors :terms ["Terms" "must be agreed to"])
-;    errors
-;    ) 
-;  )
-;
-;(defn- _ack-valid? [s errors]
-;  (if (not (get-in @s [:data :ack]))
-;    (assoc errors :ack ["Acknowledgement" "is required"])
-;    errors
-;    )
-;  )
-;
-;(defn- _errors [s]
-;  (->>
-;    (reduce (fn [errors [k v]]
-;              (if (= 0 (count (get-in @s [:data k])))
-;                (assoc errors k v)
-;                errors
-;                )
-;              ) {} {:title ["Title" "can not be empty"]
-;                    :abstract ["Abstract" "can not be empty"]
-;                    :authors-list ["Authors"  "can not be empty"]
-;                    :content ["Content" "can not be empty"]
-;                    :tags ["Tags" "can not be empty"]
-;                    :licenses ["Licenses" "can not be empty"]
-;                    })   
-;    (_date-valid? s)
-;    (_ack-valid? s) 
-;    )
-;  )
-;
-;(defn errors? [s]
-;  (let [errors (->> (_errors s) (_terms-valid? s))]
-;    (swap! s assoc-in [:ui :errors] errors)
-;    (-> errors (count) (= 0))
-;    )
-;  )
-;
-;(defn valid? [s]
-;  (-> (_errors s) (count) (= 0)))
+
 
 (defn file-count [files]
   (reduce (fn [c d]

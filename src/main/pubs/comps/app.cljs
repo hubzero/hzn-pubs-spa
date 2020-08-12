@@ -21,6 +21,7 @@
     [pubs.comps.panels.authors-new :as authors-new] 
     [pubs.comps.panels.citations-doi :as citations-doi]
     [pubs.comps.panels.citations-manual :as citations-manual]
+    [pubs.comps.panels.errors :as errors]
     [pubs.comps.panels.files :as files]
     [pubs.comps.panels.licenses :as licenses]
     [pubs.comps.main :as main]
@@ -140,14 +141,7 @@
 ;
 
 
-;(defn- _submit-draft [s e]
-;  (when (not (utils/errors? s)) 
-;    (.preventDefault e) 
-;    (.stopPropagation e)  
-;    (panels/show s e true :errors)     
-;    )
-;  )
-;
+
 ;(defn aside-buttons [s]
 ;  [:aside
 ;   [:div.inner
@@ -172,20 +166,6 @@
 ;                                   "/continue"
 ;                                   )} "Switch to classic"]
 ;     ]
-;    ]
-;   ]
-;  )
-;
-;(defn section-buttons [s]
-;  [:fieldset.fieldset-section.buttons
-;   [:div.field.buttons
-;    [:a.btn {:href (str "/pubs/#/pubs/"
-;                        (get-in @s [:data :pub-id])
-;                        "/v/"
-;                        (get-in @s [:data :ver-id])
-;                        )
-;             :on-click #(_submit-draft s %)} "Proceed with the draft"]
-;    
 ;    ]
 ;   ]
 ;  )
@@ -216,7 +196,7 @@
     [:div]
     (wrap s)
     (overlay/render s)
-;    (errors/errors s :errors)
+    (errors/render s :errors)
     (files/render s :content)
     (files/render s :images)
     (files/render s :support-docs)

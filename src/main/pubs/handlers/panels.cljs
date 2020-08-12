@@ -34,3 +34,8 @@
   (assoc-in db [:data k n] v)
   )
 
+(defn errors [db [_ errors]]
+  (re-frame.core/dispatch [:panels/show :errors true])
+  (assoc-in db [:ui :errors] errors)
+  )
+
