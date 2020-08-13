@@ -1,6 +1,5 @@
 (ns pubs.comps.section-buttons
   (:require [pubs.handlers.validate :as validate])
-  
   )
 
 (defn- submit [s e]

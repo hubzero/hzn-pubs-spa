@@ -142,34 +142,6 @@
 
 
 
-;(defn aside-buttons [s]
-;  [:aside
-;   [:div.inner
-;    [:fieldset.buttons-aside
-;     ;;[:a.btn {:href "/pubs/#/summary"} "Proceed with the draft"]
-;     ;;[:a.btn {:href "#" :on-click #(_submit-draft s %)} "Proceed with the draft"]
-;     [:a.btn {:href (str "/pubs/#/pubs/"
-;                         (get-in @s [:data :pub-id])
-;                         "/v/"
-;                         (get-in @s [:data :ver-id])
-;                         )
-;              :on-click #(_submit-draft s %)} "Proceed with the draft"]
-;     [:a.btn.secondary {:href (str "/projects/"
-;                                   (get-in @s [:data :prj-id])
-;                                   "/publications"
-;                                   )} "Save & Close"]
-;     ;; https://localhost/projects/broodje/publications/274/continue
-;     [:a.btn.secondary {:href (str "/projects/"
-;                                   (get-in @s [:data :prj-id])
-;                                   "/publications/"
-;                                   (get-in @s [:data :pub-id])
-;                                   "/continue"
-;                                   )} "Switch to classic"]
-;     ]
-;    ]
-;   ]
-;  )
-;
 
 (defn wrap [s]
   [:div.wrap {:on-click (fn [e]
