@@ -22,10 +22,22 @@
                                     :view app/render
                                     :controllers [{:start controllers/pub}]
                                     }]
+   ["/prjs/:id" {:name :prj
+                 :view app/render
+                 :controllers [{:start controllers/prj}]
+                 }]
    ]
   )
 
 (def router (rfe/router routes))
+
+(defn redirect [url]
+  (->
+    js/window
+    .-location
+    (set! url)
+    )
+  )
 
 (defn on-navigate [new-match]
   (when new-match

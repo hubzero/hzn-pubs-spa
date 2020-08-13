@@ -81,18 +81,17 @@
          )
   )
 
-(defn save [db _]
-  (->>
-    (:data db)
-    (prepare db)
-    (hub/save-pub db)
+(defn save [db _ & [new?]]
+  (as-> (:data db) $
+    (prepare db $)
+    (hub/save-pub db $ new?)
     )
   )
 
-(defn submit [db c]
+(defn submit [db _]
   (as-> db $
     (if (and (validate/valid? $) (not (validate/submitted? $)))
-      (save db c)
+      (save db nil)
       $
       )
     )
@@ -108,5 +107,14 @@
 
 (defn citation-types [db _]
   (hub/citation-types db)
+  )
+
+(defn new-pub [db [_ params]]
+  (prn "NEW-PUB" params)
+  (-> db
+       (assoc-in [:ui :summary] false)
+       (assoc-in [:data :prj-id] (:id params))
+       (save nil true)
+       ) 
   )
 

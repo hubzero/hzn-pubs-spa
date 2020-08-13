@@ -3,8 +3,10 @@
   )
 
 (defn pub [db params]
-  ;(dispatch [:req/master-types params])
   (dispatch [:req/pub params])
-  ;(dispatch [:req/me])
+  )
+
+(defn prj [db params]
+  (dispatch [:req/new params])
   )
 

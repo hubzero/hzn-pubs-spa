@@ -38,6 +38,7 @@
 (rf/reg-event-db :req/agree req/agree)
 (rf/reg-event-db :req/rm-citation req/rm-citation)
 (rf/reg-event-db :req/citation-types req/citation-types)
+(rf/reg-event-db :req/new req/new-pub)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -68,6 +69,8 @@
 (rf/reg-event-db :res/rm-citation res/rm-citation)
 (rf/reg-event-db :res/create-citation res/create-citation)
 (rf/reg-event-db :res/citation-types res/citation-types)
+(rf/reg-event-db :res/save-pub res/save-pub)
+(rf/reg-event-db :res/new-pub res/new-pub)
 
 ;; Component handlers - JBG
 

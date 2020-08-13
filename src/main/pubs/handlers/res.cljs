@@ -1,5 +1,6 @@
 (ns pubs.handlers.res
   (:require [pubs.hub :as hub]
+            [pubs.routes :as routes]
             [pubs.utils :as utils]
             )
   )
@@ -29,6 +30,13 @@
     )
   )
 
+(defn- get-license [db]
+  (if (get-in db [:data :license_type])
+    (hub/license db)
+    db
+    )
+  )
+
 (defn pub [db [_ res]]
   (let [pub (pub-master-type db res)]
     (-> (assoc db :data pub)
@@ -36,7 +44,7 @@
         (hub/files)
         (hub/authors)
         (hub/tags)
-        (hub/license)
+        (get-license)
         (hub/citations)
       )
     )
@@ -136,6 +144,20 @@
 
 (defn license [db [_ res]]
   (assoc-in db [:data :licenses] res)
+  )
+
+(defn new-pub [db [_ res pub]]
+  (prn "NEW PUB" db res pub)
+  (as-> db $
+    (update $ :data merge res)
+    (routes/redirect (str "/pubs/#/pubs/"
+                          (get-in $ [:data :pub-id])
+                          "/v/"
+                          (get-in $ [:data :ver-id])
+                          "/edit"
+                          )
+                     ) 
+    )
   )
 
 (defn save-pub [db [_ res pub]]
