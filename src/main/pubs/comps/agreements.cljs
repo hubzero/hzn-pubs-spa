@@ -2,8 +2,6 @@
   (:require [pubs.comps.ui :as ui])
   )
 
-(def terms "I and all publication authors have read and agree to PURR terms of deposit.")
-
 (defn click [s e]
   (.preventDefault e)
   (.stopPropagation e)
@@ -20,7 +18,7 @@
               :checked (or (get-in s [:data :terms]) false) 
               :onChange #(click s %)
               }]
-     [:label {:for :terms} terms]
+     [:label {:for :terms} (:terms s)]
      ]
     ]
     (ui/val-error s :terms)

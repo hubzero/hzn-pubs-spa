@@ -39,6 +39,7 @@
 (rf/reg-event-db :req/rm-citation req/rm-citation)
 (rf/reg-event-db :req/citation-types req/citation-types)
 (rf/reg-event-db :req/new req/new-pub)
+(rf/reg-event-db :req/summary req/summary)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)

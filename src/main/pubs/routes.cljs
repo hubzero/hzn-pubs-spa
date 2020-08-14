@@ -8,6 +8,7 @@
     [reitit.coercion.spec :as rss]
     [pubs.controllers :as controllers]
     [pubs.containers.app :as app]
+    [pubs.containers.summary :as summary]
     ))
 
 ;; Triggering navigation from events.
@@ -18,7 +19,11 @@
     (apply rfez/push-state route)))
 
 (def routes
-  [["/pubs/:pub-id/v/:ver-id/edit" {:name :pub
+  [["/pubs/:pub-id/v/:ver-id" {:name :summary
+                               :view summary/render
+                               :controllers [{:start controllers/summary}]
+                               }]
+   ["/pubs/:pub-id/v/:ver-id/edit" {:name :pub
                                     :view app/render
                                     :controllers [{:start controllers/pub}]
                                     }]

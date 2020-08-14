@@ -10,3 +10,7 @@
   (dispatch [:req/new params])
   )
 
+(defn summary [db params]
+  (dispatch [:req/summary params])
+  )
+

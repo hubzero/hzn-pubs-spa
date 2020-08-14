@@ -110,11 +110,20 @@
   )
 
 (defn new-pub [db [_ params]]
-  (prn "NEW-PUB" params)
   (-> db
        (assoc-in [:ui :summary] false)
        (assoc-in [:data :prj-id] (:id params))
        (save nil true)
        ) 
+  )
+
+(defn summary [db [_ params]]
+ (-> js/window (.scrollTo 0 0))
+ (-> db
+      (assoc-in [:data :pub-id] (:pub-id params))
+      (assoc-in [:data :ver-id] (:ver-id params))
+      (assoc-in [:ui :summary] true)
+      (hub/master-types)
+      )
   )
 

@@ -46,7 +46,8 @@
         (hub/tags)
         (get-license)
         (hub/citations)
-      )
+        (assoc :terms "I and all publication authors have read and agree to PURR terms of deposit.")
+        )
     )
   )
 
