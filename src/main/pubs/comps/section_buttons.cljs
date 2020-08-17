@@ -3,6 +3,7 @@
   )
 
 (defn- submit [s e]
+  (re-frame.core/dispatch [:req/save-pub])
   (let [errors (validate/pub s)]
     (when (> (count errors) 0)
       (.preventDefault e) 
