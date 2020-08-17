@@ -200,3 +200,7 @@
       )
   )
 
+(defn submit-pub [db [_ res]]
+  (routes/redirect (str "/publications/" (get-in db [:data :pub-id])))
+  )
+

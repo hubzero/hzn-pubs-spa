@@ -1,4 +1,4 @@
-(ns pubs.comps.summary.addtional
+(ns pubs.comps.summary.additional
   (:require [pubs.comps.summary.section :as section])
   )
 

@@ -168,10 +168,10 @@
     )
   )
 
-(defn save-pub [db pub & [new?]]
+(defn save-pub [db pub & [response-handler]]
  (do-post db
            "/pubs"
-           (if new? :res/new-pub :res/save-pub)
+           (or response-handler :res/save-pub)
            http/post
            pub)
   )

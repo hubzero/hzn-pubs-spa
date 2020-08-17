@@ -140,9 +140,6 @@
 ;  )
 ;
 
-
-
-
 (defn wrap [s]
   [:div.wrap {:on-click (fn [e]
                           ;(options/close s)
@@ -154,7 +151,6 @@
      (main/render s)
      ) 
    ])
-
 
 ;(defn- _save [s]
 ;  (if (utils/savable? s) (data/save-pub s))

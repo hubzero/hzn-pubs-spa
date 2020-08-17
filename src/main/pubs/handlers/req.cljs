@@ -81,17 +81,17 @@
          )
   )
 
-(defn save [db _ & [new?]]
+(defn save [db _ & [response-handler]]
   (as-> (:data db) $
     (prepare db $)
-    (hub/save-pub db $ new?)
+    (hub/save-pub db $ response-handler)
     )
   )
 
 (defn submit [db _]
   (as-> db $
     (if (and (validate/valid? $) (not (validate/submitted? $)))
-      (save db nil)
+      (save db nil :res/submit-pub)
       $
       )
     )
@@ -113,7 +113,7 @@
   (-> db
        (assoc-in [:ui :summary] false)
        (assoc-in [:data :prj-id] (:id params))
-       (save nil true)
+       (save nil :res/new-pub)
        ) 
   )
 
