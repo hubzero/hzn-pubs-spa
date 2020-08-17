@@ -90,8 +90,11 @@
 
 (defn submit [db _]
   (as-> db $
-    (if (and (validate/valid? $) (not (validate/submitted? $)))
-      (save db nil :res/submit-pub)
+    (if (not (validate/submitted? $))
+      (-> db
+          (assoc-in [:data :state] 1)
+          (save nil :res/submit-pub)
+          )
       $
       )
     )

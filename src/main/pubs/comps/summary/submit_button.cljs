@@ -1,6 +1,8 @@
 (ns pubs.comps.summary.submit-button)
 
 (defn- submit [s e]
+  (.preventDefault e)
+  (.stopPropagation e)
   (re-frame.core/dispatch [:req/submit])
   )
 
