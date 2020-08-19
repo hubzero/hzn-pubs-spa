@@ -156,12 +156,16 @@
 ;  (if (utils/savable? s) (data/save-pub s))
 ;  )
 
+(defn click [s e]
+  (re-frame.core/dispatch [:tags/close])
+  (re-frame.core/dispatch [:options/close])
+  )
+
 (defn render [s]
   ;; Is this a hack, probably, save state and draft pub - JBG
   ;(_save s)
   (merge
-    ;[:div {:on-click #(swap! s assoc-in [:ui :tag] false)}]
-    [:div]
+    [:div {:on-click #(click s %)}]
     (wrap s)
     (overlay/render s)
     (errors/render s :errors)

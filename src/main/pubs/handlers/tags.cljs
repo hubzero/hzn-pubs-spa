@@ -25,3 +25,7 @@
     )
   )
 
+(defn close [db _]
+  (assoc-in db [:ui :tag] false)
+  )
+

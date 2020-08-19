@@ -116,6 +116,7 @@
 (rf/reg-event-db :tags/rm tags/rm)
 (rf/reg-event-db :tags/add tags/add)
 (rf/reg-event-db :tags/search tags/search)
+(rf/reg-event-db :tags/close tags/close)
 
 (rf/reg-event-db :licenses/ack licenses/ack)
 (rf/reg-event-db :licenses/select licenses/select)
