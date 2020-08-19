@@ -125,5 +125,6 @@
 (rf/reg-event-db :citations/options citations/options)
 (rf/reg-event-db :citations/manual citations/manual)
 (rf/reg-event-db :citations/text citations/text)
+(rf/reg-event-db :citations/edit citations/edit)
 
 (rf/reg-event-db :pub-date/select pub-date/select)

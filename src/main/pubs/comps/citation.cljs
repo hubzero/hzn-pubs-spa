@@ -15,7 +15,13 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:options/close])
-  (re-frame.core/dispatch [:citations/options (:id c)])
+  (re-frame.core/dispatch [:citations/edit c])
+  (re-frame.core/dispatch [:panels/show :citations-manual true])
+  )
+
+(defn click [s c e]
+  (re-frame.core/dispatch [:options/close])
+  (re-frame.core/dispatch [:citations/options (:id c)]) 
   )
 
 (defn options [s k c]
@@ -35,11 +41,11 @@
    [:div.main
     [:div.subject
      [:a {:href "#"
-          ;:on-click #(edit-citation s c %)
+          :on-click #(edit s c %)
           } (utils/format-citation c)]
      ]
     ]
-   [:div.options { :on-click #(edit s c %) }
+   [:div.options { :on-click #(click s c %) }
     (ui/icon s "#icon-dots")
     (options s k c)
     ]

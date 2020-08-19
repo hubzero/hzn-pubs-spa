@@ -56,4 +56,11 @@
     )
   )
 
+(defn edit [db [_ c]]
+  (as-> c $
+    (assoc $ :book (:booktitle c))
+    (assoc-in db [:data :citations-manual] $)
+    )  
+  )
+
 
