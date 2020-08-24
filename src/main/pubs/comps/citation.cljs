@@ -44,7 +44,9 @@
     [:div.subject
      [:a {:href "#"
           :on-click #(edit s c %)
-          } (utils/format-citation c)]
+          :dangerouslySetInnerHTML {:__html (utils/format-citation c)} 
+          }
+      ]
      ]
     ]
    [:div.options { :on-click #(click s c %) }
@@ -53,4 +55,4 @@
     ]
    ]
   )
- 
+

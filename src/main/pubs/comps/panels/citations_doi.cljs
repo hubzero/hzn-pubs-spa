@@ -32,7 +32,9 @@
   [:p.formatted-meta.key {:class (:id c)
                           :key (:id c)
                           :on-click #(click s k c %)
-                          } (utils/format-citation c)]
+                          :dangerouslySetInnerHTML {:__html (utils/format-citation c)}
+                          }
+   ]
   )
 
 (defn- results [s k]
