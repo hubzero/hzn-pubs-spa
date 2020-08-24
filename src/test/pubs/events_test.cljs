@@ -9,6 +9,7 @@
 
 (rf/reg-sub :content (fn [db _] (get-in db [:data :content])))
 (rf/reg-sub :authors (fn [db _] (get-in db [:data :authors-list])))
+(rf/reg-sub :tags (fn [db _] (get-in db [:data :tags])))
 (rf/reg-sub :user-id (fn [db _] (get-in db [:data :user-id]))) 
 (rf/reg-sub :mt (fn [db _] (:master-types db)))
 (rf/reg-sub :data (fn [db _] (:data db))) 
@@ -127,11 +128,10 @@
   (with-redefs [pubs.hub/authors pubs.hub-test/authors
                 pubs.hub/add-author pubs.hub-test/add-author]
     (rf-test/run-test-sync
-      (let [a {:role 2, :projectid 1, :userid 0, :created_by_user 1001, :lastname nil, :added "2020-01-29T10:32:28Z", :name nil, :invited_email nil, :username nil, :groupname nil, :params nil, :fullname "Femke Blokje", :invited_name "Femke Blokje", :invited_code "JPNCMSQLHN", :organization nil, :lastvisit nil, :num_visits 0, :firstname nil, :native 0, :groupid 0, :status 0, :id 41, :picture nil, :groupdesc nil, :prev_visit nil}
-            authors (rf/subscribe [:authors])]
+      (let [authors (rf/subscribe [:authors])]
         (dispatch [:req/authors])
         (-> @authors count (= 4) is)
-        (dispatch [:authors/add a])
+        (dispatch [:authors/add {}])
         (-> @authors count (= 5) is)
         )
       )
@@ -148,5 +148,19 @@
       )
     )
   )
+
+(deftest add-tags
+  (with-redefs [pubs.hub/add-tag pubs.hub-test/add-tag
+                pubs.hub/tags pubs.hub-test/tags
+                ]
+    (rf-test/run-test-sync
+      (let [tags (rf/subscribe [:tags])]
+        (dispatch [:tags/add "bos"])
+        (-> @tags count (= 1) is)
+        )
+      )
+    )
+  )
+
 
 
