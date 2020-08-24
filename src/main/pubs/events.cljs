@@ -129,3 +129,4 @@
 (rf/reg-event-db :citations/edit citations/edit)
 
 (rf/reg-event-db :pub-date/select pub-date/select)
+(rf/reg-event-db :pub-date/change pub-date/change)

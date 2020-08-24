@@ -6,6 +6,10 @@
   (re-frame.core/dispatch [:pub-date/select date])
   )
 
+(defn- change [s e]
+  (re-frame.core/dispatch [:pub-date/change (-> e .-target .-value)])
+  )
+
 (defn render [s]
   [^{:component-did-mount
      (fn []
@@ -21,6 +25,7 @@
       [:label {:for :title} "Embargo date:"]
       [:input {:type :text
                :name "publication-date" 
+               :onChange #(change s %)
                }]
       (ui/val-error s :publication-date)
       ]
