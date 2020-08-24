@@ -16,7 +16,10 @@
   )
 
 (defn add [db [_ c]]
-  (hub/add-citation db c)
+  (-> db
+      (assoc :doi-query "")    
+      (hub/add-citation c)
+      )
   )
 
 (defn create [db [_ c]]

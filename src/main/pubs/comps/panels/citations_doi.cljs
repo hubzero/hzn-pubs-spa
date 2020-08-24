@@ -63,7 +63,6 @@
     ]
    [:hr]
    [:div.field.buttons
-    ;[:a.btn {:href "#" :on-click #(add-doi s %)} "Add citation"]  
     [:a.btn.secondary {:href "#" :on-click #(close s %)} "Close"]
     ]
    ]
