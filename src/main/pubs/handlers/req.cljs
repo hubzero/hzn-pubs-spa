@@ -1,9 +1,8 @@
 (ns pubs.handlers.req
-  (:require 
-    [pubs.handlers.validate :as validate]
-    [pubs.hub :as hub]
-    [pubs.utils :as utils]
-    )
+  (:require [pubs.handlers.validate :as validate]
+            [pubs.hub :as hub]
+            [pubs.utils :as utils]
+            )
   )
 
 (defn me [db [_ _]]

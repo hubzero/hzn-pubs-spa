@@ -52,6 +52,7 @@
   )
 
 (defn prj [db [_ res]]
+  (prn "HUB PRJ" res)
   (assoc-in db [:data :prj] res)
   )
 
@@ -85,6 +86,7 @@
   )
 
 (defn owners [db [_ res]]
+  (prn "HUB OWNERS" res)
   (->> res
        (map (fn [u] [(:id u) u]))
        (into {})
@@ -105,6 +107,7 @@
   )
 
 (defn new-author [db [_ res]]
+  (prn "HUB NEW-AUTHOR" res)
   (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
   )
 
@@ -113,6 +116,7 @@
   )
 
 (defn tags [db [_ res]]
+  (prn "HUB TAGS" res)
   (->>
     res
     (group-by :id)
@@ -123,10 +127,12 @@
   )
 
 (defn rm-tag [db _]
+  (prn "HUB RM-TAG")
   (hub/tags db)
   )
 
-(defn add-tag [db _]
+(defn add-tag [db [_ res]]
+  (prn "HUB ADD-TAG" res)
   (-> db
       (assoc-in [:ui :tag-str] "")
       (dissoc :tag-query)
@@ -136,19 +142,22 @@
   )
 
 (defn search-tags [db [_ res]]
+  (prn "HUB SEARCH-TAGS" res)
   (assoc db :tag-results res) 
   )
 
 (defn licenses [db [_ res]]
+  (prn "HUB LICENSES" res)
   (assoc db :licenses res)
   )
 
 (defn license [db [_ res]]
+  (prn "HUB LICENSE" res)
   (assoc-in db [:data :licenses] res)
   )
 
 (defn new-pub [db [_ res pub]]
-  (prn "NEW PUB" db res pub)
+  (prn "HUB NEW-PUB" res)
   (as-> db $
     (update $ :data merge res)
     (routes/redirect (str "/pubs/#/pubs/"
@@ -162,10 +171,12 @@
   )
 
 (defn save-pub [db [_ res pub]]
+  (prn "HUB SAVE-PUB" res)
   (update db :data merge res)
   )
 
 (defn citations [db [_ res]]
+  (prn "HUB CITATIONS" res)
   (->>
     res
     (group-by :id)
@@ -176,22 +187,27 @@
   )
 
 (defn add-citation [db [_ res]]
+  (prn "HUB ADD-CITATION" res)
   (assoc-in db [:data :citations (utils/->keyword (:id res))] res) 
   )
 
 (defn search-citations [db [_ res]]
+  (prn "HUB SEARCH-CITATIONS" res)
   (assoc db :doi-results res)
   )
 
 (defn citation-types [db [_ res]]
+  (prn "HUB CITATION-TYPES" res)
   (assoc db :citation-types res)
   )
 
 (defn rm-citation [db [_ res]]
+  (prn "HUB RM-CiTATION" res)
   (update-in db [:data :citations] dissoc (utils/->keyword (:id res)))
   )
 
 (defn create-citation [db [_ res]]
+  (prn "HUB CREATE-CITATION" res)
   ;; Scroll form, am I a dirty hack? ... yes. - JBG
   (-> js/document (.querySelector ".citations-manual .inner") (.scrollTo 0 0))
   (-> db
@@ -201,6 +217,7 @@
   )
 
 (defn submit-pub [db [_ res]]
+  (prn "HUB SUBMIT-PUB")
   (routes/redirect (str "/publications/" (get-in db [:data :pub-id])))
   db
   )

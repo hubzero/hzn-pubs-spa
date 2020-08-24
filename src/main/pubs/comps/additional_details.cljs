@@ -1,6 +1,7 @@
 (ns pubs.comps.additional-details
   (:require [pubs.comps.citations-options :as co]
             [pubs.comps.collection :as collection] 
+            [pubs.comps.textarea :as textarea]
             [pubs.comps.textfield :as textfield]
             )
   )
@@ -23,7 +24,7 @@
                       :citations
                       (co/render s)
                       citations)
-   ;(textarea s "a-verion-notes" "Version release notes:" "release-notes")
+   (textarea/render s "a-verion-notes" "Version release notes:" "release-notes")
    ]
   )
  

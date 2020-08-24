@@ -8,6 +8,7 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:text/change k (-> e .-target .-value)])
+  (re-frame.core/dispatch [:req/save-pub])
   )
 
 (defn render [s id title k]

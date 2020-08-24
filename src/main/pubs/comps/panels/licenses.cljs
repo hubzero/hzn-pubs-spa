@@ -9,6 +9,7 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:licenses/select k l])
+  (re-frame.core/dispatch [:req/save-pub])
   )
 
 (defn item [s k l]

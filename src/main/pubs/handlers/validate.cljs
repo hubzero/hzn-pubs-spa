@@ -46,6 +46,7 @@
   )
 
 (defn- year [y errors]
+  (prn "CIT YEAR" errors)
   (as-> y $
     (if (not (nil? $)) (clojure.string/trim $) "")
     (if (re-matches #"^(19|20)\d{2}$" $)
@@ -68,7 +69,7 @@
 (defn- citation [db]
   (as-> db $
     (reduce (fn [errors [k v]]
-              (if (= -1 (count (get-in $ [:data :citations-manual k])))
+              (if (= 0 (count (get-in $ [:data :citations-manual k])))
                 (assoc errors k v)
                 errors
                 )

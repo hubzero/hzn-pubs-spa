@@ -20,6 +20,8 @@
   )
 
 (defn click [s c e]
+  (.preventDefault e)
+  (.stopPropagation e)
   (re-frame.core/dispatch [:options/close])
   (re-frame.core/dispatch [:citations/options (:id c)]) 
   )
