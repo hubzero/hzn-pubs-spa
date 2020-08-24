@@ -19,7 +19,6 @@
   )
 
 (defn poc [db [_ id poc?]]
-  (prn "poc" id poc?)
   (as-> (get-in db [:data :authors-list id]) $
     (assoc $ :poc poc?)
     (hub/update-author db $)
@@ -57,15 +56,30 @@
   (hub/update-author db u)
   )
 
+(defn email-valid? [a errors]
+  (as-> (or (:email a) "") $
+    (clojure.string/trim $)
+    (if (or (= (count $) 0) (re-matches #".+\@.+\..+" $))
+      errors
+      (assoc errors :email ["Email" "must be valid"])
+      )
+    )
+  )
+
+(defn names-valid? [a errors]
+  (reduce (fn [errors [k v]]
+            (as-> (k a) $
+              (if $ (clojure.string/trim $) $)
+              (if (= 0 (count $)) (assoc errors k v) errors)
+              )
+            ) errors {:firstname ["Firstname" "can not be empty"]
+                      :lastname ["Lastname" "can not be empty"]
+                      })
+  )
+
 (defn upsert [db [_ k]]
-  (let [errors (reduce (fn [errors [k v]]
-                   (as-> (get-in db [:data :authors-new k]) $
-                     (if $ (clojure.string/trim $) $)
-                     (if (= 0 (count $)) (assoc errors k v) errors)
-                     )
-                   ) {} {:firstname ["Firstname" "can not be empty"]
-                         :lastname ["Lastname" "can not be empty"]
-                         })
+  (let [a (get-in db [:data :authors-new])
+        errors (->> {} (names-valid? a) (email-valid? a))
         new? (get-in db [:ui :author-options :is-new])
         u (as-> (get-in db [:data k]) $
             (assoc $ :fullname (str (:firstname $) " " (:lastname $)))
@@ -77,7 +91,7 @@
         (hub/update-author db u)
         )
       )
-    (assoc db [:ui :errors] errors)
+    (assoc-in db [:ui :errors] errors)
     )
   )
 
