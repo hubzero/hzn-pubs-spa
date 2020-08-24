@@ -22,6 +22,21 @@
     )
   )
 
+(defn- poc [db errors]
+  ;; If we already have validation errors with authors, roll w/ those - JBG
+  (if (:authors-list errors)
+    errors
+    (let [poc? (reduce (fn [poc? [id a]]
+                         (or poc? (> (:poc a) 0))
+                         ) false (get-in db [:data :authors-list]))]
+      (if (not poc?)
+        (assoc errors :authors-list ["Point of contact" "is required"])
+        errors
+        )
+      )
+    )
+  )
+
 (defn- form [db errors]
   (reduce (fn [errors [k v]]
             (if (= 0 (count (get-in db [:data k])))
@@ -42,6 +57,7 @@
        (date db) 
        (ack db)
        (terms db)
+       (poc db)
        )
   )
 
