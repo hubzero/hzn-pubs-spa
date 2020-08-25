@@ -87,19 +87,20 @@
 
 (defn _folder-selected? [s k index]
   (as-> (:files s) $
-    (nth $ index) 
+    (nth $ index)
     (first $)
     (reduce (fn [c f]
               (if (clojure.string/includes? (first f) $)
                 (and c
-                     (reduce (fn [x y] (and x y)) (reduce (fn [c2 f2]
-                                                            (and c2 (get-in s [:data k (get-id s k (first f) f2)]))
-                                                            ) c (last f)))
+                     (reduce (fn [c2 f2]
+                               (and c2 (boolean (get-in s [:data k
+                                                           (utils/->keyword (get-id s k (first f) f2))
+                                                           ])))
+                               ) true (last f))
                      )
-
                 c)
               )
-            true (:files s)) 
+            true (:files s))
     )
   )
 
