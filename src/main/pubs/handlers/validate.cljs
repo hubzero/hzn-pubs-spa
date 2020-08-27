@@ -74,7 +74,8 @@
 
 (defn submitted? [db]
   (-> (get-in db [:data :state])
-      (= 1)
+      (= 3)
+      (not)
       )
   )
 

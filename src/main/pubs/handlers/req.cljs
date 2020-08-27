@@ -91,7 +91,7 @@
   (as-> db $
     (if (not (validate/submitted? $))
       (-> db
-          (assoc-in [:data :state] 1)
+          (assoc-in [:data :state] 5)
           (save nil :res/submit-pub)
           )
       $

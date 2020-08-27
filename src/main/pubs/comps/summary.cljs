@@ -5,13 +5,6 @@
             )
   )
 
-;(defn- _submit [s e]
-;  ;; This will trigger the backend to grab a DOI - JBG
-;  (swap! s assoc-in [:data :state] 1)
-;  (data/submit-pub s) 
-;  )
-;
-
 (defn render [s]
   [:div.page.page-summary.--add.--show {:class (if (get-in s [:ui :summary])
                                                  [:add :show]
