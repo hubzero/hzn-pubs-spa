@@ -1,5 +1,8 @@
 (ns pubs.handlers.handler
-  (:require [reitit.frontend.controllers :as rfc]
+  (:require [react :refer [useMemo]]
+            [slate :refer [createEditor]]
+            [slate-react :refer [withReact]]
+            [reitit.frontend.controllers :as rfc]
             [pubs.hub :as hub])
   )
 
@@ -11,7 +14,6 @@
   )
 
 (defn navigated [db [_ new-match]]
-
   ;; This is not working for me :-/ - JBG
 ;  (let [old-match   (:current-route db)
 ;        controllers (rfc/apply-controllers (:controllers old-match) new-match)]

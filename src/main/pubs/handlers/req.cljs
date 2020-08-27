@@ -2,6 +2,9 @@
   (:require [pubs.handlers.validate :as validate]
             [pubs.hub :as hub]
             [pubs.utils :as utils]
+            [react :refer [useMemo]]
+            [slate :refer [createEditor]]
+            [slate-react :refer [withReact]]
             )
   )
 
@@ -20,6 +23,7 @@
   (-> db
       (assoc-in [:data :pub-id] (:pub-id params))
       (assoc-in [:data :ver-id] (:ver-id params))
+      (assoc :editor (useMemo #(withReact (createEditor)) #js []))
       (hub/master-types)
       )
   )
