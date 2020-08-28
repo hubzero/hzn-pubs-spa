@@ -104,7 +104,6 @@
 
 (defn update-author [db [_ res]]
   (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
-  db
   )
 
 (defn add-author [db [_ res]]
