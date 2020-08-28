@@ -25,8 +25,7 @@
                 :builds {:app {:target :browser
                                :output-dir "resources/public/js/compiled"
                                :asset-path "/js/compiled"
-                               :modules {:app {:init-fn pubs.core/init
-                                               :preloads [devtools.preload]}}
+                               :modules {:app {:init-fn pubs.core/init}}
                                :devtools {:http-root "resources/public"
                                           :http-port 8280
                                           }

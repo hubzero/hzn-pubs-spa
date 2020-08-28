@@ -49,6 +49,7 @@
 (rf/reg-event-db :res/files res/files)
 (rf/reg-event-db :res/add-file res/add-file)
 (rf/reg-event-db :res/rm-file res/rm-file)
+(rf/reg-event-db :res/update-file res/update-file)
 (rf/reg-event-db :res/ls-files res/ls-files)
 (rf/reg-event-db :res/usage res/usage)
 (rf/reg-event-db :res/authors res/authors)
