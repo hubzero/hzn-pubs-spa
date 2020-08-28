@@ -59,7 +59,7 @@
 (defn do-post [db route event-key & [method data]]
   (go (-> route
           get-url
-          ((or method http/post) {:edn-params (if (vector? data) (first data) data)})
+          ((or method http/post) {:edn-params data})
           <!
           (handle db event-key data)
           ))
@@ -96,7 +96,7 @@
            (ver-route db (str "/files/" (:id file)))
            :res/update-file
            http/put
-           [file k]))
+           file))
 
 (defn ls-files [db]
   (do-get db (prj-route db "/files") :res/ls-files))
@@ -113,12 +113,12 @@
 (defn rm-author [db id]
   (do-get db (ver-route db (str "/authors/" id)) :res/rm-author http/delete id))
 
-(defn update-author [db author k]
+(defn update-author [db author]
   (do-post db
            (ver-route db (str "/authors/" (:id author)))
            :res/update-author
            http/put
-           [author k]))
+           author))
 
 (defn add-author [db author]
   (do-post db

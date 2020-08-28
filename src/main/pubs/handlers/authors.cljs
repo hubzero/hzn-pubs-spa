@@ -21,7 +21,7 @@
 (defn poc [db [_ id poc?]]
   (as-> (get-in db [:data :authors-list id]) $
     (assoc $ :poc poc?)
-    (hub/update-author db $ :authors-list)
+    (hub/update-author db $)
     )
   )
 
@@ -53,7 +53,7 @@
   )
 
 (defn modify [db [_ u]]
-  (hub/update-author db u :authors-list)
+  (hub/update-author db u)
   )
 
 (defn email-valid? [a errors]
@@ -88,7 +88,7 @@
     (if (= (count errors) 0)
       (if new?
         (hub/new-author db u)
-        (hub/update-author db u :authors-list)
+        (hub/update-author db u)
         )
       )
     (assoc-in db [:ui :errors] errors)

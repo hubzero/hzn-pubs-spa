@@ -69,8 +69,10 @@
   (update-in db [:data k] dissoc (utils/->keyword id))
   )
 
-(defn update-file [db [_ res file k]]
-  (assoc-in db [:data k (utils/->keyword (:id res))] res)
+(defn update-file [db [_ res]]
+  (as-> (:id res) $
+    (assoc-in db [:data (:type file) (utils/->keyword $)] (assoc file :id $))
+    )
   )
 
 (defn ls-files [db [_ res]]
@@ -100,9 +102,8 @@
   (update-in db [:data :authors-list] dissoc (utils/->keyword id))
   )
 
-(defn update-author [db [_ res author k]]
-  (prn "UPDATE AUTHOR" res author k)
-  ;(assoc-in db [:data k (utils/->keyword (:id res))] res)
+(defn update-author [db [_ res]]
+  (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
   db
   )
 

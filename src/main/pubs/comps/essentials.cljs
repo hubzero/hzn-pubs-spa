@@ -25,8 +25,8 @@
    (master-types/render s)
    (textfield/render s "a-title" "Title:" :title)
    (textarea/render s "a-abstract" "Abstract:" :abstract)
-   (textarea/render s "a-description" "description:" :description)
-   (collection/render s "a-content" "Content:" :content nil collection/files)
+   ;(textarea/render s "a-description" "Description:" :description)
+   (collection/render s "a-content" "Content (drag to reorder):" :content nil collection/files)
    (collection/render s
                       "a-authors"
                       "Authors (drag to reorder):"
