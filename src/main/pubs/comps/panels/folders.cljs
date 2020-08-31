@@ -34,6 +34,14 @@
     (re-frame.core/dispatch [:folders/pop])
   )
 
+(defn scroll-to-top []
+  ;; HACK!!! - JBG
+  (as-> js/document $
+    (.querySelectorAll $ ".page-panel.open .inner")
+    (doall (map #(.scrollTo % 0 0) $)) 
+    )
+  )
+
 (defn folder-push [s n path e]
   (.preventDefault e)
   (.stopPropagation e)
@@ -47,6 +55,7 @@
     (re-frame.core/dispatch [:panels/push node])
     )
   (re-frame.core/dispatch [:folders/push [n path]])
+  (scroll-to-top)
   )
 
 (defn toggle-folder-files [s k index selected]
