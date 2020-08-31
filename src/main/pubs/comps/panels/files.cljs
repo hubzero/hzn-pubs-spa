@@ -105,12 +105,12 @@
 (defn file-selector [s files k index]
   [:ul.ui.file-selection.item-selector
    (select-all s k index)
-   (doall (map (fn [[path n]]
-                 (file s path n k))
-               (file-sort files index)))
    (doall (map (fn [[path n]] (folders/render s path n k (inc index) subpanel))
                (folder-sort files index)
                ))
+   (doall (map (fn [[path n]]
+                 (file s path n k))
+               (file-sort files index)))
    ]
   )
 
