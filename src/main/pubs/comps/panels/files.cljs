@@ -85,11 +85,21 @@
    (file-selector s files k index)
    ] 
   )
+
+(defn- file-sort [files index]
+  (as-> files $
+    (nth $ index)
+    (map (fn [f] [(first $) f]) (last $))
+    (sort-by #(second %) $)
+    )
+  )
  
 (defn file-selector [s files k index]
   [:ul.ui.file-selection.item-selector
    (select-all s k index)
-   (doall (map (fn [[path n]] (file s path n k)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (last $)))))
+   (doall (map (fn [[path n]]
+                 (file s path n k))
+               (file-sort files index)))
    (doall (map (fn [[path n]] (folders/render s path n k (inc index) subpanel)) (as-> files $ (nth $ index) (map (fn [f] [(first $) f]) (second $)))))
    ]
   )

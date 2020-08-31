@@ -70,9 +70,7 @@
   )
 
 (defn update-file [db [_ res]]
-  (as-> (:id res) $
-    (assoc-in db [:data (:type file) (utils/->keyword $)] (assoc file :id $))
-    )
+  (assoc-in db [:data (:type res) (utils/->keyword (:id res))] res)
   )
 
 (defn ls-files [db [_ res]]
