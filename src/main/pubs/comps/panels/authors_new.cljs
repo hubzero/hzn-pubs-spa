@@ -11,6 +11,7 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:authors/upsert k])
+  (re-frame.core/dispatch [:panels/close])
   )
 
 (defn close [e]

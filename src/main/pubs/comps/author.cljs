@@ -14,12 +14,14 @@
   (re-frame.core/dispatch [:authors/name v])
   (re-frame.core/dispatch [:panels/show :authors-new true])
   (re-frame.core/dispatch [:authors/edit false])
+  (re-frame.core/dispatch [:options/close])
   )
 
 (defn- rm [id e]
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:authors/rm id])
+  (re-frame.core/dispatch [:options/close])
   )
 
 (defn- poc [id e]
