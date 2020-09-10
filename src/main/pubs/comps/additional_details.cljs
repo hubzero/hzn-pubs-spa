@@ -24,7 +24,7 @@
                       :citations
                       (co/render s)
                       citations)
-   (textarea/render s "a-verion-notes" "Version release notes:" "release-notes")
+   (textarea/render s "a-verion-notes" "Version release notes:" :release-notes)
    ]
   )
  

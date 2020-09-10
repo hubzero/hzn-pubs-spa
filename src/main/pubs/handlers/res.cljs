@@ -37,11 +37,18 @@
     )
   )
 
+(defn- content [db]
+  (if (= "Databases" (get-in db [:data :master-type :master-type]))
+    (hub/dbs db)
+    (hub/files db)
+    )
+  )
+
 (defn pub [db [_ res]]
   (let [pub (pub-master-type db res)]
     (-> (assoc db :data pub)
         (hub/prj)
-        (hub/files)
+        (content)
         (hub/authors)
         (hub/tags)
         (get-license)
@@ -97,7 +104,8 @@
   )
 
 (defn rm-author [db [_ res id]]
-  (update-in db [:data :authors-list] dissoc (utils/->keyword id))
+  ;(update-in db [:data :authors-list] dissoc (utils/->keyword id))
+  (hub/authors db)
   )
 
 (defn update-author [db [_ res]]
@@ -105,7 +113,8 @@
   )
 
 (defn add-author [db [_ res]]
-  (assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
+  ;(assoc-in db [:data :authors-list (utils/->keyword (:id res))] res)
+  (hub/authors db)
   )
 
 (defn new-author [db [_ res]]
@@ -206,5 +215,31 @@
 (defn submit-pub [db [_ res]]
   (routes/redirect (str "/publications/" (get-in db [:data :pub-id])))
   db
+  )
+
+(defn ls-dbs [db [_ res]]
+  (assoc db :databases res)
+  )
+
+(defn dbs [db [_ res]]
+  (->> res
+       (map (fn [database] [(:id database) database]))
+       (into {})
+       (assoc-in db [:data :databases])
+       )
+  )
+
+(defn add-db [db [_ res database]]
+  (as-> (:id res) $
+    (assoc-in db [:data :databases (:id database)] res)
+    )
+  )
+
+(defn rm-db [db [_ res k id]]
+  (update-in db [:data k] dissoc id)
+  )
+
+(defn update-db [db [_ res]]
+  (assoc-in db [:data (:type res) (:id res)] res)
   )
 

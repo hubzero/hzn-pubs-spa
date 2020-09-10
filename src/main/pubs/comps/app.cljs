@@ -6,6 +6,7 @@
     [pubs.comps.panels.authors-new :as authors-new] 
     [pubs.comps.panels.citations-doi :as citations-doi]
     [pubs.comps.panels.citations-manual :as citations-manual]
+    [pubs.comps.panels.databases :as databases]
     [pubs.comps.panels.errors :as errors]
     [pubs.comps.panels.files :as files]
     [pubs.comps.panels.licenses :as licenses]
@@ -42,6 +43,7 @@
     (licenses/render s :licenses)
     (citations-doi/render s :citations-doi)
     (citations-manual/render s :citations-manual)
+    (databases/render s :databases)
 ;    (help/help s :help-center)
     )
   )

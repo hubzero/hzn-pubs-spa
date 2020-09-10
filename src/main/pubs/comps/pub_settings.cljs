@@ -7,7 +7,7 @@
   [:fieldset.fieldset-section
    [:header#a-pub-settings.anchor.a-header [:legend "Publish Settings"]]
    (pub-date/render s)
-   (textarea/render s "a-comments" "Comments to the administrator:" "comments")
+   (textarea/render s "a-comments" "Comments to the administrator:" :comments)
    ]
   )
  

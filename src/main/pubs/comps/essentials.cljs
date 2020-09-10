@@ -16,6 +16,21 @@
   (re-frame.core/dispatch [:options/authors])
   )
 
+(defn- content-type [s]
+  (if (= "Databases" (get-in s [:data :master-type :master-type]))
+    collection/dbs
+    collection/files 
+    )
+  )
+
+(defn- panel-type [s]
+  (if (= "Databases" (get-in s [:data :master-type :master-type]))
+    :databases
+    :content
+    )
+  )
+
+
 (defn render [s]
   [:fieldset.fieldset-section
    [:header
@@ -26,7 +41,12 @@
    (textfield/render s "a-title" "Title:" :title)
    (textarea/render s "a-abstract" "Abstract:" :abstract)
    ;(textarea/render s "a-description" "Description:" :description)
-   (collection/render s "a-content" "Content (drag to reorder):" :content nil collection/files)
+   (collection/render s
+                      "a-content"
+                      "Content (drag to reorder):"
+                      (panel-type s)
+                      nil
+                      (content-type s))
    (collection/render s
                       "a-authors"
                       "Authors (drag to reorder):"

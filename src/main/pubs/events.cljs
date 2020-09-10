@@ -41,6 +41,9 @@
 (rf/reg-event-db :req/new req/new-pub)
 (rf/reg-event-db :req/summary req/summary)
 (rf/reg-event-db :req/submit req/submit)
+(rf/reg-event-db :req/ls-dbs req/ls-dbs)
+(rf/reg-event-db :req/add-db req/add-db)
+(rf/reg-event-db :req/rm-db req/rm-db)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -75,6 +78,11 @@
 (rf/reg-event-db :res/save-pub res/save-pub)
 (rf/reg-event-db :res/new-pub res/new-pub)
 (rf/reg-event-db :res/submit-pub res/submit-pub)
+(rf/reg-event-db :res/ls-dbs res/ls-dbs)
+(rf/reg-event-db :res/dbs res/dbs)
+(rf/reg-event-db :res/add-db res/add-db)
+(rf/reg-event-db :res/rm-db res/rm-db)
+(rf/reg-event-db :res/update-db res/update-db)
 
 ;; Component handlers - JBG
 

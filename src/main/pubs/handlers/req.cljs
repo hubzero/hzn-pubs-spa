@@ -129,3 +129,19 @@
       )
   )
 
+(defn ls-dbs [db _]
+  (hub/ls-dbs db)
+  )
+
+(defn dbs [db _]
+  (hub/dbs db)
+  )
+
+(defn add-db [db [_ database]]
+  (hub/add-db db database)
+  )
+
+(defn rm-db [db [_ k database-id]]
+  (hub/rm-db db k database-id)
+  )
+

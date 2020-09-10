@@ -39,7 +39,7 @@
       (dispatch [event-key (:body res) args])
       )
     (dispatch [:err (:status res)])
-   )
+    )
   )
 
 (defn req [db route event-key method args]
@@ -176,7 +176,7 @@
   )
 
 (defn save-pub [db pub & [response-handler]]
- (do-post db
+  (do-post db
            "/pubs"
            (or response-handler :res/save-pub)
            http/post
@@ -205,5 +205,21 @@
 (defn citation-types [db]
   (do-get db "/citations/types" :res/citation-types)
   )
+
+(defn ls-dbs [db]
+  (do-get db (prj-route db "/databases") :res/ls-dbs))
+
+(defn dbs [db]
+  (do-get db (ver-route db "/databases") :res/dbs))
+
+(defn add-db [db database]
+  (do-post db (ver-route db "/databases") :res/add-db http/post database))
+
+(defn rm-db [db k id]
+  (do-get db
+          (ver-route db (str "/databases/" id))
+          :res/rm-db
+          http/delete
+          [k id]))
 
 

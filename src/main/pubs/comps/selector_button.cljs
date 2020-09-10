@@ -14,9 +14,14 @@
                 }))
   )
 
+(defn- click [s k f e]
+  (re-frame.core/dispatch [:options/close])
+  (f s k e) 
+  )
+
 (defn render [s k opts f]
   [:div {:class (classes s k [:selector]) }
-   [:a.selector-button {:href "#" :on-click #(f s k %)}
+   [:a.selector-button {:href "#" :on-click #(click s k f %)}
     (ui/icon s "#icon-plus")
     ] opts]
   )

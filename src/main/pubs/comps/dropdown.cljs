@@ -14,18 +14,21 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:dropdown/change k f (-> e .-target .-value)])
+  (re-frame.core/dispatch [:req/save-pub])
   )
 
 (defn- click [s k f o e]
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:dropdown/click k f o])
+  (re-frame.core/dispatch [:req/save-pub])
   )
 
 (defn- rm [s k f e]
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:dropdown/rm k f e])
+  (re-frame.core/dispatch [:req/save-pub])
   )
 
 (defn- input [s k f]
