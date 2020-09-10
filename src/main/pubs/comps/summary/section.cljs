@@ -9,6 +9,7 @@
 (defn- fieldtype [s k t bold?]
   ((t {:text #(field/render s k bold?)               
        :files #(collection/render s k t)
+       :databases #(collection/render s k t)
        :authors-list #(collection/render s k t)
        :license #(license/render s (get-in s k))
        :images #(collection/render s k t)
