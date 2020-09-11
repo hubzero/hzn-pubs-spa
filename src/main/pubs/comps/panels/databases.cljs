@@ -30,7 +30,6 @@
 (defn db-click [s k db e]
   (.preventDefault e)
   (.stopPropagation e)
-  (prn "DB CLICK" db)
   (if (get-in s [:data k (:id db)])
       (rm-db s k (:id db))
       (add-db s k db)
@@ -47,7 +46,7 @@
       ]
      ]
     [:div.icon
-     (ui/icon s "#icon-file-text2")
+     (ui/icon s "#icon-data")
      [:span.name "Remove"]
      ] 
     (:title db) 

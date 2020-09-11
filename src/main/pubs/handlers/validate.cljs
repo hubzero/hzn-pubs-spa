@@ -37,6 +37,18 @@
     )
   )
 
+(defn- content [db errors]
+  (let [k (if (= "Databases" (get-in s [:data :master-type :master-type]))
+            :databases
+            :content
+            )]
+    (if (> (count (get-in db [:data k])) 0)
+      errors
+      (assoc errors k ["Content" "can not be empty"])
+      )    
+    )
+  )
+
 (defn- form [db errors]
   (reduce (fn [errors [k v]]
             (if (= 0 (count (get-in db [:data k])))
@@ -46,7 +58,6 @@
             ) {} {:title ["Title" "can not be empty"]
                   :abstract ["Abstract" "can not be empty"]
                   :authors-list ["Authors"  "can not be empty"]
-                  :content ["Content" "can not be empty"]
                   :tags ["Tags" "can not be empty"]
                   :licenses ["Licenses" "can not be empty"]
                   })
@@ -58,6 +69,7 @@
        (ack db)
        (terms db)
        (poc db)
+       (content db)
        )
   )
 

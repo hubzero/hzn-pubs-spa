@@ -26,7 +26,7 @@
 
 (defn render [s k v]
   [:li.item {:key (:id v)}
-   (ui/icon s "#icon-file-text2")
+   (ui/icon s "#icon-data")
    [:div.main [:span (:title v)]]
    [:div.options {:on-click (fn [e]
                               (.preventDefault e)
