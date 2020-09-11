@@ -1,7 +1,6 @@
 (ns pubs.handlers.dropdown)
 
 (defn show [db [_ k f e]]
-  (prn "SHOW" k f (:ui db))
   (update-in db [:ui k (:name f)] not)
   )
 
