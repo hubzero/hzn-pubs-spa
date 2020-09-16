@@ -38,8 +38,9 @@
   )
 
 (defn- content [db]
-  (if (= "Databases" (get-in db [:data :master-type :master-type]))
-    (hub/dbs db)
+  (case (get-in db [:data :master-type :master-type])
+    "Databases" (hub/dbs db)
+    "Series" (hub/series db)
     (hub/files db)
     )
   )
@@ -242,4 +243,31 @@
 (defn update-db [db [_ res]]
   (assoc-in db [:data (:type res) (:id res)] res)
   )
+
+(defn search-series [db [_ res]]
+  (assoc db :pubs res)
+  )
+
+(defn series [db [_ res]]
+  (->> res
+       (map (fn [series] [(:id series) series]))
+       (into {})
+       (assoc-in db [:data :series])
+       )
+  )
+
+(defn add-series [db [_ res pub]]
+  (as-> (:id res) $
+    (assoc-in db [:data :databases (:id pub)] res)
+    )
+  )
+
+(defn rm-series [db [_ res k id]]
+  (update-in db [:data k] dissoc id)
+  )
+
+(defn update-series [db [_ res]]
+  (assoc-in db [:data (:type res) (:id res)] res)
+  )
+
 

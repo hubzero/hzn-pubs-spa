@@ -19,20 +19,20 @@
 ;   ]
 ;  )
 ;
-(defn- add-db [s k db]
-  (re-frame.core/dispatch [:req/add-db db])
+(defn- add [s k db]
+  (re-frame.core/dispatch [:dbs/add db])
   )
 
-(defn- rm-db [s k id]
-  (re-frame.core/dispatch [:req/rm-db k id])
+(defn- rm [s k id]
+  (re-frame.core/dispatch [:dbs/rm k id])
   )
 
 (defn db-click [s k db e]
   (.preventDefault e)
   (.stopPropagation e)
   (if (get-in s [:data k (:id db)])
-      (rm-db s k (:id db))
-      (add-db s k db)
+      (rm s k (:id db))
+      (add s k db)
       )
   )
 

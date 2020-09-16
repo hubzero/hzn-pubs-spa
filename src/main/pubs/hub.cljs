@@ -222,4 +222,34 @@
           http/delete
           [k id]))
 
+(defn update-db [db attach k]
+  (do-post db
+           (ver-route db (str "/databases/" (:id attach)))
+           :res/update-db
+           http/put
+           attach))
+
+(defn search-series [db v]
+  (do-post db "/series/search" :res/search-series http/post {:q v})
+  )
+
+(defn series [db]
+  (do-get db (ver-route db "/series") :res/series))
+
+(defn add-series [db pub]
+  (do-post db (ver-route db "/series") :res/add-series http/post pub))
+
+(defn rm-series [db k id]
+  (do-get db
+          (ver-route db (str "/series/" id))
+          :res/rm-series
+          http/delete
+          [k id]))
+
+(defn update-series [db attach k]
+  (do-post db
+           (ver-route db (str "/series/" (:id attach)))
+           :res/update-series
+           http/put
+           attach))
 

@@ -10,6 +10,7 @@
     [pubs.comps.panels.errors :as errors]
     [pubs.comps.panels.files :as files]
     [pubs.comps.panels.licenses :as licenses]
+    [pubs.comps.panels.series :as series]
     [pubs.comps.main :as main]
     [pubs.comps.summary :as summary]
     )
@@ -44,6 +45,7 @@
     (citations-doi/render s :citations-doi)
     (citations-manual/render s :citations-manual)
     (databases/render s :databases)
+    (series/render s :series)
 ;    (help/help s :help-center)
     )
   )

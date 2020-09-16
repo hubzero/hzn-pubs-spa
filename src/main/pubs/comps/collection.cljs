@@ -41,7 +41,13 @@
 (defn- dbs [s k e]
   (.preventDefault e)
   (.stopPropagation e)
-  (re-frame.core/dispatch [:req/ls-dbs])
+  (re-frame.core/dispatch [:dbs/ls])
+  (re-frame.core/dispatch [:panels/show k true])
+  )
+
+(defn- series [s k e]
+  (.preventDefault e)
+  (.stopPropagation e)
   (re-frame.core/dispatch [:panels/show k true])
   )
  

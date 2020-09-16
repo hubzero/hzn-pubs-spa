@@ -17,19 +17,20 @@
   )
 
 (defn- content-type [s]
-  (if (= "Databases" (get-in s [:data :master-type :master-type]))
-    collection/dbs
+  (case (get-in s [:data :master-type :master-type])
+    "Databases" collection/dbs
+    "Series" collection/series
     collection/files 
     )
   )
 
 (defn- panel-type [s]
-  (if (= "Databases" (get-in s [:data :master-type :master-type]))
-    :databases
+  (case (get-in s [:data :master-type :master-type])
+    "Databases" :databases
+    "Series" :series
     :content
     )
   )
-
 
 (defn render [s]
   [:fieldset.fieldset-section

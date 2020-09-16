@@ -9,11 +9,6 @@
   (.preventDefault e)
   (.stopPropagation e)
   (re-frame.core/dispatch [:citations/search (-> e .-target .-value)])
-  ;(swap! s assoc :doi-query v)
-  ;(if (> (count v) 0)
-    ;(data/search-citations s)
-    ;(swap! s dissoc :doi-results)
-  ;  )
   )
 
 (defn- close [s e]

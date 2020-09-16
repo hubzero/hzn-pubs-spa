@@ -4,6 +4,7 @@
             [pubs.comps.database :as database]
             [pubs.comps.file :as file]
             [pubs.comps.image :as image]
+            [pubs.comps.series :as series]
             )
   )
 
@@ -15,6 +16,7 @@
        :images #(image/render s k (second v) (first v))
        :citations #(citation/render s k (second v))
        :databases #(database/render s k (second v))
+       :series #(series/render s k (second v))
        }))
   )
 

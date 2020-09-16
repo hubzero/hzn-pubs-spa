@@ -4,6 +4,7 @@
    [pubs.handlers.authors :as authors]
    [pubs.handlers.citations :as citations]
    [pubs.handlers.collection :as collection]
+   [pubs.handlers.dbs :as dbs]
    [pubs.handlers.dropdown :as dropdown]
    [pubs.handlers.folders :as folders]
    [pubs.handlers.handler :as handler]
@@ -13,6 +14,7 @@
    [pubs.handlers.pub-date :as pub-date]
    [pubs.handlers.req :as req]
    [pubs.handlers.res :as res]
+   [pubs.handlers.series :as series]
    [pubs.handlers.tags :as tags]
    [pubs.handlers.text :as text]
    ))
@@ -41,9 +43,6 @@
 (rf/reg-event-db :req/new req/new-pub)
 (rf/reg-event-db :req/summary req/summary)
 (rf/reg-event-db :req/submit req/submit)
-(rf/reg-event-db :req/ls-dbs req/ls-dbs)
-(rf/reg-event-db :req/add-db req/add-db)
-(rf/reg-event-db :req/rm-db req/rm-db)
 
 (rf/reg-event-db :res/me res/me)
 (rf/reg-event-db :res/pub res/pub)
@@ -71,7 +70,6 @@
 (rf/reg-event-db :res/citations res/citations)
 (rf/reg-event-db :res/add-citation res/add-citation)
 (rf/reg-event-db :res/search-citations res/search-citations)
-(rf/reg-event-db :res/citation-types res/citation-types)
 (rf/reg-event-db :res/rm-citation res/rm-citation)
 (rf/reg-event-db :res/create-citation res/create-citation)
 (rf/reg-event-db :res/citation-types res/citation-types)
@@ -83,6 +81,11 @@
 (rf/reg-event-db :res/add-db res/add-db)
 (rf/reg-event-db :res/rm-db res/rm-db)
 (rf/reg-event-db :res/update-db res/update-db)
+(rf/reg-event-db :res/search-series res/search-series)
+(rf/reg-event-db :res/series res/series)
+(rf/reg-event-db :res/add-series res/add-series)
+(rf/reg-event-db :res/rm-series res/rm-series)
+(rf/reg-event-db :res/update-series res/update-series)
 
 ;; Component handlers - JBG
 
@@ -139,3 +142,14 @@
 
 (rf/reg-event-db :pub-date/select pub-date/select)
 (rf/reg-event-db :pub-date/change pub-date/change)
+
+(rf/reg-event-db :dbs/ls dbs/ls)
+(rf/reg-event-db :dbs/add dbs/add)
+(rf/reg-event-db :dbs/rm dbs/rm)
+(rf/reg-event-db :dbs/edit dbs/edit)
+ 
+(rf/reg-event-db :series/search series/search)
+(rf/reg-event-db :series/add series/add)
+(rf/reg-event-db :series/rm series/rm)
+(rf/reg-event-db :series/edit series/edit)
+
