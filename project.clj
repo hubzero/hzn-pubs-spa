@@ -30,6 +30,11 @@
                                           :http-port 8280
                                           }
                                }
+                         :hzn {:target :browser
+                               :output-dir "resources/public/js/compiled"
+                               :asset-path "/app/components/com_pubs/site/assets/js/compiled"
+                               :modules {:app {:init-fn pubs.core/init}}
+                               :compiler-options {:infer-externs :auto}}      
                          :hub {:target :browser
                                :output-dir "/home/jbg/Development/hub/app/components/com_pubs/site/assets/js/compiled"
                                :asset-path "/app/components/com_pubs/site/assets/js/compiled"
