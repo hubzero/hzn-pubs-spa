@@ -15,6 +15,7 @@
        :images #(collection/render s k t)
        :tags #(tags/render s)
        :citations #(collection/render s k t)
+       :series #(collection/render s k t)
        }))
   )
 

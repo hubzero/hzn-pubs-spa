@@ -4,6 +4,7 @@
             [pubs.comps.summary.database :as database]
             [pubs.comps.summary.file :as file]
             [pubs.comps.summary.image :as image]
+            [pubs.comps.summary.series :as series]
             )
   )
 
@@ -17,6 +18,7 @@
                          :images #(image/render s i)
                          :citations #(citation/render s i)
                          :databases #(database/render s i)
+                         :series #(series/render s i)
                          }))) (as-> (get-in s k) $ (if (map? $) (vals $) $)))
        )
      )

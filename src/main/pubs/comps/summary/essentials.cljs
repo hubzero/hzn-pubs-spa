@@ -3,8 +3,9 @@
   )
 
 (defn- content-type [s]
-  (if (= "Databases" (get-in s [:data :master-type :master-type]))
-    [[:data :databases] "Databases" :databases false]
+  (case (get-in s [:data :master-type :master-type])
+    "Databases" [[:data :databases] "Databases" :databases false]
+    "Series" [[:data :series] "Series" :series false]
     [[:data :content] "Content" :files false]
     )
   )

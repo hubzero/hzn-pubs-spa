@@ -38,8 +38,9 @@
   )
 
 (defn- content [db errors]
-  (let [k (if (= "Databases" (get-in db [:data :master-type :master-type]))
-            :databases
+  (let [k (case (get-in db [:data :master-type :master-type])
+            "Databases" :databases 
+            "Series" :series 
             :content
             )]
     (if (> (count (get-in db [:data k])) 0)
