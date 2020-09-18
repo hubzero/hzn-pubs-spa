@@ -232,7 +232,7 @@
 
 (defn add-db [db [_ res database]]
   (as-> (:id res) $
-    (assoc-in db [:data :databases (:id database)] res)
+    (assoc-in db [:data :databases (:id res)] res)
     )
   )
 
@@ -258,7 +258,7 @@
 
 (defn add-series [db [_ res pub]]
   (as-> (:id res) $
-    (assoc-in db [:data :databases (:id pub)] res)
+    (assoc-in db [:data :series (:id res)] res)
     )
   )
 

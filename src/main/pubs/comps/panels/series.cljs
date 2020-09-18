@@ -14,11 +14,24 @@
   (re-frame.core/dispatch [:series/rm k id])
   )
 
+(defn- find-attachment [s k pub]
+  (->>
+    (filter (fn [[_ a]]
+              (= (:object_id a) (:id pub))) (get-in s [:data k]))   
+    (first)
+    (second)
+    )
+  )
+
+(defn- select? [s k pub]
+  (not (nil? (find-attachment s k pub))) 
+  )
+ 
 (defn pub-click [s k pub e]
   (.preventDefault e)
   (.stopPropagation e)
-  (if (get-in s [:data k (:id pub)])
-      (rm-pub s k (:id pub))
+  (if (select? s k pub)
+      (rm-pub s k (:id (find-attachment s k pub)))
       (add-pub s k pub)
       )
   )
@@ -26,7 +39,7 @@
 (defn pub [s k pub]
   [:li {:key (:id pub) :on-click #(pub-click s k pub %)}
    [:div.inner
-    [:div.selected-indicator {:class (if (get-in s [:data k (:id pub)]) :selected) }
+    [:div.selected-indicator {:class (if (select? s k pub) :selected)}
      [:div.icon
       (ui/icon s "#icon-checkmark")
       [:span.name "Selected"]

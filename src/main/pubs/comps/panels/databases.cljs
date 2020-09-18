@@ -6,19 +6,6 @@
     ) 
   )
 
-;(defn select-all [s k index]
-;  [:li {:class :select-all :on-click #(folders/folder-click s k index %)}
-;   [:div {:class :inner}
-;    [:div {:class [:selected-indicator (if (folders/folder-selected? s k index) :selected)]}
-;     [:div {:class :icon}
-;      (ui/icon s "#icon-checkmark")
-;      [:span {:class :name} "Selected"]
-;      ]
-;     ] "Select all"
-;    ]
-;   ]
-;  )
-;
 (defn- add [s k db]
   (re-frame.core/dispatch [:dbs/add db])
   )
@@ -27,19 +14,32 @@
   (re-frame.core/dispatch [:dbs/rm k id])
   )
 
+(defn- find-attachment [s k db]
+  (->>
+    (filter (fn [[_ a]]
+              (= (:object_id a) (:id db))) (get-in s [:data k]))   
+    (first)
+    (second)
+    )
+  )
+
+(defn- select? [s k db]
+  (not (nil? (find-attachment s k db))) 
+  )
+ 
 (defn db-click [s k db e]
   (.preventDefault e)
   (.stopPropagation e)
-  (if (get-in s [:data k (:id db)])
-      (rm s k (:id db))
+  (if (select? s k db)
+      (rm s k (:id (find-attachment s k db)))
       (add s k db)
       )
   )
 
 (defn db [s k db]
-  [:li {:key (:name db) :on-click #(db-click s k db %)}
+  [:li {:key (:id db) :on-click #(db-click s k db %)}
    [:div.inner
-    [:div.selected-indicator {:class (if (get-in s [:data k (:id db)]) :selected) }
+    [:div.selected-indicator {:class (if (select? s k db) :selected)}
      [:div.icon
       (ui/icon s "#icon-checkmark")
       [:span.name "Selected"]
@@ -60,7 +60,6 @@
 
 (defn db-selector [s k dbs]
   [:ul.ui.file-selection.item-selector
-   ;(select-all s k index)
    (doall (map #(db s k %) (db-sort dbs)))
    ]
   )
