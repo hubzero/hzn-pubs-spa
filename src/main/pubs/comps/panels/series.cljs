@@ -83,10 +83,13 @@
 
 (defn search-field [s k]
   [:div.field
-   [:label {:for :series-query} "Publication:"]
+   [:label {:for :series-query} "Search Publications (Title, DOI, etc.):"]
    [:input {:type :text
             :value (:series-query s)
-            :onChange #(search s %)}]
+            :onChange #(search s %)
+            :placeholder "Search..."
+            }
+    ]
    ]
   )
 
