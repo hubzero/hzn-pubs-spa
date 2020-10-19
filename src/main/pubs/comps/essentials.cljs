@@ -6,7 +6,8 @@
             [pubs.comps.master-types :as master-types]
             [pubs.comps.tags :as tags]
             [pubs.comps.textfield :as textfield]
-            [pubs.comps.textarea :as textarea]))
+            [pubs.comps.textarea :as textarea]
+            [pubs.comps.rich-editor :as re]))
 
 (defn authors [s k e]
   (.preventDefault e)
@@ -32,7 +33,7 @@
     [:div.note "all fields required"]]
    (master-types/render s)
    (textfield/render s "a-title" "Title:" :title)
-   (textarea/render s "a-abstract" "Abstract:" :abstract)
+   (re/render s "a-abstract" "Abstract:" :abstract)
    (collection/render s
                       "a-content"
                       "Content (drag to reorder):"

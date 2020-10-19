@@ -1,6 +1,7 @@
 {
 	"name": "hzn-pubs-spa",
 	"dependencies": {
+		"react-quill": "^1.3.5",
 		"sortablejs": "^1.12.0"
 	},
 	"devDependencies": {
