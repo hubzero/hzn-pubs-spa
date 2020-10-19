@@ -10,7 +10,7 @@
 (defn render [s]
   (section/render s [[[:data :doi] "DOI" :text true]
                      [[:data :title] "Title" :text true]
-                     [[:data :abstract] "Abstract" :text false]
+                     [[:data :abstract] "Abstract" :html false]
                      (content-type s)
                      [[:data :authors-list] "Authors" :authors-list false]
                      [[:data :tags] "Tags" :tags false]

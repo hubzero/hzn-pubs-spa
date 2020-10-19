@@ -2,7 +2,8 @@
   (:require [pubs.comps.summary.field :as field]
             [pubs.comps.summary.collection :as collection]
             [pubs.comps.summary.license :as license]
-            [pubs.comps.summary.tags :as tags]))
+            [pubs.comps.summary.tags :as tags]
+            [pubs.comps.summary.html :as html]))
 
 (defn- fieldtype [s k t bold?]
   ((t {:text #(field/render s k bold?)
@@ -13,7 +14,8 @@
        :images #(collection/render s k t)
        :tags #(tags/render s)
        :citations #(collection/render s k t)
-       :series #(collection/render s k t)})))
+       :series #(collection/render s k t)
+       :html #(html/render s k t)})))
 
 (defn render [s fields]
   [:section {:class [:fieldset :no-header]}
