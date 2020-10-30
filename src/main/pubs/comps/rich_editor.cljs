@@ -9,7 +9,8 @@
   {:toolbar [[{"header" [2 3 false]}]
              ["bold" "italic" "underline"]
              ["link"]
-             [{"list" "ordered"} {"list" "bullet"}]]})
+             [{"list" "ordered"} {"list" "bullet"}]]
+   :clipboard {:matchVisual false}})
 
 (def formats
   ["header" "bold" "italic" "underline" "link" "list" "bullet"])
