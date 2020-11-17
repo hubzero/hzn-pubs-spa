@@ -214,7 +214,9 @@
   )
 
 (defn submit-pub [db [_ res]]
-  (routes/redirect (str "/publications/" (get-in db [:data :pub-id])))
+  (let [project-id     (get-in db [:data :prj-id])
+        publication-id (get-in db [:data :pub-id])]
+    (routes/redirect (str "/projects/" project-id "/publications/" publication-id)))
   db
   )
 
