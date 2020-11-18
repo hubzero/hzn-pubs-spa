@@ -4,3 +4,5 @@ package-lock.json
 resources/public/js/
 target/
 ./shadow-cljs.edn
+/.idea
+/*.iml

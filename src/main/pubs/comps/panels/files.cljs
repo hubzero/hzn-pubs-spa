@@ -80,6 +80,8 @@
    ]
   )
 
+(declare file-selector)
+
 (defn subpanel [s files n k index]
   [:div.panel-subpanel.as-panel.files.-open {:id n}
    (file-selector s files k index)
