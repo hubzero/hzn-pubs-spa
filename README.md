@@ -2,6 +2,10 @@
 
 Hubzero new pubs javascript based front end.
 
+## Building Gotcha
+
+Run `npm install --save react-sortablejs sortablejs` before building via `lein`
+
 ## Run tests
 
     $ lein test
