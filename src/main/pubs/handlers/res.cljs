@@ -13,7 +13,7 @@
   )
 
 (defn master-types [db [_ res]]
-  (->> res 
+  (->> res
        (filter #(some #{(:type %)} ["File(s)" "Databases" "Series"]))
        (assoc db :master-types)
        (hub/pub)
@@ -146,11 +146,11 @@
       (dissoc :tag-query)
       (assoc-in [:ui :tag] false)
       (hub/tags)
-      ) 
+      )
   )
 
 (defn search-tags [db [_ res]]
-  (assoc db :tag-results res) 
+  (assoc db :tag-results res)
   )
 
 (defn licenses [db [_ res]]
@@ -170,7 +170,7 @@
                           (get-in $ [:data :ver-id])
                           "/edit"
                           )
-                     ) 
+                     )
     )
   )
 
@@ -189,7 +189,7 @@
   )
 
 (defn add-citation [db [_ res]]
-  (assoc-in db [:data :citations (utils/->keyword (:id res))] res) 
+  (assoc-in db [:data :citations (utils/->keyword (:id res))] res)
   )
 
 (defn search-citations [db [_ res]]
@@ -214,7 +214,9 @@
   )
 
 (defn submit-pub [db [_ res]]
-  (routes/redirect (str "/publications/" (get-in db [:data :pub-id])))
+  (let [project-id     (get-in db [:data :prj-id])
+        publication-id (get-in db [:data :pub-id])]
+    (routes/redirect (str "/projects/" project-id "/publications/" publication-id)))
   db
   )
 
