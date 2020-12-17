@@ -11,7 +11,7 @@
  ;; Any changes you make will be overwritten and lost.
  ;; Instead you should edit the value keyed :shadow-cljs in project.clj.
  ;;
- ;; More explaination: https://gitlab.com/nikperic/lein-shadow/-/tree/docs/shadow-cljs.edn.md
+ ;; More details: https://gitlab.com/nikperic/lein-shadow/-/tree/docs/shadow-cljs.edn.md
  ;;
  ;; Don't even check this file into your git repo. Add it to .gitignore.
  ;;
@@ -23,4 +23,4 @@
  ;;
  ;; >>>>>>>>>>>>>>>>>>>>>>>> YOUR CHANGES WILL BE LOST <<<<<<<<<<<<<<<<<<<<<<<<<
  ;;
- {:nrepl {:port 8777}, :builds {:app {:target :browser, :output-dir "resources/public/js/compiled", :asset-path "/js/compiled", :modules {:app {:init-fn pubs.core/init}}, :devtools {:http-root "resources/public", :http-port 8280}}, :hzn {:target :browser, :output-dir "resources/public/js/compiled", :asset-path "/app/components/com_pubs/site/assets/js/compiled", :modules {:app {:init-fn pubs.core/init}}, :compiler-options {:infer-externs :auto}}, :hub {:target :browser, :output-dir "/home/jbg/Development/hub/app/components/com_pubs/site/assets/js/compiled", :asset-path "/app/components/com_pubs/site/assets/js/compiled", :modules {:app {:init-fn pubs.core/init}}, :compiler-options {:infer-externs :auto}}, :test {:target :node-test, :output-to "out/node-tests.js", :autorun true}}, :lein true}
+ {:nrepl {:port 8777}, :builds {:hzn {:target :browser, :output-dir "resources/public/js/compiled", :asset-path "/app/components/com_pubs/site/assets/js/compiled", :modules {:app {:init-fn pubs.core/init}}, :compiler-options {:infer-externs :auto}}, :zapp {:target :browser, :output-dir "resources/public/js/compiled", :asset-path "/app/components/com_pubs/site/assets/js/compiled", :modules {:app {:init-fn pubs.core/init, :entries [devtools.preload day8.re-frame-10x.preload]}}, :compiler-options {:closure-defines {re-frame.trace.trace-enabled? true}, :silence-optimizations-warning true, :optimizations :none, :infer-externs :auto}}, :test {:target :node-test, :output-to "out/node-tests.js", :autorun true}}, :lein true}
