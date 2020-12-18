@@ -17,7 +17,7 @@
   )
 
 (defn- order [s k l]
-  [:> ReactSortable {:tag "ul" :list l :setList #(reorder s k %)}
+  [:> ReactSortable {:tag "ul" :list l :delay 2 :setList #(reorder s k %)}
    (doall
      (map #(item/render s k %) l)
      )

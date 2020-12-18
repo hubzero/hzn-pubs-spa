@@ -2,9 +2,13 @@
 
 Hubzero new pubs javascript based front end.
 
-## Building Gotcha
+## References
 
-Run `npm install --save react-sortablejs sortablejs` before building via `lein`
+https://github.com/SortableJS/sortablejs
+https://github.com/SortableJS/react-sortablejs
+https://github.com/reagent-project/reagent/blob/master/doc/InteropWithReact.md#creating-reagent-components-from-react-components
+
+https://github.com/mhuebert/shadow-re-frame
 
 ## Run tests
 

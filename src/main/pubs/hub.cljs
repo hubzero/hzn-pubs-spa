@@ -3,6 +3,7 @@
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
             [re-frame.core :as rf :refer [dispatch dispatch-sync]]
+            [pubs.utils :as utils]
             )
   )
 
@@ -92,11 +93,12 @@
           [k id]))
 
 (defn update-file [db file k]
-  (do-post db
-           (ver-route db (str "/files/" (:id file)))
-           :res/update-file
-           http/put
-           file))
+  (when (not= file (get-in db [:data :content (utils/->keyword (:id file))]))
+    (do-post db
+             (ver-route db (str "/files/" (:id file)))
+             :res/update-file
+             http/put
+             file)))
 
 (defn ls-files [db]
   (do-get db (prj-route db "/files") :res/ls-files))
@@ -114,11 +116,12 @@
   (do-get db (ver-route db (str "/authors/" id)) :res/rm-author http/delete id))
 
 (defn update-author [db author]
-  (do-post db
-           (ver-route db (str "/authors/" (:id author)))
-           :res/update-author
-           http/put
-           author))
+  (when (not= author (get-in db [:data :authors-list (utils/->keyword (:id author))]))
+    (do-post db
+             (ver-route db (str "/authors/" (:id author)))
+             :res/update-author
+             http/put
+             author)))
 
 (defn add-author [db author]
   (do-post db
