@@ -8,7 +8,10 @@
             )
   )
 
-(defn render [s k v]
+(defn render
+  "Uses the keyword to pull the right render function based on which thing needs rendered,
+   The function is then invoked."
+  [s k v]
   ((k {
        :content #(file/render s k (second v) (first v))
        :support-docs #(file/render s k (second v) (first v))
