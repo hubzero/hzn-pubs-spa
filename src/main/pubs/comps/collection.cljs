@@ -8,15 +8,15 @@
   )
 
 (defn- reorder [s k l]
+  ;(cljs.pprint/pprint (js->clj l))
   (as-> l $
-    (js->clj $)
-    (map (fn [[k v]] [(keyword k) (utils/keywordize v)]) $)
-    (into {} $) 
-    (re-frame.core/dispatch [:collection/order k $])
-    )
-  )
+        (js->clj $)
+        (map (fn [[k v]]
+               [(keyword k) (utils/keywordize v)]) $)
+        (re-frame.core/dispatch [:collection/order k $])))
 
 (defn- order [s k l]
+  "reorder is triggered by mouse and is provided the new list order."
   [:> ReactSortable {:tag "ul" :list l :delay 2 :setList #(reorder s k %)}
    (doall
      (map #(item/render s k %) l)

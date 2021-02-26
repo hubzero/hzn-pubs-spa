@@ -92,8 +92,13 @@
           http/delete
           [k id]))
 
-(defn update-file [db file k]
-  (when (not= file (get-in db [:data :content (utils/->keyword (:id file))]))
+(defn update-file
+  "Make a call to the API to update the list.
+
+   Causes a re-frame trigger event as well."
+  [db file k]
+  (when
+    (not= file (get-in db [:data :content (utils/->keyword (:id file))]))
     (do-post db
              (ver-route db (str "/files/" (:id file)))
              :res/update-file
