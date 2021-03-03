@@ -50,7 +50,6 @@
 
 (defn init! []
   (rf/clear-subscription-cache!)
-  (prn "Initializing routes")
   ; registers event listeners on HTML5 history and hashchange events
   (rfez/start! router
                on-navigate

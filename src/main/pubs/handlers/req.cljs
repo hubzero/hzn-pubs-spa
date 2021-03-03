@@ -32,9 +32,12 @@
   (hub/files db)
   )
 
-(defn ls-files [db _]
-  (hub/ls-files db)
-  )
+(defn ls-files
+  "Adds a key to identify the file selection type to the db."
+  [db [_ ls-type-kw]]
+  (assoc
+    (hub/ls-files db)
+    :ls-type-kw ls-type-kw))
 
 (defn usage [db _]
   (->> (get-in db [:data :content] {})
