@@ -33,7 +33,7 @@
 (defn- files [s k e]
   (.preventDefault e)
   (.stopPropagation e)
-  (re-frame.core/dispatch [:req/ls-files])
+  (re-frame.core/dispatch [:req/ls-files k])
   (re-frame.core/dispatch [:req/usage])
   (re-frame.core/dispatch [:panels/show k true])
   )

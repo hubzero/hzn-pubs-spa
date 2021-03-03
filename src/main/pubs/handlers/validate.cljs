@@ -75,7 +75,6 @@
   )
 
 (defn- year [y errors]
-  (prn "CIT YEAR" errors)
   (as-> y $
     (if (not (nil? $)) (clojure.string/trim $) "")
     (if (re-matches #"^(19|20)\d{2}$" $)

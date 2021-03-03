@@ -104,7 +104,12 @@
     )
   )
 
-(defn file-selector [s files k index]
+(defn file-selector
+  "The files data structure is an array of triples. Each triple representing a Folder.
+
+   Index 0 of the triple is the folder name, the last element in the triple is a list of filenames as strings.
+   "
+  [s files k index]
   [:ul.ui.file-selection.item-selector
    (select-all s k index)
    (doall (map (fn [[path n]] (folders/render s path n k (inc index) subpanel))

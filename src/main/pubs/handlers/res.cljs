@@ -2,7 +2,7 @@
   (:require [pubs.hub :as hub]
             [pubs.routes :as routes]
             [pubs.utils :as utils]
-            )
+            [clojure.string :as s])
   )
 
 (defn me [db [_ res]]
@@ -81,12 +81,44 @@
   (assoc-in db [:data (:type res) (utils/->keyword (:id res))] res)
   )
 
-(defn ls-files [db [_ res]]
-  (-> db
-      (assoc :files res)
-      (assoc-in [:ui :current-folder] [["Project files" (first (first res))]])
-      )
-  )
+;[["sample/files"
+;  ["subdir"]
+;  ["replicasetbpm.md"
+;   "README.md"
+;   "project.clj"
+;   "nano_support_stats_12_31_20.txt"
+;   "aws_immutant.md"]]
+; ["sample/files/subdir" ["subsubdir"] ["venues1.json"]]
+; ["sample/files/subdir/subsubdir" ["subsubsubdir"] ["sts-header.txt"]]
+; ["sample/files/subdir/subsubdir/subsubsubdir"
+;  []
+;  ["stanford_nlp_sentiment.md"]]]
+
+(defn image-file-filter [filename]
+  (re-find #"\.(jpg|gif|jpeg|png|bmp|tif|tiff)$" (s/lower-case filename)))
+
+(defn image-files-only
+  [res]
+  ;;(prn "---->>>>" (filter image-file-filter (-> res first last)))
+  (map (fn [dir-set]
+         ;; first is directory name string; last is list of files to filter over
+         (concat (butlast dir-set)
+                 [(filter image-file-filter (last dir-set))]))
+       res))
+
+(defn ls-files
+  "`res` looks like ^
+  "
+  [db [_ res]]
+  ;(cljs.pprint/pprint res)
+  (let [fres (if (= (:ls-type-kw db) :images)
+               (image-files-only res)
+               res)]
+    ;(cljs.pprint/pprint fres)
+    (-> db
+        (assoc :files fres)
+        (assoc-in [:ui :current-folder] [["Project files" (first (first res))]])
+        )))
 
 (defn usage [db [_ res]]
   (assoc db :usage res)
