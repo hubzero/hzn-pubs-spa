@@ -110,8 +110,8 @@
 (rf/reg-event-db :panels/field panels/field)
 (rf/reg-event-db :panels/errors panels/errors)
 
+(rf/reg-event-db :folders/click folders/click-folder)
 (rf/reg-event-db :folders/pop folders/!pop)
-(rf/reg-event-db :folders/push folders/push)
 
 (rf/reg-event-db :authors/edit authors/edit)
 (rf/reg-event-db :authors/name authors/fillname)
