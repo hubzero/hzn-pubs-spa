@@ -33,68 +33,12 @@
          (clojure.string/split #"/")
          (last))]]])
 
-(defn list-all-from
-  "Returns a list of full filenames (including path) of all files at or below the
-   currently specified directory location.
-
-   files-map - The content of :files key from the :files-m file list state map.
-   location  - A string representing the users current location in the file system."
-  [files-map location]
-  (let [{files :files subdirs :subdirs} (get files-map location)]
-    (concat
-      (map #(str location "/" %) files)
-      (mapcat (partial list-all-from files-map)
-           (map #(str location "/" %) subdirs)))))
-
-(comment
-
-  (list-all-from (:files (get-in @re-frame.db/app-db [:files-m]))
-                 "sample/files")
-
-  (get-in @re-frame.db/app-db [:data :images])
-  (get-in @re-frame.db/app-db [:files-m])
-  (last (get-in @re-frame.db/app-db [:files-m :location]))
-
-  (clojure.set/subset?
-    (into #{}
-          (list-all-from (:files (get-in @re-frame.db/app-db [:files-m]))
-                         "sample/files"))
-    (into #{}
-          (map :path (vals (get-in @re-frame.db/app-db [:data :images]))))
-
-    )
-  )
-
-(defn click-select-all
-  [db k]
-  (let [selected (get-in db [:data k])
-        location (-> db (get-in [:files-m :location]) last)
-        all-at-loc (into #{} (list-all-from (-> db :files-m :files) location))
-        all-sel (into #{} (map :path (-> db :data k vals)))
-        diff (clojure.set/difference all-at-loc all-sel)]
-    ;; at the current "location", get all files.
-    ;; if every file in this list is in the selected files list, then DESELECT all
-    ;; otherwise, SELECT all files not currently selected.
-    (if (empty? diff)
-      (do
-        ;; Deselect all
-        (doseq [id (keys selected)]
-          (re-frame.core/dispatch [:req/rm-file k id])))
-      (do
-        ;; Select the difference
-        (doseq [path diff]
-          (re-frame.core/dispatch [:req/add-file {:type  k
-                                                  :index 0
-                                                  :path  path
-                                                  :name  (-> path (clojure.string/split #"/") last)
-                                                  }]))))))
-
 (defn select-all
   ""
   [s k]
-  [:li {:class :select-all :on-click #(click-select-all s k)}
+  [:li {:class :select-all :on-click #(folders/click-select-all s k %)}
    [:div {:class :inner}
-    [:div {:class [:selected-indicator (if false :selected)]}
+    [:div {:class [:selected-indicator (if (folders/subpath-fully-selected? s k) :selected)]}
      [:div {:class :icon}
       (ui/icon s "#icon-checkmark")
       [:span {:class :name} "Selected"]
@@ -152,7 +96,7 @@
      (concat
        (->> subdirs
             (sort-by #(clojure.string/lower-case %))
-            (map (partial folders/render-m s current)))
+            (map (partial folders/render-m s k current)))
        (->> files
             (sort-by #(clojure.string/lower-case %))
             (map (partial file-m s current k))))
