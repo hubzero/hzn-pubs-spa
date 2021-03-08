@@ -39,13 +39,15 @@
         ;; Default to current location if a subpath isn't specified.
         all-at-loc (into #{} (list-all-from (-> db :files-m :files) location))
         all-sel (into #{} (map :path (-> db :data k vals)))]
-    (clojure.set/difference all-at-loc all-sel)))
+    (when (not-empty all-at-loc)
+      (clojure.set/difference all-at-loc all-sel))))
 
 (defn subpath-fully-selected? [db k & [location]]
   (let [location (or location (-> db (get-in [:files-m :location]) last))
         diff (file-set-diff db k location)]
     ; if the diff is empty, we're subpath fully selected.
-    (empty? diff)))
+    ; must not be nil
+    (and diff (empty? diff))))
 
 (defn click-select-all
   [db k e & [location]]
