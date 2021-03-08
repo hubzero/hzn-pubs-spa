@@ -1,10 +1,11 @@
 (ns pubs.handlers.folders)
 
 (defn !pop [db [_ _]]
-  (update-in db [:ui :current-folder] pop)
-  )
+  (let [pos (get-in db [:files-m :location])]
+    (-> db
+        (assoc-in [:files-m :location] (butlast pos))
+        )))
 
-(defn push [db [_ folder]]
-  (update-in db [:ui :current-folder] conj folder)
-  )
-
+(defn click-folder [db [_ fullpath]]
+  (-> db
+      (update-in [:files-m :location] concat [fullpath])))
